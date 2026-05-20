@@ -77,6 +77,33 @@
             color: #3b82f6;
         }
 
+        /* Sidebar Footer Styles */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .btn-back-home {
+            background: none; 
+            border: 1px solid #1e2533; 
+            color: #6b7280; 
+            padding: 10px 14px; 
+            border-radius: 10px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: 100%; 
+            text-align: left; 
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        .btn-back-home:hover {
+            color: #ffffff; 
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
         .menu-toggle {
             display: none;
             position: fixed;
@@ -558,6 +585,7 @@
             padding: 14px 18px;
             display: flex; align-items: center; gap: 16px;
             cursor: pointer; text-align: left; width: 100%;
+            text-decoration: none; /* Reset link underline */
             transition: all 0.2s ease;
         }
         .wallet-option-item:hover {
@@ -618,11 +646,6 @@
 
     <aside id="appSidebar">
         <div>
-            <button onclick="window.location.href='index.html'" style="background: none; border: 1px solid #1e2533; color: #6b7280; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 24px; width: 100%; text-align: left; transition: all 0.2s;" onmouseover="this.style.color='#ffffff'; this.style.borderColor='#3b82f6';" onmouseout="this.style.color='#6b7280'; this.style.borderColor='#1e2533';">
-                <span class="lang-en">← Back to Home</span>
-                <span class="lang-id">← Kembali ke Beranda</span>
-            </button>
-            
             <div class="logo">ZoniqFi<span>.</span></div>
             <ul class="nav-links">
                 <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
@@ -631,7 +654,14 @@
                 <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veZNF Governance</a></li>
             </ul>
         </div>
-        <div style="font-size: 11px; color: #4b5563; padding-left: 16px;">Base Network Connected</div>
+        
+        <div class="sidebar-footer">
+            <a href="index.html" class="btn-back-home">
+                <span class="lang-en">← Back to Home</span>
+                <span class="lang-id">← Kembali ke Beranda</span>
+            </a>
+            <div style="font-size: 11px; color: #4b5563; padding-left: 16px;">Base Network Connected</div>
+        </div>
     </aside>
 
     <main class="main-content">
@@ -949,7 +979,7 @@
             </div>
 
             <div class="wallet-options-list">
-                <button class="wallet-option-item highlight-smart" id="optSmartAccount">
+                <a href="https://provizto.xyz" target="_blank" class="wallet-option-item highlight-smart" id="optSmartAccount">
                     <div class="wallet-option-icon logo-smart">✨</div>
                     <div class="wallet-option-info">
                         <div class="wallet-option-name">
@@ -959,9 +989,9 @@
                         <div class="wallet-option-desc lang-en">Create or login via Passkey, Google, or Apple ID</div>
                         <div class="wallet-option-desc lang-id">Buat atau masuk via Passkey, Google, atau Apple ID</div>
                     </div>
-                </button>
+                </a>
 
-                <button class="wallet-option-item" id="optMetaMask">
+                <a href="https://metamask.io" target="_blank" class="wallet-option-item" id="optMetaMask">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
                         <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
@@ -972,9 +1002,9 @@
                         <div class="wallet-option-desc lang-en">Connect via MetaMask extension or mobile app</div>
                         <div class="wallet-option-desc lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</div>
                     </div>
-                </button>
+                </a>
 
-                <button class="wallet-option-item" id="optWalletConnect">
+                <a href="https://walletconnect.com" target="_blank" class="wallet-option-item" id="optWalletConnect">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
                         <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
@@ -987,7 +1017,7 @@
                         <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
                         <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
                     </div>
-                </button>
+                </a>
             </div>
             
             <div class="wallet-modal-footer lang-en">
@@ -1031,9 +1061,16 @@
             showNotification();
         }
 
-        document.getElementById('optSmartAccount').addEventListener('click', () => executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90"));
-        document.getElementById('optMetaMask').addEventListener('click', () => executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b"));
-        document.getElementById('optWalletConnect').addEventListener('click', () => executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a"));
+        document.getElementById('optSmartAccount').addEventListener('click', (e) => {
+            // e.preventDefault(); // Hapus ini jika ingin membuka tautan sekaligus memicu logika JS Anda
+            executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
+        });
+        document.getElementById('optMetaMask').addEventListener('click', (e) => {
+            executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+        });
+        document.getElementById('optWalletConnect').addEventListener('click', (e) => {
+            executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+        });
         btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
 
 
