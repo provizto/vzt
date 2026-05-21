@@ -1,403 +1,1277 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="appNode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon - FAQ</title>
+    <title>PROVIZTO - dApp Dashboard</title>
     <style>
         /* ==========================================================================
-           1. RESET & BASE STYLES
+           1. RESET & LOGIKA DUA BAHASA (MURNI CSS)
            ========================================================================== */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #f8fafc;
-            min-height: 100vh;
+            background-color: #080b11;
+            color: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 2rem 1rem;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Container Utama */
-        .container {
-            width: 100%;
-            max-width: 700px;
-            margin-top: 5rem;
-            flex-grow: 1;
-        }
+        /* LOGIKA TAMPILAN BAHASA */
+        html[lang="en"] .lang-id { display: none !important; }
+        html[lang="en"] .lang-en { display: block; }
+        html[lang="en"] span.lang-en { display: inline; }
+        html[lang="en"] div.lang-en { display: block; }
+        html[lang="id"] .lang-en { display: none !important; }
+        html[lang="id"] .lang-id { display: block; }
+        html[lang="id"] span.lang-id { display: inline; }
+        html[lang="id"] div.lang-id { display: block; }
+
+        /* Utility helper class */
+        .style-hidden { display: none !important; }
 
         /* ==========================================================================
-           2. NAVIGATION & DROPDOWN BUTTON (TOP BAR)
+           2. SIDEBAR NAVIGATION & MOBILE INTERFACE
            ========================================================================== */
-        .top-nav {
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            padding: 0 2rem;
+        aside {
+            width: 260px;
+            background-color: #0f131c;
+            border-right: 1px solid #1e2533;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            z-index: 100;
-        }
-
-        /* Tombol Back to Home */
-        .back-home a {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .back-home a:hover {
-            color: #38bdf8;
-        }
-
-        /* Komponen Dropdown Bahasa */
-        .lang-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Tombol Utama Dropdown */
-        .dropbtn {
-            background-color: #334155;
-            color: #f8fafc;
-            padding: 0.6rem 1.2rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .dropbtn:hover {
-            background-color: #475569;
-            border-color: #38bdf8;
-        }
-
-        .dropbtn .arrow {
-            font-size: 0.75rem;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 40;
             transition: transform 0.3s ease;
         }
-
-        /* Menu Pilihan di Dalam Dropdown */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #1e293b;
-            min-width: 130px;
-            box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
-            border: 1px solid #334155;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            overflow: hidden;
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 40px;
+            padding-left: 10px;
         }
-
-        .dropdown-content button {
-            color: #cbd5e1;
-            padding: 0.7rem 1rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: background 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content button:hover {
-            background-color: #334155;
-            color: #38bdf8;
-        }
-
-        /* Tampilkan Dropdown Saat Kelas 'show' Aktif */
-        .lang-dropdown.show .dropdown-content {
+        .logo span { color: #3b82f6; }
+        
+        .nav-links { list-style: none; }
+        .nav-links li { margin-bottom: 8px; }
+        .nav-links a {
             display: block;
+            padding: 12px 16px;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
         }
 
-        /* Putar Panah Saat Dropdown Terbuka */
-        .lang-dropdown.show .dropbtn .arrow {
-            transform: rotate(180deg);
-        }
-
-        /* ==========================================================================
-           3. HERO / COMING SOON SECTION
-           ========================================================================== */
-        .hero {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #38bdf8;
-        }
-
-        .hero p {
-            color: #94a3b8;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        /* ==========================================================================
-           4. FAQ SECTION (ACCORDION)
-           ========================================================================== */
-        .faq-section h2 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            color: #f1f5f9;
-        }
-
-        .faq-container {
+        /* Sidebar Footer Styles */
+        .sidebar-footer {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 12px;
+            margin-top: auto; 
+        }
+        .btn-back-home {
+            background: none; 
+            border: 1px solid #1e2533; 
+            color: #9ca3af; 
+            padding: 10px 14px; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: 100%; 
+            text-align: left; 
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        .btn-back-home:hover {
+            color: #ffffff; 
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .sidebar-copyright {
+            font-size: 11px;
+            color: #4b5563;
+            padding-left: 14px;
+            line-height: 1.4;
+            border-top: 1px solid rgba(30, 37, 51, 0.5);
+            padding-top: 12px;
+            margin-top: 4px;
         }
 
-        .faq-item {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .faq-question {
-            width: 100%;
-            background: none;
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
             border: none;
-            padding: 1.2rem;
-            text-align: left;
-            color: #f8fafc;
-            font-size: 1.1rem;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 35;
+        }
+
+        @media (max-width: 768px) {
+            aside { transform: translateX(-100%); }
+            aside.open { transform: translateX(0); }
+            .menu-toggle { display: flex; }
+            .main-content { margin-left: 0 !important; padding: 20px !important; }
+            .sidebar-overlay.active { display: block; }
+        }
+
+        /* ==========================================================================
+           3. AREA KONTEN UTAMA & DASHBOARD LAYOUT
+           ========================================================================== */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 16px;
+        }
+        @media (max-width: 480px) {
+            .topbar { flex-direction: column; align-items: flex-start; }
+            .right-controls { width: 100%; justify-content: space-between; }
+        }
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .lang-select {
+            background-color: #1e2533;
+            border: 1px solid #2e374a;
+            color: #d1d5db;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+        }
+        .btn-wallet {
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-wallet:hover {
+            transform: translateY(-1px);
+        }
+
+        .wallet-active-status {
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .address-badge {
+            background-color: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .btn-disconnect {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .panel-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-box {
+            background-color: #080b11;
+            border: 1px solid #1e2533;
+            border-radius: 14px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .faq-question:hover {
-            background: #273549;
+        .input-box input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            width: 70%;
+            outline: none;
         }
+        .token-select { font-weight: 700; color: #3b82f6; font-size: 16px; }
 
-        .faq-question .icon {
-            font-size: 1.5rem;
-            color: #38bdf8;
+        .duration-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
         }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
-            padding: 0 1.2rem;
-            color: #cbd5e1;
-            line-height: 1.6;
-        }
-
-        .faq-item.active .faq-answer {
-            max-height: 200px;
-            padding-bottom: 1.2rem;
-        }
-
-        /* ==========================================================================
-           5. FOOTER (COPYRIGHT)
-           ========================================================================== */
-        footer {
+        .duration-btn {
+            background-color: #080b11;
+            border: 1px solid #1e2533;
+            color: #9ca3af;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
             text-align: center;
-            padding: 2rem 0 1rem 0;
-            color: #64748b;
-            font-size: 0.9rem;
+        }
+        .duration-btn.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .summary-box {
+            background-color: rgba(59, 130, 246, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 24px 0;
+            font-size: 13px;
+        }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .summary-label { color: #9ca3af; }
+        .summary-value { font-weight: 600; color: #ffffff; }
+        .summary-value.highlight { color: #22d3ee; font-weight: 700; }
+
+        .btn-action {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-action:hover { background-color: #1d4ed8; }
+
+        .reward-card {
+            background-color: #111622;
+            border: 1px solid #1e2533;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reward-info h4 { font-size: 14px; color: #6b7280; font-weight: 600; margin-bottom: 4px; }
+        .reward-info p { font-size: 20px; font-weight: 700; color: #ffffff; }
+        .btn-sm {
+            background-color: #1e2533;
+            border: 1px solid #2e374a;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 360px;
             width: 100%;
         }
+        .toast {
+            background-color: #0f131c;
+            border: 1px solid #22c55e;
+            border-left: 6px solid #22c55e;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            gap: 12px;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast-icon { font-size: 20px; line-height: 1; }
+        .toast-content { flex-grow: 1; }
+        .toast-title { font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .toast-desc { font-size: 12px; color: #9ca3af; line-height: 1.4; }
+
+        .swap-box {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .swap-icon-container {
+            display: flex;
+            justify-content: center;
+            margin: -10px 0;
+            position: relative;
+            z-index: 2;
+        }
+        .swap-arrow-btn {
+            background-color: #1e2533;
+            border: 1px solid #2e374a;
+            color: #3b82f6;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .swap-arrow-btn:hover { background-color: #2e374a; color: #22d3ee; }
+
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid #1e2533;
+            background-color: rgba(15, 23, 42, 0.4);
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+        th {
+            background-color: #0f131c;
+            color: #9ca3af;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 16px 20px;
+            border-bottom: 1px solid #1e2533;
+        }
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+            color: #d1d5db;
+        }
+        tr:last-child td { border-bottom: none; }
+        .pool-title { font-weight: 700; color: #ffffff; }
+        .badge-pool {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            background-color: #1e2533;
+            color: #9ca3af;
+            border: 1px solid #2e374a;
+        }
+        .badge-pool.boost {
+            background-color: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            border-color: rgba(34, 211, 238, 0.2);
+        }
+
+        .gov-banner {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        @media (max-width: 600px) { .gov-banner { flex-direction: column; align-items: flex-start; } }
+        
+        .gov-banner-text h4 { font-size: 16px; color: #ffffff; font-weight: 700; margin-bottom: 6px; }
+        .gov-banner-text p { font-size: 13px; color: #9ca3af; line-height: 1.5; margin: 0; }
+        
+        .vote-progress-container {
+            margin-bottom: 30px;
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            padding: 20px;
+            border-radius: 16px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+        .progress-bar-bg {
+            background-color: #080b11;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #1e2533;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #2563eb 0%, #22d3ee 100%);
+            height: 100%;
+            width: 0%; 
+            transition: width 0.3s ease;
+        }
+
+        .table-panel {
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .gov-table-responsive { overflow-x: auto; margin-top: 15px; }
+        .gov-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+        .gov-table th {
+            background-color: #080b11;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 14px 20px;
+            border-bottom: 1px solid #1e2533;
+        }
+        .gov-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(30, 37, 51, 0.6);
+            color: #d1d5db;
+            vertical-align: middle;
+        }
+        .gov-table tr:last-child td { border-bottom: none; }
+        
+        .vote-input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: #080b11;
+            border: 1px solid #1e2533;
+            border-radius: 10px;
+            padding: 6px 12px;
+            width: 110px;
+        }
+        .vote-input-wrapper input {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            width: 100%;
+            outline: none;
+            text-align: right;
+        }
+        .vote-input-wrapper input::-webkit-outer-spin-button,
+        .vote-input-wrapper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .vote-input-wrapper span { color: #6b7280; font-size: 13px; font-weight: 700; margin-left: 4px; }
 
         /* ==========================================================================
-           6. RESPONSIVE MEDIA QUERIES
+           6. WALLET SELECTION POP-UP MODAL STYLES
            ========================================================================== */
-        @media (max-width: 600px) {
-            .top-nav {
-                position: static;
-                flex-direction: column;
-                gap: 1.5rem;
-                padding: 0;
-                margin-bottom: 2rem;
-            }
-            .container {
-                margin-top: 0;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
+        .wallet-modal-overlay {
+            position: fixed; inset: 0;
+            background-color: rgba(3, 5, 9, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .wallet-modal-card {
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            border-radius: 24px;
+            width: 100%; max-width: 440px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            position: relative;
+            animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalSlideUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .wallet-modal-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; margin-bottom: 20px;
+        }
+        .wallet-modal-header h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .wallet-modal-header p { font-size: 12px; color: #6b7280; }
+        .wallet-modal-close {
+            background: none; border: none; color: #6b7280;
+            font-size: 16px; cursor: pointer; padding: 4px;
+        }
+        .wallet-modal-close:hover { color: #fff; }
+
+        .wallet-options-list { display: flex; flex-direction: column; gap: 12px; }
+        .wallet-option-item {
+            background-color: #080b11;
+            border: 1px solid #1e2533;
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex; align-items: center; gap: 16px;
+            cursor: pointer; text-align: left; width: 100%;
+            text-decoration: none; 
+            transition: all 0.2s ease;
+        }
+        .wallet-option-item:hover {
+            background-color: #121824; border-color: #2e374a; transform: scale(1.01);
+        }
+        
+        /* Modifikasi efek disabled apabila persetujuan belum dicentang */
+        .wallet-option-item.disabled-style {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .wallet-option-icon {
+            width: 36px; height: 36px; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+        
+        .logo-smart {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+            border-radius: 10px; border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+        .highlight-smart {
+            border-color: rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, #080b11 0%, rgba(37, 99, 235, 0.03) 100%);
+        }
+        .highlight-smart:hover {
+            border-color: #2563eb;
+            background: linear-gradient(135deg, #121824 0%, rgba(37, 99, 235, 0.06) 100%);
+        }
+
+        .wallet-option-info { flex-grow: 1; }
+        .wallet-option-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+        .wallet-option-desc { font-size: 11px; color: #6b7280; line-height: 1.3; }
+        
+        .badge-recommended {
+            background-color: rgba(34, 211, 238, 0.1); color: #22d3ee;
+            font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;
+        }
+        .badge-beta {
+            background-color: rgba(239, 68, 68, 0.1); color: #ef4444;
+            font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; margin-left: auto;
+        }
+
+        .wallet-modal-footer { margin-top: 18px; font-size: 10px; color: #4b5563; text-align: center; line-height: 1.4; }
+        .wallet-modal-footer a { color: #3b82f6; text-decoration: none; }
+
+        /* ==========================================================================
+           7. STYLE TAMBAHAN: POP-UP PILOT/UJICUBA PERINGATAN
+           ========================================================================== */
+        .trial-notice-box {
+            background-color: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .trial-notice-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .trial-notice-body {
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+        .trial-checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+        .trial-checkbox-container input {
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .trial-checkbox-text {
+            font-size: 12px;
+            color: #d1d5db;
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav">
-        <div class="back-home">
-            <a href="/">
-                <span>←</span>
-                <span class="en">Back to Home</span>
-                <span class="id" style="display:none;">Kembali ke Beranda</span>
-            </a>
-        </div>
-
-        <div class="lang-dropdown" id="langDropdown">
-            <button class="dropbtn" onclick="toggleDropdown()">
-                <span id="current-lang-text">🌐 EN</span>
-                <span class="arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <button onclick="switchLang('en')">🌐 EN</button>
-                <button onclick="switchLang('id')">🌐 ID</button>
+    <div class="toast-container" id="toastContainer">
+        <div class="toast" id="transactionToast">
+            <div class="toast-icon">✅</div>
+            <div class="toast-content">
+                <div class="toast-title lang-en">Transaction Successful</div>
+                <div class="toast-title lang-id">Transaksi Berhasil</div>
+                <div class="toast-desc lang-en">Action processed on Base L2 network successfully.</div>
+                <div class="toast-desc lang-id">Aksi berhasil diproses pada jaringan Base L2.</div>
             </div>
         </div>
-    </nav>
-
-    <div class="container">
-        <header class="hero">
-            <h1 class="en">Something Exciting is Coming Soon!</h1>
-            <h1 class="id" style="display:none;">Sesuatu yang Seru Bakal Segera Hadir!</h1>
-            
-            <p class="en">We are working hard to bring you the best experience. In the meantime, check out our FAQs below.</p>
-            <p class="id" style="display:none;">Kami sedang bekerja keras untuk memberikan pengalaman terbaik. Sementara itu, silakan cek FAQ kami di bawah ini.</p>
-        </header>
-
-        <section class="faq-section">
-            <h2 class="en">Frequently Asked Questions</h2>
-            <h2 class="id" style="display:none;">Pertanyaan yang Sering Diajukan</h2>
-
-            <div class="faq-container">
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span class="en">When will the website launch?</span>
-                        <span class="id" style="display:none;">Kapan situs web ini akan diluncurkan?</span>
-                        <span class="icon">+</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p class="en">We are aiming to launch in Q3 of this year. Stay tuned for the exact date!</p>
-                        <p class="id" style="display:none;">Kami menargetkan peluncuran pada kuartal ketiga tahun ini. Tunggu tanggal mainnya!</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span class="en">What is this project about?</span>
-                        <span class="id" style="display:none;">Tentang apakah proyek ini?</span>
-                        <span class="icon">+</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p class="en">It's a brand new platform designed to simplify your daily workflow with smart tools.</p>
-                        <p class="id" style="display:none;">Ini adalah platform baru yang dirancang untuk mempermudah alur kerja harian Anda dengan alat pintar.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span class="en">How can I get updates?</span>
-                        <span class="id" style="display:none;">Bagaimana cara mendapatkan pembaruan info?</span>
-                        <span class="icon">+</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p class="en">You can bookmark this page or follow our social media channels for the latest news.</p>
-                        <p class="id" style="display:none;">Anda dapat menyimpan halaman ini atau mengikuti media sosial kami untuk berita terbaru.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
-    <footer>
-        <p>&copy; 2026 YourCompany. All rights reserved.</p>
-    </footer>
+    <button id="menuToggleBtn" class="menu-toggle">☰</button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <aside id="appSidebar">
+        <div>
+            <div class="logo">PROVIZTO<span>.</span></div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="index.html" class="btn-back-home">
+                <span class="lang-en">← Back to Home</span>
+                <span class="lang-id">← Kembali ke Beranda</span>
+            </a>
+            
+            <div style="font-size: 11px; color: #3b82f6; padding-left: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <span style="width: 6px; height: 6px; background-color: #10b981; border-radius: 50%; display: inline-block;"></span>
+                Base Network Connected
+            </div>
+
+            <div class="sidebar-copyright">
+                <span class="lang-en">© 2026 PROVIZTO. <br>All rights reserved.</span>
+                <span class="lang-id">© 2026 PROVIZTO. <br>Hak cipta dilindungi undang-undang.</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h2 class="lang-en" style="font-size: 24px; font-weight: 700;">Console Account</h2>
+                <h2 class="lang-id" style="font-size: 24px; font-weight: 700;">Konsol Akun</h2>
+            </div>
+            <div class="right-controls">
+                <select id="appLangSwitcher" class="lang-select">
+                    <option value="en">🌐 EN</option>
+                    <option value="id">🌐 ID</option>
+                </select>
+                
+                <button class="btn-wallet" id="btnConnectTrigger">
+                    <span class="lang-en">Connect Wallet</span>
+                    <span class="lang-id">Hubungkan Dompet</span>
+                </button>
+
+                <div id="walletConnectedStatus" class="wallet-active-status style-hidden">
+                    <div id="userAddress" class="address-badge">0x000...0000</div>
+                    <button id="btnDisconnect" class="btn-disconnect">
+                        <span class="lang-en">Disconnect</span>
+                        <span class="lang-id">Putuskan</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div id="page-dashboard" class="page-section">
+            <section class="dashboard-grid">
+                <div class="panel">
+                    <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
+                    <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label lang-en">Amount to Lock</label>
+                        <label class="form-label lang-id">Jumlah untuk Dikunci</label>
+                        <div class="input-box">
+                            <input type="number" placeholder="0.0" value="1000">
+                            <span class="token-select">$VZT</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label lang-en">Lock Duration</label>
+                        <label class="form-label lang-id">Durasi Penguncian</label>
+                        <div class="duration-grid">
+                            <div class="duration-btn">1 W</div>
+                            <div class="duration-btn">1 M</div>
+                            <div class="duration-btn">1 Y</div>
+                            <div class="duration-btn active">4 Y (Max)</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Voting Power Received</span>
+                            <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
+                            <span class="summary-value highlight">1,000.00 veVZT</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Estimated Weekly Yield</span>
+                            <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
+                            <span class="summary-value">~14.50 USDC</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Unlock Date</span>
+                            <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
+                            <span class="summary-value">May 18, 2030</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-action" id="executeBtn">
+                        <span class="lang-en">Execute Lock Transaction</span>
+                        <span class="lang-id">Eksekusi Transaksi Kunci</span>
+                    </button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Locked Balance</h4>
+                                <h4 class="lang-id">Saldo Terkunci</h4>
+                                <p>1,000 $VZT</p>
+                            </div>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Current Voting Weight</h4>
+                                <h4 class="lang-id">Bobot Suara Saat Ini</h4>
+                                <p style="color: #22d3ee;">1,000 veVZT</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
+                        <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
+                            <div class="reward-info">
+                                <h4>USDC Rewards</h4>
+                                <p style="color: #22d3ee;">142.50 USDC</p>
+                            </div>
+                            <button class="btn-sm" id="claimBtn">Claim</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="page-swap" class="page-section" style="display: none;">
+            <div class="panel swap-box">
+                <h3 class="panel-title lang-en">Swap Tokens</h3>
+                <h3 class="panel-title lang-id">Tukar Token</h3>
+                
+                <div class="form-group">
+                    <label class="form-label lang-en">From</label>
+                    <label class="form-label lang-id">Dari</label>
+                    <div class="input-box">
+                        <input type="number" placeholder="0.0" value="1">
+                        <span class="token-select">ETH</span>
+                    </div>
+                </div>
+
+                <div class="swap-icon-container">
+                    <button class="swap-arrow-btn">⬇</button>
+                </div>
+
+                <div class="form-group" style="margin-top: 10px;">
+                    <label class="form-label lang-en">To (Estimated)</label>
+                    <label class="form-label lang-id">Ke (Estimasi)</label>
+                    <div class="input-box">
+                        <input type="number" placeholder="0.0" value="3450" readonly>
+                        <span class="token-select">USDC</span>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span class="summary-label lang-en">Slippage Tolerance</span>
+                        <span class="summary-label lang-id">Toleransi Slippage</span>
+                        <span class="summary-value">0.5%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label lang-en">Network Fee</span>
+                        <span class="summary-label lang-id">Biaya Jaringan</span>
+                        <span class="summary-value highlight">&lt; $0.01 (Base)</span>
+                    </div>
+                </div>
+
+                <button class="btn-action" id="swapActionBtn">
+                    <span class="lang-en">Swap Assets</span>
+                    <span class="lang-id">Tukar Aset</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="page-vaults" class="page-section" style="display: none;">
+            <div class="panel">
+                <h3 class="panel-title lang-en">Automated Compounding Vaults</h3>
+                <h3 class="panel-title lang-id">Brankas Otomatisasi Hasil</h3>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="lang-en">Vault Name</th><th class="lang-id">Nama Brankas</th>
+                                <th class="lang-en">Total Deposited (TVL)</th><th class="lang-id">Total Disetor (TVL)</th>
+                                <th class="lang-en">Your Balance</th><th class="lang-id">Saldo Anda</th>
+                                <th style="color: #22d3ee;">Boosted APY</th>
+                                <th style="text-align: right;" class="lang-en">Action</th><th style="text-align: right;" class="lang-id">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="pool-title">WETH / USDC</div>
+                                    <span class="badge-pool lang-en">Standard</span><span class="badge-pool lang-id">Standar</span>
+                                </td>
+                                <td>$18,452,000</td>
+                                <td>0.00 LP</td>
+                                <td style="color: #22d3ee; font-weight: 700;">32.8% 🔥</td>
+                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Deposit</button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pool-title">USDC / USDt</div>
+                                    <span class="badge-pool">Stable</span>
+                                </td>
+                                <td>$14,210,500</td>
+                                <td>540.20 LP</td>
+                                <td style="color: #22d3ee; font-weight: 700;">11.5% 🔥</td>
+                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pool-title">$VZT / WETH</div>
+                                    <span class="badge-pool boost">Volatile</span>
+                                </td>
+                                <td>$10,188,704</td>
+                                <td>1,250.00 LP</td>
+                                <td style="color: #22d3ee; font-weight: 700;">114.6% 🔥</td>
+                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-governance" class="page-section" style="display: none;">
+            <div class="gov-banner">
+                <div class="gov-banner-text">
+                    <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
+                    <h4 class="lang-id">Pemungutan Suara Emisi - Epoh 14 Aktif</h4>
+                    <p class="lang-en">Lock your $ZNF to gain veZNF. Use your voting weight weekly to direct daily $ZNF reward emissions to your preferred liquidity pools.</p>
+                    <p class="lang-id">Kunci $ZNF Anda untuk mendapatkan veZNF. Gunakan bobot hak suara Anda setiap minggu untuk mengarahkan emisi hadiah harian $ZNF ke kolam likuiditas pilihan Anda.</p>
+                </div>
+                <div style="text-align: right; min-width: 140px;">
+                    <span class="lang-en" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Time Remaining</span>
+                    <span class="lang-id" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Sisa Waktu</span>
+                    <span style="font-size: 18px; font-weight: 700; color: #22d3ee;">2d 14h 32m</span>
+                </div>
+            </div>
+
+            <div class="vote-progress-container">
+                <div class="progress-header">
+                    <div>
+                        <span class="lang-en">Your Voting Power Allocation</span>
+                        <span class="lang-id">Alokasi Kekuatan Suara Anda</span>
+                    </div>
+                    <div style="color: #ffffff;"><span id="totalAllocatedPercent">0</span>% / 100%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="govProgressBar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div class="table-panel">
+                <h3 class="panel-title lang-en" style="margin-bottom: 6px;">Pool Weight Allocations</h3>
+                <h3 class="panel-title lang-id" style="margin-bottom: 6px;">Alokasi Bobot Kolam</h3>
+                <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veZNF weight across the available pools below. Ensure the total does not exceed 100%.</p>
+                <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veZNF Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
+                
+                <div class="gov-table-responsive">
+                    <table class="gov-table">
+                        <thead>
+                            <tr>
+                                <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
+                                <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
+                                <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
+                                <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
+                                <td>42.51%</td>
+                                <td style="color: #22d3ee;">~1.42 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
+                                <td>21.14%</td>
+                                <td style="color: #22d3ee;">~0.71 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
+                                <td>36.35%</td>
+                                <td style="color: #22d3ee;">~1.21 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
+                    <span class="lang-en">Submit Gauge Votes</span>
+                    <span class="lang-id">Kirim Pilihan Suara Emisi</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="walletModal" class="wallet-modal-overlay style-hidden">
+        <div class="wallet-modal-card">
+            <div class="wallet-modal-header">
+                <div>
+                    <h3 class="lang-en">Connect your Wallet</h3>
+                    <h3 class="lang-id">Hubungkan Dompet Anda</h3>
+                    <p class="lang-en">Select your preferred secure connection method</p>
+                    <p class="lang-id">Pilih metode koneksi aman pilihan Anda</p>
+                </div>
+                <button id="btnCloseModal" class="wallet-modal-close">✕</button>
+            </div>
+
+            <div class="trial-notice-box">
+                <div class="trial-notice-header">
+                    <span>⚠️</span>
+                    <span class="lang-en">Beta Testnet Platform</span>
+                    <span class="lang-id">Platform Ujicoba Testnet</span>
+                </div>
+                <div class="trial-notice-body">
+                    <p class="lang-en">This dApp dashboard is currently in its experimental pilot testing stage on the Base Testnet network. Do not interact using real mainnet funds.</p>
+                    <p class="lang-id">Dasbor dApp ini saat ini berada dalam tahap ujicoba eksperimental pada jaringan Base Testnet. Jangan berinteraksi menggunakan dana mainnet asli.</p>
+                </div>
+                <label class="trial-checkbox-container">
+                    <input type="checkbox" id="chkAgreeTerms">
+                    <div class="trial-checkbox-text">
+                        <span class="lang-en">I understand and agree to the <a href="halaman-tos-anda.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Terms of Service</a></span>
+                        <span class="lang-id">Saya paham dan menyetujui <a href="halaman-tos-anda.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Ketentuan Layanan</a></span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="wallet-options-list">
+                <a href="https://provizto.xyz" target="_blank" class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
+                    <div class="wallet-option-icon logo-smart">✨</div>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">
+                            <span>Smart Account</span>
+                            <span class="badge-recommended">Recommended</span>
+                        </div>
+                        <div class="wallet-option-desc lang-en">Create or login via Passkey, Google, or Apple ID</div>
+                        <div class="wallet-option-desc lang-id">Buat atau masuk via Passkey, Google, atau Apple ID</div>
+                    </div>
+                </a>
+
+                <a href="https://metamask.io" target="_blank" class="wallet-option-item disabled-style" id="optMetaMask">
+                    <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
+                        <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
+                        <path d="M14 5L16 8L18 5L25 9L23 15L16 12L9 15L7 9L14 5Z" fill="#F6851B"/>
+                    </svg>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">MetaMask Browser</div>
+                        <div class="wallet-option-desc lang-en">Connect via MetaMask extension or mobile app</div>
+                        <div class="wallet-option-desc lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</div>
+                    </div>
+                </a>
+
+                <a href="https://walletconnect.com" target="_blank" class="wallet-option-item disabled-style" id="optWalletConnect">
+                    <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
+                        <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
+                    </svg>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">
+                            <span>WalletConnect</span>
+                            <span class="badge-beta">Base Testnet</span>
+                        </div>
+                        <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
+                        <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="wallet-modal-footer lang-en">
+                By connecting, you agree to ZoniqFi's <a href="halaman-tos-anda.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
+            </div>
+            <div class="wallet-modal-footer lang-id">
+                Dengan menghubungkan, Anda menyetujui <a href="halaman-tos-anda.html" target="_blank">Ketentuan Layanan</a> ZoniqFi. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Fungsi Buka/Tutup Menu Dropdown Bahasa
-        function toggleDropdown() {
-            document.getElementById("langDropdown").classList.toggle("show");
-        }
+        // --- AMBIL ELEMEN DOM ---
+        const btnConnectTrigger = document.getElementById('btnConnectTrigger');
+        const walletModal = document.getElementById('walletModal');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const walletConnectedStatus = document.getElementById('walletConnectedStatus');
+        const userAddress = document.getElementById('userAddress');
+        const btnDisconnect = document.getElementById('btnDisconnect');
+        const toast = document.getElementById('transactionToast');
+        
+        // Elemen baru untuk Logika Ujicoba Terms
+        const chkAgreeTerms = document.getElementById('chkAgreeTerms');
+        const walletOptions = document.querySelectorAll('.wallet-option-item');
 
-        // Logika Pengganti Bahasa (EN / ID)
-        function switchLang(lang) {
-            const enElements = document.querySelectorAll('.en');
-            const idElements = document.querySelectorAll('.id');
-            const currentLangText = document.getElementById('current-lang-text');
+        // --- 1. LOGIKA INTERAKSI WALLET MODAL ---
+        btnConnectTrigger.addEventListener('click', () => {
+            // Reset checkbox dan status wallet-list setiap kali modal dibuka baru
+            chkAgreeTerms.checked = false;
+            walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+            walletModal.classList.remove('style-hidden');
+        });
+        
+        btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
+        walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
 
-            if (lang === 'en') {
-                enElements.forEach(el => el.style.display = 'block');
-                idElements.forEach(el => el.style.display = 'none');
-                currentLangText.textContent = "🌐 EN";
+        // Event Listener untuk mengontrol aktif/tidaknya pilihan dompet berdasarkan checkbox
+        chkAgreeTerms.addEventListener('change', function() {
+            if (this.checked) {
+                walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
             } else {
-                enElements.forEach(el => el.style.display = 'none');
-                idElements.forEach(el => el.style.display = 'block');
-                currentLangText.textContent = "🌐 ID";
+                walletOptions.forEach(opt => opt.classList.add('disabled-style'));
             }
+        });
+
+        function toggleWalletUI(isConnected, address = "") {
+            if (isConnected) {
+                btnConnectTrigger.classList.add('style-hidden');
+                walletConnectedStatus.classList.remove('style-hidden');
+                userAddress.innerText = address.substring(0, 6) + "..." + address.substring(address.length - 4);
+            } else {
+                btnConnectTrigger.classList.remove('style-hidden');
+                walletConnectedStatus.classList.add('style-hidden');
+            }
+        }
+
+        function executeWalletConnection(walletType, dummyAddress) {
+            walletModal.classList.add('style-hidden');
+            toggleWalletUI(true, dummyAddress);
+            showNotification();
+        }
+
+        document.getElementById('optSmartAccount').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
+            } else {
+                e.preventDefault();
+            }
+        });
+        document.getElementById('optMetaMask').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+            } else {
+                e.preventDefault();
+            }
+        });
+        document.getElementById('optWalletConnect').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+            } else {
+                e.preventDefault();
+            }
+        });
+        btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
+
+
+        // --- 2. LOGIKA PERHITUNGAN GAUGE VOTING ---
+        function calculateTotalVotes() {
+            const inputs = document.querySelectorAll('.gauge-input');
+            const progressFill = document.getElementById('govProgressBar');
+            const totalText = document.getElementById('totalAllocatedPercent');
             
-            // Penyesuaian khusus elemen inline span di dalam teks tombol/navigasi
-            document.querySelectorAll('span.en').forEach(el => {
-                if(lang === 'en') el.style.display = 'inline';
-            });
-            document.querySelectorAll('span.id').forEach(el => {
-                if(lang === 'id') el.style.display = 'inline';
+            let total = 0;
+            inputs.forEach(input => {
+                let value = parseInt(input.value) || 0;
+                if (value < 0) value = 0;
+                if (value > 100) value = 100;
+                total += value;
             });
 
-            // Tutup kembali dropdown setelah memilih bahasa
-            document.getElementById("langDropdown").classList.remove("show");
-        }
-
-        // Menutup dropdown otomatis jika pengguna mengklik di luar area menu dropdown
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn') && !event.target.closest('.dropbtn')) {
-                const dropdowns = document.getElementsByClassName("lang-dropdown");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    let openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
+            if (total > 100) {
+                alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
+                let excess = total - 100;
+                event.target.value = Math.max(0, parseInt(event.target.value) - excess);
+                total = 100;
             }
+
+            totalText.innerText = total;
+            progressFill.style.width = total + '%';
         }
 
-        // Logika Akordion FAQ
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        faqQuestions.forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                item.classList.toggle('active');
-                
-                const icon = question.querySelector('.icon');
-                if (item.classList.contains('active')) {
-                    icon.textContent = '−';
-                } else {
-                    icon.textContent = '+';
-                }
+
+        // --- 3. LOGIKA TOAST NOTIFIKASI ---
+        function showNotification() {
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
+        }
+        
+        document.getElementById('executeBtn').addEventListener('click', showNotification);
+        document.getElementById('claimBtn').addEventListener('click', showNotification);
+        document.getElementById('swapActionBtn').addEventListener('click', showNotification);
+        document.getElementById('submitVotesBtn').addEventListener('click', showNotification);
+        document.querySelectorAll('.id-vault-btn').forEach(btn => btn.addEventListener('click', showNotification));
+
+
+        // --- 4. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
+        document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
+            document.getElementById('appNode').setAttribute('lang', e.target.value);
+        });
+
+
+        // --- 5. SELEKSI TOMBOL DURASI ---
+        const durationBtns = document.querySelectorAll('.duration-btn');
+        durationBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                durationBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
             });
         });
+
+
+        // --- 6. LOGIKA NAVIGASI MENU SIDEBAR (SPA) ---
+        function switchPage(pageId, element) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => { page.style.display = 'none'; });
+
+            const activePage = document.getElementById(`page-${pageId}`);
+            if (activePage) { activePage.style.display = 'block'; }
+
+            const menuItems = document.querySelectorAll('.nav-item');
+            menuItems.forEach(item => { item.classList.remove('active'); });
+            element.classList.add('active');
+            
+            if(window.innerWidth <= 768) toggleMobileMenu();
+        }
+
+
+        // --- 7. LOGIKA MENU HAMBURGER (RESPONSIF HP) ---
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const appSidebar = document.getElementById('appSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleMobileMenu() {
+            const isOpen = appSidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+            if (isOpen) {
+                menuToggleBtn.innerHTML = '✕';
+                menuToggleBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #991b1b 100%)';
+            } else {
+                menuToggleBtn.innerHTML = '☰';
+                menuToggleBtn.style.background = 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)';
+            }
+        }
+        menuToggleBtn.addEventListener('click', toggleMobileMenu);
+        sidebarOverlay.addEventListener('click', toggleMobileMenu);
     </script>
 </body>
 </html>
