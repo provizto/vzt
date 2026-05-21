@@ -22,6 +22,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between;
             padding: 2rem 1rem;
         }
 
@@ -29,35 +30,117 @@
         .container {
             width: 100%;
             max-width: 700px;
-            margin-top: 2rem;
+            margin-top: 5rem;
+            flex-grow: 1;
         }
 
         /* ==========================================================================
-           2. LANGUAGE SWITCHER (TOMBOL BAHASA)
+           2. NAVIGATION & DROPDOWN BUTTON (TOP BAR)
            ========================================================================== */
-        .lang-switcher {
+        .top-nav {
             position: absolute;
             top: 20px;
-            right: 20px;
+            left: 0;
+            right: 0;
+            padding: 0 2rem;
             display: flex;
-            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 100;
         }
 
-        .lang-switcher button {
-            background: #334155;
-            border: none;
+        /* Tombol Back to Home */
+        .back-home a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             color: #94a3b8;
-            padding: 0.5rem 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-home a:hover {
+            color: #38bdf8;
+        }
+
+        /* Komponen Dropdown Bahasa */
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Tombol Utama Dropdown */
+        .dropbtn {
+            background-color: #334155;
+            color: #f8fafc;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid #475569;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             transition: all 0.3s ease;
         }
 
-        .lang-switcher button.active, 
-        .lang-switcher button:hover {
-            background: #38bdf8;
-            color: #0f172a;
+        .dropbtn:hover {
+            background-color: #475569;
+            border-color: #38bdf8;
+        }
+
+        .dropbtn .arrow {
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        /* Menu Pilihan di Dalam Dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1e293b;
+            min-width: 130px;
+            box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .dropdown-content button {
+            color: #cbd5e1;
+            padding: 0.7rem 1rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #334155;
+            color: #38bdf8;
+        }
+
+        /* Tampilkan Dropdown Saat Kelas 'show' Aktif */
+        .lang-dropdown.show .dropdown-content {
+            display: block;
+        }
+
+        /* Putar Panah Saat Dropdown Terbuka */
+        .lang-dropdown.show .dropbtn .arrow {
+            transform: rotate(180deg);
         }
 
         /* ==========================================================================
@@ -126,7 +209,6 @@
         .faq-question .icon {
             font-size: 1.5rem;
             color: #38bdf8;
-            transition: transform 0.3s ease;
         }
 
         .faq-answer {
@@ -138,32 +220,64 @@
             line-height: 1.6;
         }
 
-        /* Keadaan Aktif ketika FAQ Terbuka */
         .faq-item.active .faq-answer {
-            max-height: 200px; /* Sesuaikan jika teks jawaban sangat panjang */
+            max-height: 200px;
             padding-bottom: 1.2rem;
         }
 
         /* ==========================================================================
-           5. RESPONSIVE MEDIA QUERIES
+           5. FOOTER (COPYRIGHT)
            ========================================================================== */
-        @media (max-width: 480px) {
+        footer {
+            text-align: center;
+            padding: 2rem 0 1rem 0;
+            color: #64748b;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           6. RESPONSIVE MEDIA QUERIES
+           ========================================================================== */
+        @media (max-width: 600px) {
+            .top-nav {
+                position: static;
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 0;
+                margin-bottom: 2rem;
+            }
+            .container {
+                margin-top: 0;
+            }
             .hero h1 {
                 font-size: 2rem;
-            }
-            .lang-switcher {
-                position: static;
-                margin-bottom: 2rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="lang-switcher">
-        <button onclick="switchLang('en')" id="btn-en" class="active">EN</button>
-        <button onclick="switchLang('id')" id="btn-id">ID</button>
-    </div>
+    <nav class="top-nav">
+        <div class="back-home">
+            <a href="/">
+                <span>←</span>
+                <span class="en">Back to Home</span>
+                <span class="id" style="display:none;">Kembali ke Beranda</span>
+            </a>
+        </div>
+
+        <div class="lang-dropdown" id="langDropdown">
+            <button class="dropbtn" onclick="toggleDropdown()">
+                <span id="current-lang-text">🌐 EN</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <button onclick="switchLang('en')">🌐 EN</button>
+                <button onclick="switchLang('id')">🌐 ID</button>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <header class="hero">
@@ -218,43 +332,64 @@
         </section>
     </div>
 
+    <footer>
+        <p>&copy; 2026 YourCompany. All rights reserved.</p>
+    </footer>
+
     <script>
+        // Fungsi Buka/Tutup Menu Dropdown Bahasa
+        function toggleDropdown() {
+            document.getElementById("langDropdown").classList.toggle("show");
+        }
+
         // Logika Pengganti Bahasa (EN / ID)
         function switchLang(lang) {
             const enElements = document.querySelectorAll('.en');
             const idElements = document.querySelectorAll('.id');
-            const btnEn = document.getElementById('btn-en');
-            const btnId = document.getElementById('btn-id');
+            const currentLangText = document.getElementById('current-lang-text');
 
             if (lang === 'en') {
                 enElements.forEach(el => el.style.display = 'block');
                 idElements.forEach(el => el.style.display = 'none');
-                btnEn.classList.add('active');
-                btnId.classList.remove('active');
+                currentLangText.textContent = "🌐 EN";
             } else {
                 enElements.forEach(el => el.style.display = 'none');
                 idElements.forEach(el => el.style.display = 'block');
-                btnId.classList.add('active');
-                btnEn.classList.remove('active');
+                currentLangText.textContent = "🌐 ID";
             }
             
-            // Penyesuaian tampilan khusus untuk elemen inline (span) di dalam tombol FAQ
+            // Penyesuaian khusus elemen inline span di dalam teks tombol/navigasi
             document.querySelectorAll('span.en').forEach(el => {
                 if(lang === 'en') el.style.display = 'inline';
             });
             document.querySelectorAll('span.id').forEach(el => {
                 if(lang === 'id') el.style.display = 'inline';
             });
+
+            // Tutup kembali dropdown setelah memilih bahasa
+            document.getElementById("langDropdown").classList.remove("show");
         }
 
-        // Logika Akordion Buka/Tutup FAQ
+        // Menutup dropdown otomatis jika pengguna mengklik di luar area menu dropdown
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn') && !event.target.closest('.dropbtn')) {
+                const dropdowns = document.getElementsByClassName("lang-dropdown");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Logika Akordion FAQ
         const faqQuestions = document.querySelectorAll('.faq-question');
         faqQuestions.forEach(question => {
             question.addEventListener('click', () => {
                 const item = question.parentElement;
                 item.classList.toggle('active');
                 
-                // Animasi perubahan ikon + menjadi -
                 const icon = question.querySelector('.icon');
                 if (item.classList.contains('active')) {
                     icon.textContent = '−';
