@@ -11,7 +11,7 @@
             color: #9ca3af;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.6;
-            padding-bottom: 60px;
+            padding-bottom: 40px; /* Diubah agar pas dengan jarak footer */
         }
         /* MULTI-LANGUAGE DISPLAY */
         html[lang="en"] .lang-id { display: none !important; }
@@ -31,8 +31,22 @@
             max-width: 800px; margin: 0 auto; padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
         }
+        .header-left {
+            display: flex; align-items: center; gap: 16px;
+        }
         .logo { font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; }
         .logo span { color: #3b82f6; }
+        
+        /* BACK TO HOME BUTTON */
+        .btn-home {
+            background-color: transparent; border: 1px solid #2e374a; color: #9ca3af;
+            padding: 6px 12px; border-radius: 8px; font-size: 12px; text-decoration: none;
+            transition: all 0.2s ease; font-weight: 500;
+        }
+        .btn-home:hover {
+            background-color: #1e2533; color: #fff; border-color: #3b82f6;
+        }
+
         .lang-select {
             background-color: #1e2533; border: 1px solid #2e374a; color: #d1d5db;
             padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer;
@@ -62,13 +76,26 @@
         /* STYLING UTK PASAL KRITIKAL (CAPS LOCK STANDARD HUKUM) */
         .legal-bold { color: #f3f4f6; font-weight: 700; }
         .all-caps-legal { text-transform: uppercase; background-color: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; font-size: 12.5px; }
+
+        /* FOOTER COPYRIGHT STYLING */
+        footer {
+            max-width: 800px; margin: 40px auto 20px auto; padding: 0 24px;
+            text-align: center; border-top: 1px solid #1e2533; padding-top: 20px;
+        }
+        .copyright { font-size: 12px; color: #4b5563; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="#" class="logo">Provizto<span>.</span></a>
+            <div class="header-left">
+                <a href="/" class="logo">Provizto<span>.</span></a>
+                <a href="/" class="btn-home">
+                    <span class="lang-en">← Back to Home</span>
+                    <span class="lang-id">← Kembali ke Beranda</span>
+                </a>
+            </div>
             <select id="tosLangSwitcher" class="lang-select">
                 <option value="en">🌐 EN</option>
                 <option value="id">🌐 ID</option>
@@ -148,6 +175,13 @@
 
         </div>
     </main>
+
+    <footer>
+        <div class="copyright">
+            <span class="lang-en">&copy; 2026 Provizto Labs. All rights reserved. Powered by decentralized architecture.</span>
+            <span class="lang-id">&copy; 2026 Provizto Labs. Seluruh hak cipta dilindungi undang-undang. Didukung oleh arsitektur terdesentralisasi.</span>
+        </div>
+    </footer>
 
     <script>
         // Logika Interaktif Pengalihan Bahasa ToS
