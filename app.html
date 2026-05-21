@@ -186,6 +186,11 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .lang-select:focus, .lang-select:hover {
+            border-color: #3b82f6;
+            outline: none;
         }
         .btn-wallet {
             background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
@@ -196,10 +201,14 @@
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
         }
         .btn-wallet:hover {
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .btn-wallet:active {
+            transform: translateY(1px);
         }
 
         .wallet-active-status {
@@ -344,6 +353,11 @@
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-sm:hover {
+            border-color: #3b82f6;
+            background-color: #1a2233;
         }
 
         .toast-container {
@@ -450,6 +464,7 @@
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
             border: 1px solid rgba(59, 130, 246, 0.15);
             padding: 24px;
+            border-radius: 166px;
             border-radius: 16px;
             margin-bottom: 30px;
             display: flex;
@@ -594,9 +609,10 @@
         
         /* Modifikasi efek disabled apabila persetujuan belum dicentang */
         .wallet-option-item.disabled-style {
-            opacity: 0.3;
+            opacity: 0.15;
             cursor: not-allowed;
             pointer-events: none;
+            filter: grayscale(1);
         }
 
         .wallet-option-icon {
@@ -829,7 +845,10 @@
                                 <h4>USDC Rewards</h4>
                                 <p style="color: #22d3ee;">142.50 USDC</p>
                             </div>
-                            <button class="btn-sm" id="claimBtn">Claim</button>
+                            <button class="btn-sm" id="claimBtn">
+                                <span class="lang-en">Claim</span>
+                                <span class="lang-id">Klaim</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1058,7 +1077,7 @@
             </div>
 
             <div class="wallet-options-list">
-                <a href="https://provizto.xyz" target="_blank" class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
+                <button class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
                     <div class="wallet-option-icon logo-smart">✨</div>
                     <div class="wallet-option-info">
                         <div class="wallet-option-name">
@@ -1068,9 +1087,9 @@
                         <div class="wallet-option-desc lang-en">Create or login via Passkey, Google, or Apple ID</div>
                         <div class="wallet-option-desc lang-id">Buat atau masuk via Passkey, Google, atau Apple ID</div>
                     </div>
-                </a>
+                </button>
 
-                <a href="https://metamask.io" target="_blank" class="wallet-option-item disabled-style" id="optMetaMask">
+                <button class="wallet-option-item disabled-style" id="optMetaMask">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
                         <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
@@ -1081,9 +1100,9 @@
                         <div class="wallet-option-desc lang-en">Connect via MetaMask extension or mobile app</div>
                         <div class="wallet-option-desc lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</div>
                     </div>
-                </a>
+                </button>
 
-                <a href="https://walletconnect.com" target="_blank" class="wallet-option-item disabled-style" id="optWalletConnect">
+                <button class="wallet-option-item disabled-style" id="optWalletConnect">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
                         <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
@@ -1096,14 +1115,14 @@
                         <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
                         <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
                     </div>
-                </a>
+                </button>
             </div>
             
             <div class="wallet-modal-footer lang-en">
-                By connecting, you agree to Provizto's <a href="halaman-tos-anda.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
+                By connecting, you agree to Provizto's <a href="tos.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
             </div>
             <div class="wallet-modal-footer lang-id">
-                Dengan menghubungkan, Anda menyetujui <a href="halaman-tos.html" target="_blank">Ketentuan Layanan</a> Provizto. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
+                Dengan menghubungkan, Anda menyetujui <a href="tos.html" target="_blank">Ketentuan Layanan</a> Provizto. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
             </div>
         </div>
     </div>
@@ -1124,7 +1143,6 @@
 
         // --- 1. LOGIKA INTERAKSI WALLET MODAL ---
         btnConnectTrigger.addEventListener('click', () => {
-            // Reset checkbox dan status wallet-list setiap kali modal dibuka baru
             chkAgreeTerms.checked = false;
             walletOptions.forEach(opt => opt.classList.add('disabled-style'));
             walletModal.classList.remove('style-hidden');
@@ -1133,7 +1151,7 @@
         btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
         walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
 
-        // Event Listener untuk mengontrol aktif/tidaknya pilihan dompet berdasarkan checkbox
+        // Perbaikan Responsivitas Checkbox Syarat & Ketentuan Modal
         chkAgreeTerms.addEventListener('change', function() {
             if (this.checked) {
                 walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
@@ -1159,25 +1177,20 @@
             showNotification();
         }
 
+        // Penanganan Klik Wallet yang Jauh Lebih Responsif (Mencegah Trigger Redirect Sembarangan)
         document.getElementById('optSmartAccount').addEventListener('click', function(e) {
             if (chkAgreeTerms.checked) {
                 executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
-            } else {
-                e.preventDefault();
             }
         });
         document.getElementById('optMetaMask').addEventListener('click', function(e) {
             if (chkAgreeTerms.checked) {
                 executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
-            } else {
-                e.preventDefault();
             }
         });
         document.getElementById('optWalletConnect').addEventListener('click', function(e) {
             if (chkAgreeTerms.checked) {
                 executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
-            } else {
-                e.preventDefault();
             }
         });
         btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
@@ -1223,6 +1236,7 @@
 
 
         // --- 4. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
+        // Penyetelan transisi bahasa instan langsung ke root node 'lang' tanpa lag
         document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
             document.getElementById('appNode').setAttribute('lang', e.target.value);
         });
