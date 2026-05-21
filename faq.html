@@ -59,6 +59,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
+            white-space: nowrap; /* Mencegah teks terbungkus/patah ke bawah di layar kecil */
         }
 
         .back-home a:hover {
@@ -84,6 +85,7 @@
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
+            white-space: nowrap; /* Mencegah teks tombol patah di layar kecil */
         }
 
         .dropbtn:hover {
@@ -266,14 +268,15 @@
            ========================================================================== */
         @media (max-width: 600px) {
             .top-nav {
-                position: static;
-                flex-direction: column;
-                gap: 1.5rem;
-                padding: 0;
-                margin-bottom: 2rem;
+                position: absolute; /* Tetap absolute agar tidak merusak flow layout */
+                top: 15px;
+                padding: 0 1rem; /* Mengurangi padding luar agar muat di layar hp kecil */
+                flex-direction: row; /* MEMASTIKAN tetap berjejer ke samping */
+                justify-content: space-between;
+                gap: 0.5rem;
             }
             .container {
-                margin-top: 0;
+                margin-top: 4.5rem; /* Memberikan ruang aman di bawah top-nav mobile */
             }
             .hero h1 {
                 font-size: 2rem;
@@ -288,7 +291,7 @@
             <a href="index.html">
                 <span>←</span>
                 <span class="en">Back to Home</span>
-                <span class="id" style="display:none;">Kembali ke Beranda</span>
+                <span class="id" style="display:none;">Kembali</span>
             </a>
         </div>
 
@@ -470,7 +473,7 @@
                                 <li>
                                     <strong class="en">Emergency Pause Feature:</strong><strong class="id" style="display:none;">Fitur Emergency Pause:</strong>
                                     <span class="en"> The protocol features an automated emergency pause switch if any suspicious or anomalous transaction activity is detected.</span>
-                                    <span class="id" style="display:none;"> Protokol dilengkapi fungsi jeda darurat otomatis jika mendeteksi adanya aktivitas transaksi anomali yang mencurigakan.</span>
+                                    <span class="id" style="display:none;"> Protokol dilengkapi fungsi jeda darurat otomatis jika mendeteksi adanya aktivitas transaksi anomali yang mencurangakan.</span>
                                 </li>
                             </ul>
                         </div>
