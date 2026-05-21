@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" id="appNode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoniqFi - Official Whitepaper</title>
+    <style>
+        /* ==========================================================================
+           1. RESET & MULTI-LANGUAGE LOGIC (PURE CSS)
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #080b11;
+            color: #9ca3af;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        /* TOGGLE LANG VISIBILITY */
+        html[lang="en"] .lang-id { display: none !important; }
+        html[lang="en"] .lang-en { display: block; }
+        html[lang="en"] span.lang-en { display: inline; }
+        html[lang="en"] div.lang-en { display: block; }
+        
+        html[lang="id"] .lang-en { display: none !important; }
+        html[lang="id"] .lang-id { display: block; }
+        html[lang="id"] span.lang-id { display: inline; }
+        html[lang="id"] div.lang-id { display: block; }
+
+        /* ==========================================================================
+           2. HEADER & NAVIGATION
+           ========================================================================== */
+        header {
+            background-color: rgba(15, 19, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e2533;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .logo span { color: #3b82f6; }
+
+        .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-back {
+            background: none;
+            border: 1px solid #1e2533;
+            color: #d1d5db;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-back:hover {
+            border-color: #3b82f6;
+            color: #ffffff;
+        }
+        .lang-select {
+            background-color: #1e2533;
+            border: 1px solid #2e374a;
+            color: #d1d5db;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* ==========================================================================
+           3. WHITEPAPER CONTENT TYPOGRAPHY
+           ========================================================================== */
+        .wp-wrapper {
+            max-width: 800px;
+            margin: 120px auto 0 auto;
+            padding: 0 24px;
+        }
+        .wp-card {
+            background-color: #0f131c;
+            border: 1px solid #1e2533;
+            border-radius: 24px;
+            padding: 40px;
+        }
+        
+        /* Meta Documents */
+        .wp-meta-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+        .wp-meta-subtitle {
+            font-size: 16px;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .wp-meta-details {
+            font-size: 12px;
+            color: #6b7280;
+            border-bottom: 1px solid #1e2533;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Markdown Headers Tag Styling */
+        h2 {
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: 700;
+            margin: 32px 0 16px 0;
+            display: flex;
+            align-items: center;
+        }
+        h3 {
+            font-size: 15px;
+            color: #e5e7eb;
+            font-weight: 700;
+            margin: 20px 0 10px 0;
+        }
+        p {
+            margin-bottom: 16px;
+            font-size: 14.5px;
+        }
+        
+        /* Lists formatting */
+        ul {
+            list-style: none;
+            margin-bottom: 20px;
+            padding-left: 4px;
+        }
+        ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        ul li::before {
+            content: "•";
+            color: #3b82f6;
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        ul li strong {
+            color: #ffffff;
+        }
+
+        /* Divider & Math Formula Box */
+        hr {
+            border: none;
+            border-top: 1px solid #1e2533;
+            margin: 32px 0;
+        }
+        .math-box {
+            background-color: rgba(59, 130, 246, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 18px;
+            border-radius: 14px;
+            color: #22d3ee;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 15px;
+        }
+
+        .disclaimer-box {
+            background-color: #080b11;
+            border-left: 4px solid #4b5563;
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 640px) {
+            .wp-card { padding: 24px; }
+            .wp-meta-title { font-size: 22px; }
+            header { position: absolute; }
+            .wp-wrapper { margin-top: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">ZoniqFi<span>.</span></a>
+            <div class="right-actions">
+                <a href="app.html" class="btn-back">
+                    <span class="lang-en">← Launch App</span>
+                    <span class="lang-id">← Buka Aplikasi</span>
+                </a>
+                <select id="wpLangSwitcher" class="lang-select">
+                    <option value="en">🌐 EN</option>
+                    <option value="id">🌐 ID</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="wp-wrapper">
+        <article class="wp-card">
+            
+            <h1 class="wp-meta-title lang-en">Zoniq Finance (ZoniqFi) Official Whitepaper V1.0</h1>
+            <h1 class="wp-meta-title lang-id">Whitepaper Resmi Zoniq Finance (ZoniqFi) V1.0</h1>
+            
+            <div class="wp-meta-subtitle lang-en">The Smart Liquidity & Governance Engine on Base Network</div>
+            <div class="wp-meta-subtitle lang-id">Mesin Likuiditas & Tata Kelola Cerdas di Jaringan Base</div>
+            
+            <div class="wp-meta-details">
+                <p>Email: core@zoniq.com | Website: zoniqfinance.com</p>
+                <p><span class="lang-en">Published: March 2026</span><span class="lang-id">Diterbitkan: Maret 2026</span></p>
+            </div>
+
+            <h2>
+                <span class="lang-en">1. Introduction & Background</span>
+                <span class="lang-id">1. Pendahuluan & Latar Belakang</span>
+            </h2>
+            
+            <div class="lang-en">
+                <p>The Decentralized Finance (DeFi) landscape has grown exponentially, yet mass adoption remains severely hindered by two primary bottlenecks: fragmented liquidity and an overly complex User Experience (UX). Everyday users frequently struggle with seed phrases, gas fee management, and highly inefficient yield farming optimization processes.</p>
+                <p><strong>Zoniq Finance (ZoniqFi)</strong> emerges as a cutting-edge solution built on the <strong>Base L2</strong> ecosystem. By leveraging Account Abstraction (ERC-4337) and a Vote-Escrowed (ve) governance model, ZoniqFi establishes a unified DeFi gateway that offers seamless transactions, highly efficient liquidity routing, and sustainable Real Yield distribution to token holders.</p>
+            </div>
+            <div class="lang-id">
+                <p>Lanskap Decentralized Finance (DeFi) telah berkembang pesat, namun adopsi massal masih terhambat oleh dua masalah utama: fragmentasi likuiditas dan pengalaman pengguna (User Experience/UX) yang terlalu rumit. Pengguna awam sering kali kesulitan menghadapi seed phrases, pengelolaan gas fee, dan optimalisasi hasil (yield farming) yang tidak efisien.</p>
+                <p><strong>Zoniq Finance (ZoniqFi)</strong> hadir sebagai solusi mutakhir di ekosistem <strong>Base L2</strong>. Dengan memanfaatkan arsitektur Account Abstraction (ERC-4337) dan model tata kelola Vote-Escrowed (ve), ZoniqFi menciptakan platform DeFi satu pintu yang menawarkan transaksi tanpa hambatan, likuiditas yang efisien, dan bagi hasil riil (Real Yield) bagi para pemegang token.</p>
+            </div>
+
+            <hr>
+
+            <h2>
+                <span class="lang-en">2. Core Features & Product Architecture</span>
+                <span class="lang-id">2. Fitur Utama & Arsitektur Produk</span>
+            </h2>
+
+            <h3 class="lang-en">2.1 Next-Gen Smart Account (Account Abstraction)</h3>
+            <h3 class="lang-id">2.1 Next-Gen Smart Account (Account Abstraction)</h3>
+            
+            <div class="lang-en">
+                <p>ZoniqFi eliminates conventional Web3 onboarding friction through the native integration of <strong>Smart Accounts</strong>.</p>
+                <ul>
+                    <li><strong>Social Logins & Passkeys:</strong> Users can create non-custodial wallets in seconds using Google, Apple ID, or biometric Passkeys.</li>
+                    <li><strong>Gasless Transactions:</strong> A dedicated <em>paymaster</em> mechanism allows developers or protocols to sponsor transaction fees, or enables users to settle gas fees using stablecoins such as USDC.</li>
+                    <li><strong>Batched Transactions:</strong> Multi-step executions (e.g., <em>Token Approval</em> + <em>Vault Deposit</em>) are condensed into a <strong>single-click</strong> operation.</li>
+                </ul>
+            </div>
+            <div class="lang-id">
+                <p>ZoniqFi menghilangkan hambatan masuk Web3 konvensional melalui integrasi <strong>Smart Account</strong>.</p>
+                <ul>
+                    <li><strong>Akses Sosial & Passkey:</strong> Pengguna dapat membuat dompet non-kustodian dalam hitungan detik menggunakan Google, Apple ID, atau Passkey biometrik.</li>
+                    <li><strong>Gasless Transactions:</strong> Mekanisme <em>paymaster</em> memungkinkan pengembang atau protokol mensponsori biaya transaksi (gas fee), atau mengizinkan pengguna membayar gas menggunakan token stabil seperti USDC.</li>
+                    <li><strong>Batched Transactions:</strong> Eksekusi multi-langkah (seperti <em>Approve</em> + <em>Deposit</em> ke dalam Vault) dapat dilakukan hanya dalam <strong>satu kali klik</strong>.</li>
+                </ul>
+            </div>
+
+            <h3 class="lang-en">2.2 Automated Compounding Vaults (Yield Optimizer)</h3>
+            <h3 class="lang-id">2.2 Automated Compounding Vaults (Yield Optimizer)</h3>
+            
+            <div class="lang-en">
+                <p>ZoniqFi Vaults operate as automated asset managers designed to maximize yields for Liquidity Providers (LPs).</p>
+                <ul>
+                    <li><strong>Auto-Compounding:</strong> The protocol periodically harvests reward incentives, swaps them back into the underlying primary assets, and automatically reinvests them to trigger a powerful compounding interest effect.</li>
+                    <li><strong>Efficiency on Base:</strong> Capitalizing on the ultra-low transaction costs of the Base L2 network, compounding cycles are executed at higher frequencies to deliver optimized APYs.</li>
+                </ul>
+            </div>
+            <div class="lang-id">
+                <p>ZoniqFi Vaults bertindak sebagai manajer investasi otomatis yang memaksimalkan pendapatan penyedia likuiditas (LP).</p>
+                <ul>
+                    <li><strong>Auto-Compounding:</strong> Protokol secara berkala memanen (harvest) hadiah insentif, menukarnya kembali menjadi aset utama, dan menginvestasikannya ulang secara otomatis untuk memicu efek bunga berbunga (compound interest).</li>
+                    <li><strong>Efficiency on Base:</strong> Berkat biaya transaksi yang sangat murah di jaringan Base L2, proses reinvestasi dapat dilakukan lebih sering demi meraih APY yang optimal.</li>
+                </ul>
+            </div>
+
+            <h3 class="lang-en">2.3 Concentrated Liquidity (DEX Swap)</h3>
+            <h3 class="lang-id">2.3 Sentralisasi Likuiditas (DEX Swap)</h3>
+            <p class="lang-en">ZoniqFi integrates a built-in DEX aggregator featuring intelligent smart routing. This ensures minimal slippage and the most competitive transaction rates for users swapping digital assets.</p>
+            <p class="lang-id">ZoniqFi mengintegrasikan agregator DEX internal dengan rute cerdas (smart routing) untuk memastikan slippage minimal dan biaya transaksi termurah bagi pengguna yang ingin menukar aset digital mereka.</p>
+
+            <hr>
+
+            <h2>
+                <span class="lang-en">3. Tokenomics & The veZNF Model</span>
+                <span class="lang-id">3. Tokenomika & Model veZNF (Tokenomics)</span>
+            </h2>
+            <p class="lang-en">The ZoniqFi ecosystem is driven by its native utility and governance token: <strong>$ZNF</strong>.</p>
+            <p class="lang-id">Ekosistem ZoniqFi digerakkan oleh token utilitas utama: <strong>$ZNF</strong>.</p>
+
+            <h3 class="lang-en">3.1 Token Details</h3>
+            <h3 class="lang-id">3.1 Detail Token</h3>
+            <ul>
+                <li><strong class="lang-en">Token Name:</strong><strong class="lang-id">Nama Token:</strong> Zoniq Finance</li>
+                <li><strong>Ticker:</strong> $ZNF</li>
+                <li><strong class="lang-en">Network:</strong><strong class="lang-id">Jaringan:</strong> Base Network (L2)</li>
+                <li><strong class="lang-en">Standard:</strong><strong class="lang-id">Standar:</strong> ERC-20 (<span class="lang-en">Optimized for Smart Account compatibility</span><span class="lang-id">Mendukung fungsi Smart Account</span>)</li>
+            </ul>
+
+            <h3 class="lang-en">3.2 Vote-Escrowed Mechanism (veZNF)</h3>
+            <h3 class="lang-id">3.2 Mekanisme Vote-Escrowed (veZNF)</h3>
+            <div class="lang-en">
+                <p>Users can lock their $ZNF tokens for a specified duration ranging from 1 week up to a maximum of 4 years. The longer the tokens are locked, the greater the voting power and share of protocol revenue accrued.</p>
+            </div>
+            <div class="lang-id">
+                <p>Pengguna dapat mengunci token $ZNF mereka untuk jangka waktu tertentu (dari 1 minggu hingga maksimal 4 tahun). Semakin lama token dikunci, semakin besar hak suara (Voting Power) dan hak bagi hasil yang diperoleh.</p>
+            </div>
+
+            <div class="math-box">
+                Voting Power = Amount of ZNF × (Lock Duration / 4 Years)
+            </div>
+
+            <h3 class="lang-en">3.3 Incentive Distribution (Gauge Voting)</h3>
+            <h3 class="lang-id">3.3 Distribusi Insentif (Gauge Voting)</h3>
+            <p class="lang-en">Every week (per <em>Epoch</em>), <strong>veZNF</strong> holders can cast votes on the <strong>Gauge Allocation Table</strong>. This process dynamically dictates the distribution percentage of daily $ZNF$ token emissions across the available liquidity pools and vaults. This setup sparks a healthy competition among pools to attract deep capital, driving the <em>Liquidity Flywheel</em>.</p>
+            <p class="lang-id">Setiap minggu (per <em>Epoch</em>), para pemegang <strong>veZNF</strong> dapat memberikan suara (voting) pada <strong>Gauge Allocation Table</strong>. Proses ini menentukan ke kolam likuiditas (Pool/Vault) mana emisi harian token $ZNF$ baru akan dialokasikan. Mekanisme ini memicu persaingan sehat antar-pool untuk menarik likuiditas terbesar (Liquidity Flywheel).</p>
+
+            <h3 class="lang-en">3.4 Real Yield (Protocol Revenue Share)</h3>
+            <h3 class="lang-id">3.4 Real Yield (Pendapatan Riil Protokol)</h3>
+            <p class="lang-en">ZoniqFi distributes <strong>Real Yield</strong> rather than relying solely on token inflation. <strong>60% of all swap fees and Vault performance fees</strong> are collected by the protocol in blue-chip assets (USDC/WETH) and distributed weekly directly to <strong>veZNF</strong> stakers.</p>
+            <p class="lang-id">ZoniqFi tidak hanya membagikan inflasi token, melainkan <strong>Real Yield</strong>. Sebesar <strong>60% dari seluruh biaya penukaran (Swap Fees) dan biaya performa Vault</strong> dikumpulkan oleh protokol dalam bentuk pecahan <strong>USDC/WETH</strong>, kemudian didistribusikan setiap minggu secara langsung kepada para pemegang token <strong>veZNF</strong>.</p>
+
+            <hr>
+
+            <h2>
+                <span class="lang-en">4. Protocol Security</span>
+                <span class="lang-id">4. Keamanan Protokol</span>
+            </h2>
+            <ul>
+                <li><strong class="lang-en">Smart Contract Audits:</strong><strong class="lang-id">Audit Smart Contract:</strong> <span class="lang-en">All code logic governing Vaults, Governance, and Token mechanics undergoes rigorous, multi-layered audits by leading independent Web3 cybersecurity firms.</span><span class="lang-id">Seluruh kode penulisan Smart Contract (Vault, Governance, dan Token) diaudit secara berlapis oleh firma keamanan Web3 independen terkemuka.</span></li>
+                <li><strong class="lang-en">Timelock Mechanisms:</strong><strong class="lang-id">Mekanisme Timelock:</strong> <span class="lang-en">Any critical parameter changes to the protocol must pass a community governance vote and clear a mandatory 48-hour <em>timelock</em> delay before being deployed to the mainnet.</span><span class="lang-id">Setiap perubahan parameter vital pada protokol wajib melewati proses tata kelola dan jeda waktu (timelock) selama 48 jam sebelum diterapkan ke jaringan utama.</span></li>
+            </ul>
+
+            <hr>
+
+            <h2>
+                <span class="lang-en">5. Conclusion</span>
+                <span class="lang-id">5. Kesimpulan</span>
+            </h2>
+            <p class="lang-en">Zoniq Finance bridges the massive gap between complex Web3 dApps and the fluid simplicity of Web2 applications. By combining <strong>Account Abstraction</strong>, automated yield optimization on <strong>Base L2</strong>, and a robust <strong>veZNF</strong> tokenomics design, ZoniqFi is positioned to become a core liquidity anchor and the primary onboarding catalyst for millions of new users entering decentralized finance.</p>
+            <p class="lang-id">Zoniq Finance menjembatani celah besar antara kompleksitas dApp Web3 dan kemudahan aplikasi Web2. Melalui kombinasi teknologi <strong>Account Abstraction</strong>, optimalisasi hasil yield otomatis di <strong>Base L2</strong>, serta tokenomika <strong>veZNF</strong> yang kokoh, ZoniqFi siap menjadi fondasi likuiditas utama sekaligus gerbang utama bagi jutaan pengguna baru di dunia finansial terdesentralisasi.</p>
+
+            <div class="disclaimer-box">
+                <span class="lang-en"><strong>Disclaimer:</strong> This whitepaper is strictly for informational and technical explanation purposes regarding Zoniq Finance and does not constitute investment solicitation or financial advice.</span>
+                <span class="lang-id"><strong>Disclaimer:</strong> Whitepaper ini bersifat informatif untuk menjelaskan arsitektur teknis Zoniq Finance dan bukan merupakan ajakan investasi atau nasihat keuangan resmi.</span>
+            </div>
+
+        </article>
+    </main>
+
+    <script>
+        // Logika Pengalihan Dua Bahasa pada Node HTML Dokumen Utama
+        document.getElementById('wpLangSwitcher').addEventListener('change', function(e) {
+            document.getElementById('appNode').setAttribute('lang', e.target.value);
+        });
+    </script>
+</body>
+</html>
