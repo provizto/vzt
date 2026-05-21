@@ -20,7 +20,7 @@
             line-height: 1.6;
         }
         .wrapper {
-            max-width: 1200px; /* Diperlebar sedikit agar 4 kolom tetap nyaman dibaca */
+            max-width: 1240px; /* Diperlebar agar ruang 4 kolom kartu tetap lega */
             margin: 0 auto;
             padding: 0 24px;
         }
@@ -28,13 +28,11 @@
         /* ==========================================================================
            2. LOGIKA SISTEM DUA BAHASA (EN / ID) TANPA JAVASCRIPT
            ========================================================================== */
-        /* Sembunyikan elemen ID secara default saat dokumen berbahasa EN */
         html[lang="en"] .lang-id { display: none !important; }
         html[lang="en"] .lang-en { display: block; }
         html[lang="en"] span.lang-en { display: inline; }
         html[lang="en"] tr.lang-en { display: table-row; }
 
-        /* Sembunyikan elemen EN saat dokumen dialihkan ke bahasa ID */
         html[lang="id"] .lang-en { display: none !important; }
         html[lang="id"] .lang-id { display: block; }
         html[lang="id"] span.lang-id { display: inline; }
@@ -150,7 +148,7 @@
         .stat-item .cyan-text { color: #22d3ee; }
         .stat-item .blue-text { color: #60a5fa; }
 
-        /* FITUR KARTU (DIPERBARUI MENJADI 4 KOLOM) */
+        /* FITUR KARTU (SISTEM GRID 4 KOLOM RESPONSIVE) */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -158,10 +156,10 @@
             margin-bottom: 60px;
             text-align: left;
         }
-        @media (max-width: 1024px) {
-            .features-grid { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 1100px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
             .features-grid { grid-template-columns: 1fr; }
         }
         .card {
@@ -169,9 +167,55 @@
             border: 1px solid #1e293b;
             padding: 24px;
             border-radius: 16px;
+            display: flex;
+            flex-direction: column;
         }
         .card h3 { color: #ffffff; font-size: 18px; margin-bottom: 12px; font-weight: 700; }
-        .card p { color: #9ca3af; font-size: 13px; margin: 0; line-height: 1.6; max-width: 100%; }
+        .card p { color: #9ca3af; font-size: 13px; margin: 0 0 16px 0; line-height: 1.6; }
+
+        /* SUB-TABS UNTUK AREA WIDGET BERITA */
+        .news-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 8px;
+        }
+        .news-tab-btn {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .news-tab-btn.active {
+            color: #22d3ee;
+            background-color: rgba(34, 211, 238, 0.1);
+        }
+
+        .news-content-wrapper {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            margin-top: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            background-color: #0b0f19;
+        }
+        .news-panel {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .news-panel.active {
+            display: block;
+        }
 
         /* TABEL KOLAM */
         .table-section {
@@ -220,7 +264,7 @@
             font-weight: 600;
             cursor: pointer;
         }
-        .btn-sm:hover { background-color: #2563eb; color: #white; }
+        .btn-sm:hover { background-color: #2563eb; color: white; }
 
         /* FOOTER */
         footer {
@@ -323,10 +367,40 @@
                 <p class="lang-en">Lucrative rewards program for regular users and KOLs/Influencers. Share your unique link to earn continuous automated commissions based on referral trade volume.</p>
                 <p class="lang-id">Program hadiah menguntungkan untuk pengguna reguler dan KOL/Influencer. Bagikan tautan unik Anda untuk mendapatkan komisi otomatis berkelanjutan berdasarkan volume perdagangan rujukan.</p>
             </div>
+            
             <div class="card">
                 <h3>24/7 Financial & Crypto News</h3>
-                <p class="lang-en">Stay ahead with real-time global economic updates, financial data streams, and breaking cryptocurrency market news integrated directly into your dashboard.</p>
-                <p class="lang-id">Tetap terdepan dengan pembaruan ekonomi global real-time, aliran data keuangan, dan berita pasar mata uang kripto terkini yang terintegrasi langsung di dasbor Anda.</p>
+                <p class="lang-en">Track live macroeconomic headlines and real-time cryptocurrency aggregated feeds simultaneously.</p>
+                <p class="lang-id">Pantau berita utama makroekonomi dan arus agregator pasar kripto secara real-time sekaligus.</p>
+                
+                <div class="news-tabs">
+                    <button class="news-tab-btn active" onclick="switchNewsTab('crypto-panic')">Crypto</button>
+                    <button class="news-tab-btn" onclick="switchNewsTab('tradingview')">Finance</button>
+                </div>
+
+                <div class="news-content-wrapper">
+                    <div id="pane-crypto-panic" class="news-panel active">
+                        <iframe src="https://cryptopanic.com/widgets/news/?bg_color=0f172a&font_family=sans-serif&header_bg=0f172a&header_text=ffffff&link_color=22d3ee&news_feed=recent&text_color=9ca3af&title=Live%20Crypto" 
+                                width="100%" height="100%" frameborder="0" scrolling="yes" style="border:none;"></iframe>
+                    </div>
+
+                    <div id="pane-tradingview" class="news-panel">
+                        <div class="tradingview-widget-container" style="border:none; height:100%;">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                            {
+                                "feedMode": "all_symbols",
+                                "isTransparent": true,
+                                "displayMode": "regular",
+                                "width": "100%",
+                                "height": "100%",
+                                "colorTheme": "dark",
+                                "locale": "en"
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -390,9 +464,27 @@
     </footer>
 
     <script>
+        // Logika Pengalih Bahasa Utama dApp
         document.getElementById('langSwitcher').addEventListener('change', function(e) {
             document.getElementById('rootNode').setAttribute('lang', e.target.value);
         });
+
+        // Logika Pengalih Tab Berita (Crypto Panic vs TradingView)
+        function switchNewsTab(tabName) {
+            // Sembunyikan semua panel berita
+            document.querySelectorAll('.news-panel').forEach(panel => panel.classList.remove('active'));
+            // Matikan status aktif semua tombol tab
+            document.querySelectorAll('.news-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Aktifkan panel dan tombol yang dipilih
+            if (tabName === 'crypto-panic') {
+                document.getElementById('pane-crypto-panic').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'tradingview') {
+                document.getElementById('pane-tradingview').classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
     </script>
 </body>
 </html>
