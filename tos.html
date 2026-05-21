@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" id="tosNode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoniqFi - Terms of Service (Beta)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #080b11;
+            color: #9ca3af;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+        /* MULTI-LANGUAGE DISPLAY */
+        html[lang="en"] .lang-id { display: none !important; }
+        html[lang="en"] .lang-en { display: block; }
+        html[lang="id"] .lang-en { display: none !important; }
+        html[lang="id"] .lang-id { display: block; }
+
+        /* NAVIGATION & HEADER */
+        header {
+            background-color: rgba(15, 19, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e2533;
+            position: fixed;
+            top: 0; left: 0; right: 0; z-index: 100;
+        }
+        .nav-container {
+            max-width: 800px; margin: 0 auto; padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; }
+        .logo span { color: #3b82f6; }
+        .lang-select {
+            background-color: #1e2533; border: 1px solid #2e374a; color: #d1d5db;
+            padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer;
+        }
+
+        /* CONTENT CONTAINER */
+        .tos-wrapper { max-width: 800px; margin: 100px auto 0 auto; padding: 0 24px; }
+        .tos-card { background-color: #0f131c; border: 1px solid #1e2533; border-radius: 20px; padding: 40px; }
+        
+        h1 { font-size: 24px; color: #fff; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: #3b82f6; margin-bottom: 24px; font-weight: 600; }
+        
+        /* SHIELD/WARNING BOX FOR TESTING STAGE */
+        .beta-warning-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 20px; border-radius: 12px; margin-bottom: 32px;
+        }
+        .beta-warning-box h4 { color: #ef4444; font-size: 15px; margin-bottom: 6px; font-weight: 700; }
+        .beta-warning-box p { font-size: 13px; color: #fca5a5; }
+
+        h2 { font-size: 16px; color: #fff; margin: 24px 0 12px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { font-size: 13.5px; margin-bottom: 14px; text-align: justify; }
+        ul { margin-bottom: 16px; padding-left: 20px; }
+        li { font-size: 13.5px; margin-bottom: 6px; color: #d1d5db; }
+        
+        /* STYLING UTK PASAL KRITIKAL (CAPS LOCK STANDARD HUKUM) */
+        .legal-bold { color: #f3f4f6; font-weight: 700; }
+        .all-caps-legal { text-transform: uppercase; background-color: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; font-size: 12.5px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">ZoniqFi<span>.</span></a>
+            <select id="tosLangSwitcher" class="lang-select">
+                <option value="en">🌐 EN</option>
+                <option value="id">🌐 ID</option>
+            </select>
+        </div>
+    </header>
+
+    <main class="tos-wrapper">
+        <div class="tos-card">
+            
+            <h1 class="lang-en">Terms of Service</h1>
+            <h1 class="lang-id">Ketentuan Layanan</h1>
+            
+            <div class="subtitle lang-en">Last Updated: March 2026 (BETA VERSION)</div>
+            <div class="subtitle lang-id">Terakhir Diperbarui: Maret 2026 (VERSI BETA)</div>
+
+            <div class="beta-warning-box">
+                <h4 class="lang-en">⚠️ CRITICAL NOTICE: BETA TESTING STAGE</h4>
+                <h4 class="lang-id">⚠️ PEMBERITAHUAN KRITIKAL: TAHAP UJICOBA (BETA)</h4>
+                
+                <p class="lang-en">ZoniqFi is currently in an experimental testing phase. By interacting with this platform, you explicitly acknowledge that the smart contracts, frontend, and architecture are provided "AS IS" without any warranties. Do not risk assets you cannot afford to lose.</p>
+                <p class="lang-id">ZoniqFi saat ini berada dalam fase pengujian eksperimental. Dengan berinteraksi di platform ini, Anda secara tegas mengakui bahwa smart contract, frontend, dan arsitektur yang tersedia disediakan "APA ADANYA" tanpa jaminan apa pun. Jangan memisahkan aset yang Anda tidak siap untuk kehilangan.</p>
+            </div>
+
+            <h2>
+                <span class="lang-en">1. Acceptance of Terms</span>
+                <span class="lang-id">1. Persetujuan Ketentuan</span>
+            </h2>
+            <p class="lang-en">By accessing or using ZoniqFi (the "Platform"), connecting your wallet, or utilizing our smart accounts/vaults, you agree to be bound by these Terms of Service. If you do not agree, you must immediately cease all interactions with the Platform.</p>
+            <p class="lang-id">Dengan mengakses atau menggunakan ZoniqFi ("Platform"), menghubungkan dompet kripto Anda, atau memanfaatkan smart account/vault kami, Anda setuju untuk terikat oleh Ketentuan Layanan ini. Jika Anda tidak setuju, Anda harus segera menghentikan semua interaksi dengan Platform.</p>
+
+            <h2>
+                <span class="lang-en">2. Experimental & Beta Nature Risks</span>
+                <span class="lang-id">2. Risiko Sifat Eksperimental & Beta</span>
+            </h2>
+            <p class="lang-en">You expressly acknowledge that the Platform is under initial development and pilot testing. The services, code base, and user interfaces may contain bugs, errors, or vulnerabilities that could lead to financial losses, transactional delays, or total asset loss. By using the experimental vaults or interface, you assume 100% of the operational and smart contract risks.</p>
+            <p class="lang-id">Anda secara tegas mengakui bahwa Platform ini sedang dalam pengembangan awal dan uji coba percontohan. Layanan, baris kode base, dan antarmuka pengguna mungkin mengandung bug, kesalahan, atau kerentanan yang dapat menyebabkan kerugian finansial, keterlambatan transaksi, atau kehilangan total aset. Dengan menggunakan vault atau antarmuka eksperimental ini, Anda menanggung 100% risiko operasional dan smart contract.</p>
+
+            <h2>
+                <span class="lang-en">3. Absolute Limitation of Liability</span>
+                <span class="lang-id">3. Pembatasan Tanggung Jawab Mutlak</span>
+            </h2>
+            <div class="lang-en all-caps-legal">
+                <p class="legal-bold">TO the maximum extent permitted by applicable law, in no event shall ZoniqFi, its developers, founders, contributors, or partners be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, digital assets, or tokens, arising out of or connected with your use or inability to use the platform during this testing phase.</p>
+            </div>
+            <div class="lang-id all-caps-legal">
+                <p class="legal-bold">Sejauh diizinkan oleh hukum yang berlaku, dalam hal apa pun ZoniqFi, para pengembang, pendiri, kontributor, atau mitra tidak dapat digugat atau dimintai pertanggungjawaban atas kerugian langsung, tidak langsung, tidak sengaja, khusus, atau konsekuensial, termasuk namun tidak terbatas pada kehilangan keuntungan, data, aset digital, atau token, yang timbul dari atau terkait dengan penggunaan atau ketidakmampuan Anda menggunakan platform selama fase ujicoba ini.</p>
+            </div>
+
+            <h2>
+                <span class="lang-en">4. No Financial Advice</span>
+                <span class="lang-id">4. Bukan Nasihat Keuangan</span>
+            </h2>
+            <p class="lang-en">All information provided on the Platform, including yield estimations, historical statistics, and whitepaper documentation, does not constitute financial, investment, or legal advice. You are solely responsible for doing your own due diligence before depositing assets into any DeFi protocol.</p>
+            <p class="lang-id">Semua informasi yang disediakan di Platform, termasuk estimasi hasil (yield), statistik historis, dan dokumentasi whitepaper, bukan merupakan nasihat keuangan, investasi, atau hukum. Anda bertanggung jawab penuh untuk melakukan riset mandiri (due diligence) sebelum menyetorkan aset ke protokol DeFi mana pun.</p>
+
+            <h2>
+                <span class="lang-en">5. Non-Custodial Nature & Wallet Security</span>
+                <span class="lang-id">5. Sifat Non-Kustodian & Keamanan Dompet</span>
+            </h2>
+            <p class="lang-en">ZoniqFi is a non-custodial software application. We never store, hold, or have access to your private keys, seed phrases, or passkeys. You are single-handedly responsible for maintaining the security of your dynamic Web3 wallet or connected smart accounts.</p>
+            <p class="lang-id">ZoniqFi adalah aplikasi perangkat lunak non-kustodian. Kami tidak pernah menyimpan, menahan, atau memiliki akses ke private key, seed phrase, atau passkey Anda. Anda bertanggung jawab penuh secara sepihak untuk menjaga keamanan dompet Web3 atau smart account Anda yang terhubung.</p>
+
+            <h2>
+                <span class="lang-en">6. Modifications to Service</span>
+                <span class="lang-id">6. Perubahan Layanan</span>
+            </h2>
+            <p class="lang-en">As a testing environment, ZoniqFi reserves the absolute right to modify, pause, clear testing history, upgrade, or temporarily restrict access to the web interface or smart contracts deployment without prior notice to users.</p>
+            <p class="lang-id">Sebagai lingkungan ujicoba, ZoniqFi berhak mutlak untuk mengubah, menghentikan sementara, menghapus riwayat riwayat pengujian, meningkatkan, atau membatasi akses sementara ke antarmuka web atau penyebaran smart contract tanpa pemberitahuan terlebih dahulu kepada pengguna.</p>
+
+            <h2>
+                <span class="lang-en">7. Governing Law and Dispute Resolution</span>
+                <span class="lang-id">7. Hukum yang Mengatur dan Penyelesaian Sengketa</span>
+            </h2>
+            <p class="lang-en">Any disputes arising out of these terms shall be resolved exclusively through binding arbitration, on an individual basis, and you explicitly waive any right to participate in a class-action lawsuit or class-wide arbitration against the creators of ZoniqFi.</p>
+            <p class="lang-id">Setiap perselisihan yang timbul dari ketentuan ini akan diselesaikan secara eksklusif melalui arbitrase yang mengikat, secara individual, dan Anda secara tegas melepaskan hak apa pun untuk berpartisipasi dalam gugatan perwakilan kelompok (class-action) atau arbitrase kelompok terhadap pembuat ZoniqFi.</p>
+
+        </div>
+    </main>
+
+    <script>
+        // Logika Interaktif Pengalihan Bahasa ToS
+        document.getElementById('tosLangSwitcher').addEventListener('change', function(e) {
+            document.getElementById('tosNode').setAttribute('lang', e.target.value);
+        });
+    </script>
+</body>
+</html>
