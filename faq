@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - FAQ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="lang-switcher">
+        <button onclick="switchLang('en')" id="btn-en" class="active">EN</button>
+        <button onclick="switchLang('id')" id="id-btn">ID</button>
+    </div>
+
+    <div class="container">
+        <header class="hero">
+            <h1 class="en">Something Exciting is Coming Soon!</h1>
+            <h1 class="id" style="display:none;">Sesuatu yang Seru Bakal Segera Hadir!</h1>
+            
+            <p class="en">We are working hard to bring you the best experience. In the meantime, check out our FAQs below.</p>
+            <p class="id" style="display:none;">Kami sedang bekerja keras untuk memberikan pengalaman terbaik. Sementara itu, silakan cek FAQ kami di bawah ini.</p>
+        </header>
+
+        <section class="faq-section">
+            <h2 class="en">Frequently Asked Questions</h2>
+            <h2 class="id" style="display:none;">Pertanyaan yang Sering Diajukan</h2>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="en">When will the website launch?</span>
+                        <span class="id" style="display:none;">Kapan situs web ini akan diluncurkan?</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="en">We are aiming to launch in Q3 of this year. Stay tuned for the exact date!</p>
+                        <p class="id" style="display:none;">Kami menargetkan peluncuran pada kuartal ketiga tahun ini. Tunggu tanggal mainnya!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="en">What is this project about?</span>
+                        <span class="id" style="display:none;">Tentang apakah proyek ini?</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="en">It's a brand new platform designed to simplify your daily workflow with smart tools.</p>
+                        <p class="id" style="display:none;">Ini adalah platform baru yang dirancang untuk mempermudah alur kerja harian Anda dengan alat pintar.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="en">How can I get updates?</span>
+                        <span class="id" style="display:none;">Bagaimana cara mendapatkan pembaruan info?</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="en">You can bookmark this page or follow our social media channels for the latest news.</p>
+                        <p class="id" style="display:none;">Anda dapat menyimpan halaman ini atau mengikuti media sosial kami untuk berita terbaru.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Fungsi Ganti Bahasa
+        function switchLang(lang) {
+            const enElements = document.querySelectorAll('.en');
+            const idElements = document.querySelectorAll('.id');
+            const btnEn = document.getElementById('btn-en');
+            const btnId = document.getElementById('id-btn');
+
+            if (lang === 'en') {
+                enElements.forEach(el => el.style.display = 'block');
+                idElements.forEach(el => el.style.display = 'none');
+                btnEn.classList.add('active');
+                btnId.classList.remove('active');
+            } else {
+                enElements.forEach(el => el.style.display = 'none');
+                idElements.forEach(el => el.style.display = 'block');
+                btnId.classList.add('active');
+                btnEn.classList.remove('active');
+            }
+            
+            // Memastikan penyesuaian display untuk elemen inline seperti span di dalam button
+            document.querySelectorAll('span.en').forEach(el => {
+                if(lang === 'en') el.style.display = 'inline';
+            });
+            document.querySelectorAll('span.id').forEach(el => {
+                if(lang === 'id') el.style.display = 'inline';
+            });
+        }
+
+        // Fungsi Accordion FAQ
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                // Ubah ikon + menjadi -
+                const icon = question.querySelector('.icon');
+                if (item.classList.contains('active')) {
+                    icon.textContent = '−';
+                } else {
+                    icon.textContent = '+';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
