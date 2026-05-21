@@ -173,16 +173,6 @@
         .card h3 { color: #ffffff; font-size: 20px; margin-bottom: 12px; font-weight: 700; }
         .card p { color: #9ca3af; font-size: 14px; margin: 0; line-height: 1.6; max-width: 100%; }
 
-        /* TRADINGVIEW WIDGET CONTAINER SECTION */
-        .tradingview-section {
-            margin-bottom: 60px;
-            min-height: 550px; /* Disesuaikan dengan tinggi widget screener (550px) */
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            overflow: hidden;
-            background-color: #12161f; /* Warna gelap disesuaikan dengan tema dark widget */
-        }
-
         /* TABEL KOLAM */
         .table-section {
             text-align: left;
@@ -282,16 +272,16 @@
             <p class="lang-id">Berdagang dengan slippage rendah, otomatiskan hasil investasi Anda, dan raih pendapatan protokol riil dalam USDC dengan mengunci $VZT.</p>
             
             <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px;">
-                <button onclick="window.location.href='app.html'" class="btn" style="padding: 14px 36px; font-size: 15px;">
-                    <span class="lang-en">Launch App</span>
-                    <span class="lang-id">Buka Aplikasi</span>
-                </button>
+        <button onclick="window.location.href='app.html'" class="btn" style="padding: 14px 36px; font-size: 15px;">
+            <span class="lang-en">Launch App</span>
+            <span class="lang-id">Buka Aplikasi</span>
+        </button>
 
-                <button onclick="window.location.href='wp.html'" class="btn" style="background-color: #1e293b; border: 1px solid #334155; color: #d1d5db; padding: 14px 36px; font-size: 15px;" onmouseover="this.style.backgroundColor='#334155'; this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#1e293b'; this.style.color='#d1d5db';">
-                    <span class="lang-en">Read Whitepaper</span>
-                    <span class="lang-id">Baca Whitepaper</span>
-                </button>
-            </div>
+        <button onclick="window.location.href='wp.html'" class="btn" style="background-color: #1e293b; border: 1px solid #334155; color: #d1d5db; padding: 14px 36px; font-size: 15px;" onmouseover="this.style.backgroundColor='#334155'; this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#1e293b'; this.style.color='#d1d5db';">
+            <span class="lang-en">Read Whitepaper</span>
+            <span class="lang-id">Baca Whitepaper</span>
+        </button>
+    </div>
         </section>
 
         <section class="stats-grid">
@@ -334,25 +324,6 @@
                 <p class="lang-id">Program hadiah menguntungkan untuk pengguna reguler dan KOL/Influencer. Bagikan tautan unik Anda untuk mendapatkan komisi otomatis berkelanjutan berdasarkan volume perdagangan rujukan.</p>
             </div>
         </section>
-
-        <section class="tradingview-section">
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-              <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/cryptocurrencies/prices-all/" rel="noopener nofollow" target="_blank"><span class="blue-text">Crypto markets</span></a><span class="trademark"> by TradingView</span></div>
-              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-              {
-              "defaultColumn": "oscillators",
-              "screener_type": "crypto_mkt",
-              "displayCurrency": "USD",
-              "colorTheme": "dark",
-              "isTransparent": false,
-              "locale": "en",
-              "width": "100%",
-              "height": 550
-            }
-              </script>
-            </div>
-            </section>
 
         <section class="table-section">
             <h2 class="lang-en">Supported Liquidity Pools</h2>
