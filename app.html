@@ -82,12 +82,12 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: auto; /* Memastikan footer selalu berada di paling bawah */
+            margin-top: auto; 
         }
         .btn-back-home {
             background: none; 
             border: 1px solid #1e2533; 
-            color: #9ca3af; /* Sedikit lebih terang agar keterbacaan bagus */
+            color: #9ca3af; 
             padding: 10px 14px; 
             border-radius: 10px; 
             font-size: 13px; 
@@ -105,7 +105,6 @@
             background-color: rgba(59, 130, 246, 0.05);
         }
         
-        /* Tambahan Style untuk Copyright */
         .sidebar-copyright {
             font-size: 11px;
             color: #4b5563;
@@ -203,7 +202,6 @@
             transform: translateY(-1px);
         }
 
-        /* Status setelah wallet terhubung */
         .wallet-active-status {
             background-color: #0f131c;
             border: 1px solid #1e2533;
@@ -248,7 +246,6 @@
         }
         .panel-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 20px; }
 
-        /* Komponen Form */
         .form-group { margin-bottom: 20px; }
         .form-label {
             font-size: 11px;
@@ -349,7 +346,6 @@
             cursor: pointer;
         }
 
-        /* TOAST POP-UP TRANSAKSI */
         .toast-container {
             position: fixed;
             top: 24px;
@@ -379,10 +375,6 @@
         .toast-title { font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
         .toast-desc { font-size: 12px; color: #9ca3af; line-height: 1.4; }
 
-        /* ==========================================================================
-           4. SWAP BOX & VAULT TABLE STYLES (MURNI CSS)
-           ========================================================================== */
-        /* Swap Box Specifics */
         .swap-box {
             max-width: 480px;
             margin: 0 auto;
@@ -409,7 +401,6 @@
         }
         .swap-arrow-btn:hover { background-color: #2e374a; color: #22d3ee; }
 
-        /* Vault Table Specifics */
         .table-responsive {
             overflow-x: auto;
             border: 1px solid #1e2533;
@@ -455,9 +446,6 @@
             border-color: rgba(34, 211, 238, 0.2);
         }
 
-        /* ==========================================================================
-           5. VEZNQ GOVERNANCE & GAUGE VOTING STYLES
-           ========================================================================== */
         .gov-banner {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
             border: 1px solid rgba(59, 130, 246, 0.15);
@@ -597,12 +585,20 @@
             padding: 14px 18px;
             display: flex; align-items: center; gap: 16px;
             cursor: pointer; text-align: left; width: 100%;
-            text-decoration: none; /* Reset link underline */
+            text-decoration: none; 
             transition: all 0.2s ease;
         }
         .wallet-option-item:hover {
             background-color: #121824; border-color: #2e374a; transform: scale(1.01);
         }
+        
+        /* Modifikasi efek disabled apabila persetujuan belum dicentang */
+        .wallet-option-item.disabled-style {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
         .wallet-option-icon {
             width: 36px; height: 36px; display: flex;
             align-items: center; justify-content: center;
@@ -637,6 +633,49 @@
 
         .wallet-modal-footer { margin-top: 18px; font-size: 10px; color: #4b5563; text-align: center; line-height: 1.4; }
         .wallet-modal-footer a { color: #3b82f6; text-decoration: none; }
+
+        /* ==========================================================================
+           7. STYLE TAMBAHAN: POP-UP PILOT/UJICUBA PERINGATAN
+           ========================================================================== */
+        .trial-notice-box {
+            background-color: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .trial-notice-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .trial-notice-body {
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+        .trial-checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+        .trial-checkbox-container input {
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .trial-checkbox-text {
+            font-size: 12px;
+            color: #d1d5db;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -999,8 +1038,27 @@
                 <button id="btnCloseModal" class="wallet-modal-close">✕</button>
             </div>
 
+            <div class="trial-notice-box">
+                <div class="trial-notice-header">
+                    <span>⚠️</span>
+                    <span class="lang-en">Beta Testnet Platform</span>
+                    <span class="lang-id">Platform Ujicoba Testnet</span>
+                </div>
+                <div class="trial-notice-body">
+                    <p class="lang-en">This dApp dashboard is currently in its experimental pilot testing stage on the Base Testnet network. Do not interact using real mainnet funds.</p>
+                    <p class="lang-id">Dasbor dApp ini saat ini berada dalam tahap ujicoba eksperimental pada jaringan Base Testnet. Jangan berinteraksi menggunakan dana mainnet asli.</p>
+                </div>
+                <label class="trial-checkbox-container">
+                    <input type="checkbox" id="chkAgreeTerms">
+                    <div class="trial-checkbox-text">
+                        <span class="lang-en">I understand and agree to the <a href="halaman-tos-anda.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Terms of Service</a></span>
+                        <span class="lang-id">Saya paham dan menyetujui <a href="halaman-tos-anda.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Ketentuan Layanan</a></span>
+                    </div>
+                </label>
+            </div>
+
             <div class="wallet-options-list">
-                <a href="https://provizto.xyz" target="_blank" class="wallet-option-item highlight-smart" id="optSmartAccount">
+                <a href="https://provizto.xyz" target="_blank" class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
                     <div class="wallet-option-icon logo-smart">✨</div>
                     <div class="wallet-option-info">
                         <div class="wallet-option-name">
@@ -1012,7 +1070,7 @@
                     </div>
                 </a>
 
-                <a href="https://metamask.io" target="_blank" class="wallet-option-item" id="optMetaMask">
+                <a href="https://metamask.io" target="_blank" class="wallet-option-item disabled-style" id="optMetaMask">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
                         <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
@@ -1025,7 +1083,7 @@
                     </div>
                 </a>
 
-                <a href="https://walletconnect.com" target="_blank" class="wallet-option-item" id="optWalletConnect">
+                <a href="https://walletconnect.com" target="_blank" class="wallet-option-item disabled-style" id="optWalletConnect">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
                         <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
@@ -1042,10 +1100,10 @@
             </div>
             
             <div class="wallet-modal-footer lang-en">
-                By connecting, you agree to ZoniqFi's <a href="terms.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
+                By connecting, you agree to ZoniqFi's <a href="halaman-tos-anda.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
             </div>
             <div class="wallet-modal-footer lang-id">
-                Dengan menghubungkan, Anda menyetujui <a href="terms.html" target="_blank">Ketentuan Layanan</a> ZoniqFi. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
+                Dengan menghubungkan, Anda menyetujui <a href="halaman-tos-anda.html" target="_blank">Ketentuan Layanan</a> ZoniqFi. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
             </div>
         </div>
     </div>
@@ -1059,11 +1117,30 @@
         const userAddress = document.getElementById('userAddress');
         const btnDisconnect = document.getElementById('btnDisconnect');
         const toast = document.getElementById('transactionToast');
+        
+        // Elemen baru untuk Logika Ujicoba Terms
+        const chkAgreeTerms = document.getElementById('chkAgreeTerms');
+        const walletOptions = document.querySelectorAll('.wallet-option-item');
 
         // --- 1. LOGIKA INTERAKSI WALLET MODAL ---
-        btnConnectTrigger.addEventListener('click', () => walletModal.classList.remove('style-hidden'));
+        btnConnectTrigger.addEventListener('click', () => {
+            // Reset checkbox dan status wallet-list setiap kali modal dibuka baru
+            chkAgreeTerms.checked = false;
+            walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+            walletModal.classList.remove('style-hidden');
+        });
+        
         btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
         walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
+
+        // Event Listener untuk mengontrol aktif/tidaknya pilihan dompet berdasarkan checkbox
+        chkAgreeTerms.addEventListener('change', function() {
+            if (this.checked) {
+                walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
+            } else {
+                walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+            }
+        });
 
         function toggleWalletUI(isConnected, address = "") {
             if (isConnected) {
@@ -1082,15 +1159,26 @@
             showNotification();
         }
 
-        document.getElementById('optSmartAccount').addEventListener('click', (e) => {
-            // e.preventDefault(); // Hapus ini jika ingin membuka tautan sekaligus memicu logika JS Anda
-            executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
+        document.getElementById('optSmartAccount').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
+            } else {
+                e.preventDefault();
+            }
         });
-        document.getElementById('optMetaMask').addEventListener('click', (e) => {
-            executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+        document.getElementById('optMetaMask').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+            } else {
+                e.preventDefault();
+            }
         });
-        document.getElementById('optWalletConnect').addEventListener('click', (e) => {
-            executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+        document.getElementById('optWalletConnect').addEventListener('click', function(e) {
+            if (chkAgreeTerms.checked) {
+                executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+            } else {
+                e.preventDefault();
+            }
         });
         btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
 
@@ -1109,7 +1197,6 @@
                 total += value;
             });
 
-            // Proteksi batas maksimal alokasi 100%
             if (total > 100) {
                 alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
                 let excess = total - 100;
@@ -1163,7 +1250,6 @@
             menuItems.forEach(item => { item.classList.remove('active'); });
             element.classList.add('active');
             
-            // Tutup menu mobile otomatis setelah memindahkan halaman
             if(window.innerWidth <= 768) toggleMobileMenu();
         }
 
