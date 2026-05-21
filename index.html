@@ -150,13 +150,16 @@
         .stat-item .cyan-text { color: #22d3ee; }
         .stat-item .blue-text { color: #60a5fa; }
 
-        /* FITUR KARTU */
+        /* FITUR KARTU (DIPERBARUI MENJADI 3 KOLOM) */
         .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 60px;
             text-align: left;
+        }
+        @media (max-width: 900px) {
+            .features-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 600px) {
             .features-grid { grid-template-columns: 1fr; }
@@ -241,12 +244,10 @@
 </head>
 <body>
 
-    <!-- NAVIGASI UTAMA -->
     <header>
         <div class="wrapper nav-container">
             <div class="logo">PROVIZTO<span>.</span></div>
             <div class="right-nav">
-                <!-- PENGALIH BAHASA -->
                 <select id="langSwitcher" class="lang-select">
                     <option value="en">🌐 EN</option>
                     <option value="id">🌐 ID</option>
@@ -259,10 +260,8 @@
         </div>
     </header>
 
-    <!-- KONTEN UTAMA -->
     <main class="wrapper">
         
-        <!-- HERO SECTION -->
         <section class="hero">
             <div class="badge">🚀 Native on Base Layer 2</div>
             
@@ -273,13 +272,11 @@
             <p class="lang-id">Berdagang dengan slippage rendah, otomatiskan hasil investasi Anda, dan raih pendapatan protokol riil dalam USDC dengan mengunci $VZT.</p>
             
             <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px;">
-        <!-- TOMBOL LAUNCH APP -->
         <button onclick="window.location.href='app.html'" class="btn" style="padding: 14px 36px; font-size: 15px;">
             <span class="lang-en">Launch App</span>
             <span class="lang-id">Buka Aplikasi</span>
         </button>
 
-        <!-- TOMBOL READ WHITEPAPER (BARU DITAMBAHKAN) -->
         <button onclick="window.location.href='wp.html'" class="btn" style="background-color: #1e293b; border: 1px solid #334155; color: #d1d5db; padding: 14px 36px; font-size: 15px;" onmouseover="this.style.backgroundColor='#334155'; this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#1e293b'; this.style.color='#d1d5db';">
             <span class="lang-en">Read Whitepaper</span>
             <span class="lang-id">Baca Whitepaper</span>
@@ -287,7 +284,6 @@
     </div>
         </section>
 
-        <!-- DASHBOARD STATISTIK -->
         <section class="stats-grid">
             <div class="stat-item">
                 <p class="lang-en">Total Value Locked</p>
@@ -311,7 +307,6 @@
             </div>
         </section>
 
-        <!-- FITUR PRODUK KARTU -->
         <section class="features-grid">
             <div class="card">
                 <h3>ZoniqFi AMM DEX</h3>
@@ -323,9 +318,13 @@
                 <p class="lang-en">Smart contract automated harvesting hub. Deposit assets once, and our vault compounds your earnings automatically without repetitive gas expenses.</p>
                 <p class="lang-id">Pusat otomatisasi panen pintar. Setor aset sekali saja, dan brankas kami melipatgandakan penghasilan Anda otomatis tanpa biaya gas berulang.</p>
             </div>
+            <div class="card">
+                <h3>ZoniqFi Affiliate Program</h3>
+                <p class="lang-en">Lucrative rewards program for regular users and KOLs/Influencers. Share your unique link to earn continuous automated commissions based on referral trade volume.</p>
+                <p class="lang-id">Program hadiah menguntungkan untuk pengguna reguler dan KOL/Influencer. Bagikan tautan unik Anda untuk mendapatkan komisi otomatis berkelanjutan berdasarkan volume perdagangan rujukan.</p>
+            </div>
         </section>
 
-        <!-- TABEL LIKUIDITAS -->
         <section class="table-section">
             <h2 class="lang-en">Supported Liquidity Pools</h2>
             <h2 class="lang-id">Kolam Likuiditas yang Didukung</h2>
@@ -373,7 +372,6 @@
 
     </main>
 
-    <!-- FOOTER KAKI HALAMAN -->
     <footer>
         <div class="wrapper footer-container">
             <div>&copy; Provizto. Built on Base Ecosystem.</div>
@@ -386,7 +384,6 @@
         </div>
     </footer>
 
-    <!-- INTERACTIVE LANGUAGE LOGIC -->
     <script>
         // Mengubah atribut [lang] pada tag html utama berdasarkan seleksi menu drop-down
         document.getElementById('langSwitcher').addEventListener('change', function(e) {
