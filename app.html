@@ -81,15 +81,16 @@
         .sidebar-footer {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
+            margin-top: auto; /* Memastikan footer selalu berada di paling bawah */
         }
         .btn-back-home {
             background: none; 
             border: 1px solid #1e2533; 
-            color: #6b7280; 
+            color: #9ca3af; /* Sedikit lebih terang agar keterbacaan bagus */
             padding: 10px 14px; 
             border-radius: 10px; 
-            font-size: 12px; 
+            font-size: 13px; 
             font-weight: 600; 
             cursor: pointer; 
             width: 100%; 
@@ -102,6 +103,17 @@
             color: #ffffff; 
             border-color: #3b82f6;
             background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        /* Tambahan Style untuk Copyright */
+        .sidebar-copyright {
+            font-size: 11px;
+            color: #4b5563;
+            padding-left: 14px;
+            line-height: 1.4;
+            border-top: 1px solid rgba(30, 37, 51, 0.5);
+            padding-top: 12px;
+            margin-top: 4px;
         }
 
         .menu-toggle {
@@ -660,7 +672,16 @@
                 <span class="lang-en">← Back to Home</span>
                 <span class="lang-id">← Kembali ke Beranda</span>
             </a>
-            <div style="font-size: 11px; color: #4b5563; padding-left: 16px;">Base Network Connected</div>
+            
+            <div style="font-size: 11px; color: #3b82f6; padding-left: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <span style="width: 6px; height: 6px; background-color: #10b981; border-radius: 50%; display: inline-block;"></span>
+                Base Network Connected
+            </div>
+
+            <div class="sidebar-copyright">
+                <span class="lang-en">© 2026 PROVIZTO. <br>All rights reserved.</span>
+                <span class="lang-id">© 2026 PROVIZTO. <br>Hak cipta dilindungi undang-undang.</span>
+            </div>
         </div>
     </aside>
 
