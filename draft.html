@@ -1,464 +1,423 @@
 <!DOCTYPE html>
-<html lang="en" id="rootNode">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROVIZTO - Base Ecosystem Hub</title>
+    <title>Provizto dApp Hub - Secure Edition</title>
     <style>
-        /* ==========================================================================
-           1. RESET & STRUKTUR DASAR (MURNI CSS)
-           ========================================================================== */
+        /* --- INTEGRASI CSS STYLE --- */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
+
         body {
             background-color: #0b0f19;
-            color: #f3f4f6;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.6;
-        }
-        .wrapper {
-            max-width: 1240px; /* Diperlebar agar ruang 4 kolom kartu tetap lega */
-            margin: 0 auto;
-            padding: 0 24px;
+            color: #f8fafc;
+            min-height: 100vh;
         }
 
-        /* ==========================================================================
-           2. LOGIKA SISTEM DUA BAHASA (EN / ID) TANPA JAVASCRIPT
-           ========================================================================== */
-        html[lang="en"] .lang-id { display: none !important; }
-        html[lang="en"] .lang-en { display: block; }
-        html[lang="en"] span.lang-en { display: inline; }
-        html[lang="en"] tr.lang-en { display: table-row; }
-
-        html[lang="id"] .lang-en { display: none !important; }
-        html[lang="id"] .lang-id { display: block; }
-        html[lang="id"] span.lang-id { display: inline; }
-        html[lang="id"] tr.lang-id { display: table-row; }
-
-        /* ==========================================================================
-           3. GAYA VISUAL KOMPONEN (STYLING)
-           ========================================================================== */
-        header {
-            border-bottom: 1px solid #1e293b;
-            padding: 20px 0;
-            background-color: rgba(11, 15, 25, 0.8);
-        }
-        .nav-container {
+        .dapp-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .logo {
-            font-size: 22px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-        }
-        .logo span { color: #3b82f6; }
-        
-        .right-nav {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .lang-select {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            color: #d1d5db;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 20px 40px;
+            background-color: #111827;
+            border-bottom: 1px solid #1f2937;
         }
 
-        .btn {
-            background-color: #2563eb;
-            color: #ffffff;
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .vzt-badge {
+            font-size: 0.8rem;
+            background: #14b8a6;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 5px;
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 10px;
             font-weight: 600;
-            font-size: 13px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
-        .btn:hover { background-color: #1d4ed8; }
 
-        /* HERO SECTION */
-        .hero {
+        .btn-connect:hover {
+            opacity: 0.9;
+        }
+
+        .dapp-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .wallet-status {
             text-align: center;
-            padding: 80px 0 40px 0;
-        }
-        .badge {
-            display: inline-block;
-            background-color: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 24px;
-        }
-        h1 {
-            font-size: 48px;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.15;
-            max-width: 800px;
-            margin: 0 auto 20px auto;
-            letter-spacing: -1px;
-        }
-        h1 span {
-            background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero p {
-            color: #9ca3af;
-            font-size: 16px;
-            max-width: 580px;
-            margin: 0 auto 32px auto;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
         }
 
-        /* DATA STATISTIK */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            border-top: 1px solid #111827;
-            border-bottom: 1px solid #111827;
-            padding: 32px 0;
-            margin: 40px 0;
-            background-color: rgba(17, 24, 39, 0.2);
-            border-radius: 16px;
+        /* Banner Notifikasi Pesan Keamanan Smart Contract */
+        .security-banner {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid transparent;
         }
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            h1 { font-size: 34px; }
-        }
-        .stat-item p { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-bottom: 6px; }
-        .stat-item h3 { font-size: 24px; font-weight: 700; color: #ffffff; }
-        .stat-item .cyan-text { color: #22d3ee; }
-        .stat-item .blue-text { color: #60a5fa; }
 
-        /* FITUR KARTU (SISTEM GRID 4 KOLOM RESPONSIVE) */
-        .features-grid {
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 60px;
-            text-align: left;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
-        @media (max-width: 1100px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 650px) {
-            .features-grid { grid-template-columns: 1fr; }
-        }
-        .card {
-            background-color: #0f172a;
-            border: 1px solid #1e293b;
-            padding: 24px;
-            border-radius: 16px;
+
+        .product-card {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
         }
-        .card h3 { color: #ffffff; font-size: 18px; margin-bottom: 12px; font-weight: 700; }
-        .card p { color: #9ca3af; font-size: 13px; margin: 0 0 16px 0; line-height: 1.6; }
 
-        /* SUB-TABS UNTUK AREA WIDGET BERITA */
-        .news-tabs {
-            display: flex;
-            gap: 8px;
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+        }
+
+        .product-card h3 {
             margin-bottom: 12px;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 8px;
-        }
-        .news-tab-btn {
-            background: none;
-            border: none;
-            color: #6b7280;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        .news-tab-btn.active {
-            color: #22d3ee;
-            background-color: rgba(34, 211, 238, 0.1);
+            font-size: 1.25rem;
+            color: #fff;
         }
 
-        .news-content-wrapper {
-            position: relative;
-            width: 100%;
-            height: 240px;
-            margin-top: auto;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #1e293b;
-            background-color: #0b0f19;
-        }
-        .news-panel {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-        .news-panel.active {
-            display: block;
+        .product-card .desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
 
-        /* TABEL KOLAM */
-        .table-section {
-            text-align: left;
-            margin-bottom: 80px;
-        }
-        .table-section h2 { font-size: 22px; color: #ffffff; margin-bottom: 6px; font-weight: 700; }
-        .table-section p { color: #9ca3af; font-size: 14px; margin-bottom: 20px; }
-        
-        .table-responsive {
-            overflow-x: auto;
-            border: 1px solid #1e293b;
-            background-color: rgba(15, 23, 42, 0.4);
-            border-radius: 16px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        th {
-            background-color: #0f172a;
-            color: #9ca3af;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 16px 20px;
-            border-bottom: 1px solid #1e293b;
-        }
-        td {
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
-            color: #d1d5db;
-        }
-        tr:last-child td { border-bottom: none; }
-        .pool-name { font-weight: 600; color: #ffffff; }
-        .boost-apr { font-weight: 700; color: #22d3ee; }
-        
-        .btn-sm {
-            background-color: rgba(37, 99, 235, 0.15);
-            border: 1px solid rgba(37, 99, 235, 0.3);
-            color: #60a5fa;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
+        .stat-box {
+            background-color: #1f2937;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #3b82f6;
             font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn-action {
+            background-color: #1f2937;
+            color: #94a3b8;
+            border: 1px solid #374151;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: not-allowed;
+            width: 100%;
+        }
+
+        .btn-action:not([disabled]) {
+            background: #3b82f6;
+            color: white;
+            border: none;
             cursor: pointer;
         }
-        .btn-sm:hover { background-color: #2563eb; color: white; }
 
-        /* FOOTER */
-        footer {
-            border-top: 1px solid #111827;
-            padding: 30px 0;
-            font-size: 13px;
-            color: #4b5563;
+        /* Panel Afiliasi Aman */
+        .affiliate-section {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 30px;
         }
-        .footer-container {
+
+        .section-title-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 8px;
         }
-        .footer-links a {
-            color: #4b5563;
-            text-decoration: none;
-            margin-left: 20px;
+
+        .shield-badge {
+            background-color: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+            border: 1px solid #14b8a6;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 20px;
         }
-        .footer-links a:hover { color: #ffffff; }
+
+        .affiliate-section h3 {
+            color: #fff;
+        }
+
+        .affiliate-section p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .affiliate-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .affiliate-box input {
+            flex: 1;
+            background-color: #0b0f19;
+            border: 1px solid #1f2937;
+            padding: 12px;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .btn-copy {
+            background-color: #14b8a6;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Panel Uji Coba Simulasi Keamanan */
+        .test-panel {
+            background-color: #1f2937;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .test-panel label {
+            display: block;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            background-color: #0b0f19;
+            border: 1px solid #374151;
+            padding: 10px;
+            border-radius: 6px;
+            color: #fff;
+        }
+
+        .btn-test {
+            background-color: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-test[disabled] {
+            background-color: #374151;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .tier-stats {
+            display: flex;
+            gap: 40px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .tier-stats span {
+            color: #14b8a6;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="wrapper nav-container">
-            <div class="logo">PROVIZTO<span>.</span></div>
-            <div class="right-nav">
-                <select id="langSwitcher" class="lang-select">
-                    <option value="en">🌐 EN</option>
-                    <option value="id">🌐 ID</option>
-                </select>
-                <button onclick="window.location.href='referral.html'" class="btn">
-                    <span class="lang-en">Affiliate</span>
-                    <span class="lang-id">Afiliasi</span>
-                </button>
-            </div>
-        </div>
+    <!-- Header dApp -->
+    <header class="dapp-header">
+        <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
+        <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
     </header>
 
-    <main class="wrapper">
-        
-        <section class="hero">
-            <div class="badge">🚀 Native on Base Layer 2</div>
-            
-            <h1 class="lang-en">The Capital Efficiency Hub on <span>Base Blockchain</span></h1>
-            <h1 class="lang-id">Pusat Efisiensi Modal di <span>Blockchain Base</span></h1>
-            
-            <p class="lang-en">Trade with low slippage, automate your compounding yield, and earn real protocol revenue in USDC by locking $VZT.</p>
-            <p class="lang-id">Berdagang dengan slippage rendah, otomatiskan hasil investasi Anda, dan raih pendapatan protokol riil dalam USDC dengan mengunci $VZT.</p>
-            
-            <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px;">
-                <button onclick="window.location.href='app.html'" class="btn" style="padding: 14px 36px; font-size: 15px;">
-                    <span class="lang-en">Launch App</span>
-                    <span class="lang-id">Buka Aplikasi</span>
-                </button>
+    <main class="dapp-container">
+        <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
 
-                <button onclick="window.location.href='wp.html'" class="btn" style="background-color: #1e293b; border: 1px solid #334155; color: #d1d5db; padding: 14px 36px; font-size: 15px;" onmouseover="this.style.backgroundColor='#334155'; this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#1e293b'; this.style.color='#d1d5db';">
-                    <span class="lang-en">Read Whitepaper</span>
-                    <span class="lang-id">Baca Whitepaper</span>
-                </button>
+        <!-- Panel Notifikasi Keamanan Sistem -->
+        <div class="security-banner" id="securityBanner" style="display: none;"></div>
+
+        <!-- Grid 3 Produk Utama -->
+        <section class="products-grid">
+            <div class="product-card">
+                <h3>AMM DEX Swap</h3>
+                <p class="desc">Tukar aset instan dengan perlindungan MEV dan Anti-Wash Trading harian.</p>
+                <div class="stat-box">Trading Fee: 0.3%</div>
+                <button class="btn-action" onclick="executeSecureTx('Swap')" disabled>Launch Swap</button>
+            </div>
+
+            <div class="product-card">
+                <h3>Yield Optimizer</h3>
+                <p class="desc">Setor sekali, sistem mengeksekusi otomatisasi auto-compound secara berkala.</p>
+                <div class="stat-box">Boosted APY: Up to 49.1%</div>
+                <button class="btn-action" onclick="executeSecureTx('Deposit Vault')" disabled>Open Vaults</button>
+            </div>
+
+            <div class="product-card">
+                <h3>VZT Lock & Yield</h3>
+                <p class="desc">Kunci token $VZT Anda untuk mengklaim Real Yield dalam bentuk USDC stabil.</p>
+                <div class="stat-box">Reward: Real USDC</div>
+                <button class="btn-action" onclick="executeSecureTx('Token Locking')" disabled>Lock Token</button>
             </div>
         </section>
 
-        <section class="stats-grid">
-            <div class="stat-item">
-                <p class="lang-en">Total Value Locked</p>
-                <p class="lang-id">Total Nilai Terkunci</p>
-                <h3>$42,851,204</h3>
+        <!-- Modul Afiliasi Aman -->
+        <section class="affiliate-section">
+            <div class="section-title-container">
+                <h3>Secure On-Chain Affiliate</h3>
+                <span class="shield-badge">🛡️ Anti-Sybil Active</span>
             </div>
-            <div class="stat-item">
-                <p class="lang-en">24h Volume</p>
-                <p class="lang-id">Volume 24 Jam</p>
-                <h3>$12,405,119</h3>
+            <p>Bagikan tautan unik Anda. Sistem membatasi manipulasi transaksi berulang (maks. 1 tx/10 detik).</p>
+            
+            <div class="affiliate-box">
+                <input type="text" id="refLink" value="https://provizto.hub" readonly>
+                <button class="btn-copy" id="copyBtn" onclick="copyLink()">Copy Link</button>
             </div>
-            <div class="stat-item">
-                <p class="lang-en">Real Yield Paid</p>
-                <p class="lang-id">Bagi Hasil Terbayar</p>
-                <h3 class="cyan-text">854,230 USDC</h3>
+
+            <!-- Panel Uji Coba Simulasi Eror Kode Rust -->
+            <div class="test-panel">
+                <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Rust):</label>
+                <div class="input-group">
+                    <input type="text" id="testReferrer" placeholder="Masukkan alamat dompet pengajak...">
+                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verifikasi Tautan</button>
+                </div>
             </div>
-            <div class="stat-item">
-                <p class="lang-en">$ZNF Locked</p>
-                <p class="lang-id">$ZNF Terkunci</p>
-                <h3 class="blue-text">64.2%</h3>
+
+            <div class="tier-stats">
+                <div class="tier-item">Current Tier: <span>Bronze (10%)</span></div>
+                <div class="tier-item">Total Referral Volume: <span>$0.00</span></div>
             </div>
         </section>
-
-        <section class="features-grid">
-            <div class="card">
-                <h3>ZoniqFi AMM DEX</h3>
-                <p class="lang-en">Execute instant token swaps with ultra-low gas fees on the Base network. Utilizes stable pool frameworks to drastically minimize asset slippage.</p>
-                <p class="lang-id">Eksekusi pertukaran token instan dengan biaya gas super murah di jaringan Base. Menggunakan kerangka kerja stable pool untuk meminimalkan slippage aset.</p>
-            </div>
-            <div class="card">
-                <h3>ZoniqFi Yield Optimizer</h3>
-                <p class="lang-en">Smart contract automated harvesting hub. Deposit assets once, and our vault compounds your earnings automatically without repetitive gas expenses.</p>
-                <p class="lang-id">Pusat otomatisasi panen pintar. Setor aset sekali saja, dan brankas kami melipatgandakan penghasilan Anda otomatis tanpa biaya gas berulang.</p>
-            </div>
-            <div class="card">
-                <h3>ZoniqFi Affiliate Program</h3>
-                <p class="lang-en">Lucrative rewards program for regular users and KOLs/Influencers. Share your unique link to earn continuous automated commissions based on referral trade volume.</p>
-                <p class="lang-id">Program hadiah menguntungkan untuk pengguna reguler dan KOL/Influencer. Bagikan tautan unik Anda untuk mendapatkan komisi otomatis berkelanjutan berdasarkan volume perdagangan rujukan.</p>
-            </div>
-
-        <div class="card">
-    <h3>24/7 Financial & Crypto News</h3>
-    <p class="lang-en" style="margin-bottom: 15px;">Stay ahead with real-time global economic updates.</p>
-    <p class="lang-id" style="margin-bottom: 15px;">Tetap terdepan dengan pembaruan ekonomi global real-time.</p>
-    
-    <iframe src="https://cryptopanic.com/widgets/news/?bg_color=0f172a&link_color=60a5fa&text_color=9ca3af" 
-            width="100%" height="250px" frameborder="0" style="border-radius: 8px;"></iframe>
-</div>
-            
-            </section>
-
-        <section class="table-section">
-            <h2 class="lang-en">Supported Liquidity Pools</h2>
-            <h2 class="lang-id">Kolam Likuiditas yang Didukung</h2>
-            
-            <p class="lang-en">Provide liquidity to earn transaction fees and boosted auto-compounding rewards.</p>
-            <p class="lang-id">Sediakan likuiditas untuk mendapatkan biaya transaksi dan hadiah auto-compounding yang dioptimalkan.</p>
-            
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
-                            <th>Total TVL</th>
-                            <th class="lang-en">Base APR</th><th class="lang-id">APR Dasar</th>
-                            <th class="cyan-text">ZoniqFi Boosted APY</th>
-                            <th style="text-align: right;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="pool-name">WETH / USDC</td>
-                            <td>$18,452,000</td>
-                            <td>12.4%</td>
-                            <td class="boost-apr">32.8% 🔥</td>
-                            <td style="text-align: right;"><button onclick="window.location.href='app.html'" class="btn-sm">Deposit</button></td>
-                        </tr>
-                        <tr>
-                            <td class="pool-name">USDC / USDt</td>
-                            <td>$14,210,500</td>
-                            <td>4.1%</td>
-                            <td class="boost-apr">11.5% 🔥</td>
-                            <td style="text-align: right;"><button onclick="window.location.href='app.html'" class="btn-sm">Deposit</button></td>
-                        </tr>
-                        <tr>
-                            <td class="pool-name">$ZNF / WETH</td>
-                            <td>$10,188,704</td>
-                            <td>45.2%</td>
-                            <td class="boost-apr">114.6% 🔥</td>
-                            <td style="text-align: right;"><button onclick="window.location.href='app.html'" class="btn-sm">Deposit</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
     </main>
 
-    <footer>
-        <div class="wrapper footer-container">
-            <div>&copy; Provizto. Built on Base Ecosystem.</div>
-            <div class="footer-links">
-                <a href="tos.html">ToS</a>
-                <a href="https://x.com">Twitter</a>
-                <a href="https://discord.gg">Discord</a>
-                <a href="https://provizto.github.io/vzt/">GitHub</a>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // Logika Pengalih Bahasa Utama dApp
-        document.getElementById('langSwitcher').addEventListener('change', function(e) {
-            document.getElementById('rootNode').setAttribute('lang', e.target.value);
-        });
+        /* --- INTEGRASI LOGIKA JAVASCRIPT --- */
+        let isConnected = false;
+        let myWalletAddress = "7xVZT...SolanaWallet";
+        let lastTransactionTime = 0;
 
-        // Logika Pengalih Tab Berita (Crypto Panic vs TradingView)
-        function switchNewsTab(tabName) {
-            // Sembunyikan semua panel berita
-            document.querySelectorAll('.news-panel').forEach(panel => panel.classList.remove('active'));
-            // Matikan status aktif semua tombol tab
-            document.querySelectorAll('.news-tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Aktifkan panel dan tombol yang dipilih
-            if (tabName === 'crypto-panic') {
-                document.getElementById('pane-crypto-panic').classList.add('active');
-                event.target.classList.add('active');
-            } else if (tabName === 'tradingview') {
-                document.getElementById('pane-tradingview').classList.add('active');
-                event.target.classList.add('active');
+        function toggleWallet() {
+            const btn = document.getElementById('walletBtn');
+            const status = document.getElementById('walletStatus');
+            const actionButtons = document.querySelectorAll('.btn-action');
+            const testBtn = document.getElementById('testBtn');
+            const refLink = document.getElementById('refLink');
+
+            if (!isConnected) {
+                btn.innerText = myWalletAddress;
+                btn.style.background = "#22c55e";
+                status.innerText = "Wallet Status: Connected to Solana Mainnet";
+                status.style.color = "#22c55e";
+                refLink.value = `https://provizto.hub{myWalletAddress}`;
+                actionButtons.forEach(b => b.removeAttribute('disabled'));
+                testBtn.removeAttribute('disabled');
+                isConnected = true;
+            } else {
+                btn.innerText = "Connect Wallet";
+                btn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+                status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+                status.style.color = "#94a3b8";
+                refLink.value = "https://provizto.hub";
+                actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
+                testBtn.setAttribute('disabled', 'true');
+                hideBanner();
+                isConnected = false;
             }
+        }
+
+        // Simulasi Validasi On-Chain Anti-Self-Referral (Mencerminkan ErrorCode::SelfReferralNotAllowed)
+        function verifyReferralOnChain() {
+            const inputVal = document.getElementById('testReferrer').value.trim();
+            if(inputVal === myWalletAddress) {
+                showBanner("⚠️ [Smart Contract Error]: Anda tidak bisa merujuk diri sendiri! (SelfReferralNotAllowed)", "error");
+            } else if(inputVal === "") {
+                showBanner("Silakan masukkan alamat dompet untuk simulasi tes.", "warning");
+            } else {
+                showBanner("✅ [Smart Contract Success]: Alamat perujuk valid dan dicatat aman on-chain.", "success");
+            }
+        }
+
+        // Simulasi Proteksi Cooldown 10 Detik (Mencerminkan ErrorCode::RateLimited)
+        function executeSecureTx(actionName) {
+            const now = Math.floor(Date.now() / 1000);
+            if (now - lastTransactionTime < 10) {
+                showBanner("⚠️ [Smart Contract Error]: Deteksi transaksi berulang terlalu cepat! Sesuai aturan kode Rust, harap tunggu 10 detik.", "error");
+                return;
+            }
+            lastTransactionTime = now;
+            showBanner(`✅ Transaksi ${actionName} berhasil dieksekusi secara aman di Solana network.`, "success");
+        }
+
+        function showBanner(text, type) {
+            const banner = document.getElementById('securityBanner');
+            banner.innerText = text;
+            banner.style.display = "block";
+            if(type === "error") {
+                banner.style.background = "#ef4444";
+                banner.style.borderColor = "#b91c1c";
+            } else if(type === "success") {
+                banner.style.background = "#22c55e";
+                banner.style.borderColor = "#15803d";
+            } else {
+                banner.style.background = "#eab308";
+                banner.style.borderColor = "#a16207";
+            }
+        }
+
+        function hideBanner() {
+            document.getElementById('securityBanner').style.display = "none";
+        }
+
+        function copyLink() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Referral Link berhasil disalin!");
         }
     </script>
 </body>
