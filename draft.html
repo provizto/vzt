@@ -1,184 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Provizto dApp Hub - Secure Edition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provizto dApp Hub - Secure Edition</title>
+    <style>
+        /* --- INTEGRASI CSS STYLE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
 
-<style>
-/* CSS kamu tetap */
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;}
-body{background:#0b0f19;color:#f8fafc;}
-.dapp-header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:#111827;border-bottom:1px solid #1f2937;}
-.logo{font-size:1.4rem;font-weight:800;color:#fff;}
-.vzt-badge{font-size:.8rem;background:#14b8a6;padding:3px 8px;border-radius:12px;}
-.btn-connect{background:linear-gradient(135deg,#8b5cf6,#3b82f6);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
-.dapp-container{max-width:1200px;margin:auto;padding:40px 20px;}
-.wallet-status{text-align:center;color:#94a3b8;margin-bottom:20px;}
-.security-banner{padding:15px;border-radius:8px;margin-bottom:25px;font-weight:600;text-align:center;}
-.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;}
-.product-card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:25px;}
-.product-card:hover{transform:translateY(-4px);border-color:#3b82f6;}
-.stat-box{background:#1f2937;padding:8px;border-radius:6px;color:#3b82f6;margin-bottom:20px;text-align:center;}
-.btn-action{background:#1f2937;color:#94a3b8;border:1px solid #374151;padding:12px;border-radius:8px;cursor:not-allowed;width:100%;}
-.btn-action:not([disabled]){background:#3b82f6;color:#fff;cursor:pointer;}
-footer{text-align:center;padding:20px;color:#64748b;border-top:1px solid #1f2937;margin-top:40px;}
-</style>
+        body {
+            background-color: #0b0f19;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .dapp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #111827;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .vzt-badge {
+            font-size: 0.8rem;
+            background: #14b8a6;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 5px;
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-connect:hover {
+            opacity: 0.9;
+        }
+
+        .dapp-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .wallet-status {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Banner Notifikasi Pesan Keamanan Smart Contract */
+        .security-banner {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+        }
+
+        .product-card h3 {
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            color: #fff;
+        }
+
+        .product-card .desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background-color: #1f2937;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn-action {
+            background-color: #1f2937;
+            color: #94a3b8;
+            border: 1px solid #374151;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: not-allowed;
+            width: 100%;
+        }
+
+        .btn-action:not([disabled]) {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Panel Afiliasi Aman */
+        .affiliate-section {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .section-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .shield-badge {
+            background-color: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+            border: 1px solid #14b8a6;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 20px;
+        }
+
+        .affiliate-section h3 {
+            color: #fff;
+        }
+
+        .affiliate-section p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .affiliate-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .affiliate-box input {
+            flex: 1;
+            background-color: #0b0f19;
+            border: 1px solid #1f2937;
+            padding: 12px;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .btn-copy {
+            background-color: #14b8a6;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Panel Uji Coba Simulasi Keamanan */
+        .test-panel {
+            background-color: #1f2937;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .test-panel label {
+            display: block;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            background-color: #0b0f19;
+            border: 1px solid #374151;
+            padding: 10px;
+            border-radius: 6px;
+            color: #fff;
+        }
+
+        .btn-test {
+            background-color: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-test[disabled] {
+            background-color: #374151;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .tier-stats {
+            display: flex;
+            gap: 40px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .tier-stats span {
+            color: #14b8a6;
+            font-weight: 600;
+        }
+    </style>
 </head>
-
 <body>
 
-<header class="dapp-header">
-<div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
+    <!-- Header dApp -->
+    <header class="dapp-header">
+        <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
+        <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
+    </header>
 
-<div>
-<button class="btn-connect" onclick="switchLang()">EN / ID</button>
-<button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
-</div>
-</header>
+    <main class="dapp-container">
+        <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
 
-<main class="dapp-container">
+        <!-- Panel Notifikasi Keamanan Sistem -->
+        <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
-<div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
+        <!-- Grid 3 Produk Utama -->
+        <section class="products-grid">
+            <div class="product-card">
+                <h3>AMM DEX Swap</h3>
+                <p class="desc">Tukar aset instan dengan perlindungan MEV dan Anti-Wash Trading harian.</p>
+                <div class="stat-box">Trading Fee: 0.3%</div>
+                <button class="btn-action" onclick="executeSecureTx('Swap')" disabled>Launch Swap</button>
+            </div>
 
-<div class="security-banner" id="securityBanner" style="display:none;"></div>
+            <div class="product-card">
+                <h3>Yield Optimizer</h3>
+                <p class="desc">Setor sekali, sistem mengeksekusi otomatisasi auto-compound secara berkala.</p>
+                <div class="stat-box">Boosted APY: Up to 49.1%</div>
+                <button class="btn-action" onclick="executeSecureTx('Deposit Vault')" disabled>Open Vaults</button>
+            </div>
 
-<section class="products-grid">
-<div class="product-card">
-<h3 id="swapTitle">AMM DEX Swap</h3>
-<p class="desc" id="swapDesc">Tukar aset instan dengan perlindungan MEV.</p>
-<div class="stat-box">Trading Fee: 0.3%</div>
-<button class="btn-action" onclick="executeSecureTx('Swap')" disabled id="swapBtn">Launch Swap</button>
-</div>
+            <div class="product-card">
+                <h3>VZT Lock & Yield</h3>
+                <p class="desc">Kunci token $VZT Anda untuk mengklaim Real Yield dalam bentuk USDC stabil.</p>
+                <div class="stat-box">Reward: Real USDC</div>
+                <button class="btn-action" onclick="executeSecureTx('Token Locking')" disabled>Lock Token</button>
+            </div>
+        </section>
 
-<div class="product-card">
-<h3 id="yieldTitle">Yield Optimizer</h3>
-<p class="desc" id="yieldDesc">Auto compound system berjalan otomatis.</p>
-<div class="stat-box">Boosted APY: 49%</div>
-<button class="btn-action" onclick="executeSecureTx('Vault')" disabled id="yieldBtn">Open Vault</button>
-</div>
-</section>
+        <!-- Modul Afiliasi Aman -->
+        <section class="affiliate-section">
+            <div class="section-title-container">
+                <h3>Secure On-Chain Affiliate</h3>
+                <span class="shield-badge">🛡️ Anti-Sybil Active</span>
+            </div>
+            <p>Bagikan tautan unik Anda. Sistem membatasi manipulasi transaksi berulang (maks. 1 tx/10 detik).</p>
+            
+            <div class="affiliate-box">
+                <input type="text" id="refLink" value="https://provizto.hub" readonly>
+                <button class="btn-copy" id="copyBtn" onclick="copyLink()">Copy Link</button>
+            </div>
 
-<!-- BACK HOME -->
-<div style="text-align:center;margin-top:40px;">
-<button class="btn-connect" onclick="goHome()">⬅ Back to Home</button>
-</div>
+            <!-- Panel Uji Coba Simulasi Eror Kode Rust -->
+            <div class="test-panel">
+                <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Rust):</label>
+                <div class="input-group">
+                    <input type="text" id="testReferrer" placeholder="Masukkan alamat dompet pengajak...">
+                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verifikasi Tautan</button>
+                </div>
+            </div>
 
-</main>
+            <div class="tier-stats">
+                <div class="tier-item">Current Tier: <span>Bronze (10%)</span></div>
+                <div class="tier-item">Total Referral Volume: <span>$0.00</span></div>
+            </div>
+        </section>
+    </main>
 
-<footer id="footerText">
-© 2026 Provizto dApp Hub. All Rights Reserved.
-</footer>
+    <script>
+        /* --- INTEGRASI LOGIKA JAVASCRIPT --- */
+        let isConnected = false;
+        let myWalletAddress = "7xVZT...SolanaWallet";
+        let lastTransactionTime = 0;
 
-<script>
-let isConnected=false;
-let currentLang="EN";
-let myWalletAddress="7xVZT...SolanaWallet";
-let lastTransactionTime=0;
+        function toggleWallet() {
+            const btn = document.getElementById('walletBtn');
+            const status = document.getElementById('walletStatus');
+            const actionButtons = document.querySelectorAll('.btn-action');
+            const testBtn = document.getElementById('testBtn');
+            const refLink = document.getElementById('refLink');
 
-function toggleWallet(){
-const btn=document.getElementById('walletBtn');
-const status=document.getElementById('walletStatus');
-const actionButtons=document.querySelectorAll('.btn-action');
+            if (!isConnected) {
+                btn.innerText = myWalletAddress;
+                btn.style.background = "#22c55e";
+                status.innerText = "Wallet Status: Connected to Solana Mainnet";
+                status.style.color = "#22c55e";
+                refLink.value = `https://provizto.hub{myWalletAddress}`;
+                actionButtons.forEach(b => b.removeAttribute('disabled'));
+                testBtn.removeAttribute('disabled');
+                isConnected = true;
+            } else {
+                btn.innerText = "Connect Wallet";
+                btn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+                status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+                status.style.color = "#94a3b8";
+                refLink.value = "https://provizto.hub";
+                actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
+                testBtn.setAttribute('disabled', 'true');
+                hideBanner();
+                isConnected = false;
+            }
+        }
 
-if(!isConnected){
-btn.innerText=myWalletAddress;
-btn.style.background="#22c55e";
+        // Simulasi Validasi On-Chain Anti-Self-Referral (Mencerminkan ErrorCode::SelfReferralNotAllowed)
+        function verifyReferralOnChain() {
+            const inputVal = document.getElementById('testReferrer').value.trim();
+            if(inputVal === myWalletAddress) {
+                showBanner("⚠️ [Smart Contract Error]: Anda tidak bisa merujuk diri sendiri! (SelfReferralNotAllowed)", "error");
+            } else if(inputVal === "") {
+                showBanner("Silakan masukkan alamat dompet untuk simulasi tes.", "warning");
+            } else {
+                showBanner("✅ [Smart Contract Success]: Alamat perujuk valid dan dicatat aman on-chain.", "success");
+            }
+        }
 
-status.innerText=currentLang==="EN"
-?"Wallet Connected to Solana Mainnet"
-:"Wallet Terhubung ke Solana Mainnet";
+        // Simulasi Proteksi Cooldown 10 Detik (Mencerminkan ErrorCode::RateLimited)
+        function executeSecureTx(actionName) {
+            const now = Math.floor(Date.now() / 1000);
+            if (now - lastTransactionTime < 10) {
+                showBanner("⚠️ [Smart Contract Error]: Deteksi transaksi berulang terlalu cepat! Sesuai aturan kode Rust, harap tunggu 10 detik.", "error");
+                return;
+            }
+            lastTransactionTime = now;
+            showBanner(`✅ Transaksi ${actionName} berhasil dieksekusi secara aman di Solana network.`, "success");
+        }
 
-status.style.color="#22c55e";
+        function showBanner(text, type) {
+            const banner = document.getElementById('securityBanner');
+            banner.innerText = text;
+            banner.style.display = "block";
+            if(type === "error") {
+                banner.style.background = "#ef4444";
+                banner.style.borderColor = "#b91c1c";
+            } else if(type === "success") {
+                banner.style.background = "#22c55e";
+                banner.style.borderColor = "#15803d";
+            } else {
+                banner.style.background = "#eab308";
+                banner.style.borderColor = "#a16207";
+            }
+        }
 
-actionButtons.forEach(b=>b.removeAttribute('disabled'));
+        function hideBanner() {
+            document.getElementById('securityBanner').style.display = "none";
+        }
 
-// 🔥 POPUP TEST
-alert(currentLang==="EN"
-?"Wallet Connected Successfully! (Test Popup)"
-:"Wallet Berhasil Terhubung! (Popup Uji Coba)");
-
-isConnected=true;
-
-}else{
-btn.innerText=currentLang==="EN"?"Connect Wallet":"Hubungkan Wallet";
-btn.style.background="linear-gradient(135deg,#8b5cf6,#3b82f6)";
-
-status.innerText=currentLang==="EN"
-?"Wallet Disconnected"
-:"Wallet Terputus";
-
-status.style.color="#94a3b8";
-
-actionButtons.forEach(b=>b.setAttribute('disabled','true'));
-
-isConnected=false;
-}
-}
-
-function switchLang(){
-currentLang=currentLang==="EN"?"ID":"EN";
-
-document.getElementById("swapDesc").innerText=
-currentLang==="EN"
-?"Instant asset swap with MEV protection."
-:"Tukar aset instan dengan perlindungan MEV.";
-
-document.getElementById("yieldDesc").innerText=
-currentLang==="EN"
-?"Auto compound system running periodically."
-:"Sistem auto compound berjalan otomatis.";
-
-document.getElementById("swapBtn").innerText=
-currentLang==="EN"?"Launch Swap":"Mulai Swap";
-
-document.getElementById("yieldBtn").innerText=
-currentLang==="EN"?"Open Vault":"Buka Vault";
-
-document.getElementById("walletBtn").innerText=
-isConnected?myWalletAddress:
-(currentLang==="EN"?"Connect Wallet":"Hubungkan Wallet");
-
-document.getElementById("footerText").innerText=
-currentLang==="EN"
-?"© 2026 Provizto dApp Hub. All Rights Reserved."
-:"© 2026 Provizto dApp Hub. Hak Cipta Dilindungi.";
-}
-
-function goHome(){
-alert(currentLang==="EN"
-?"Redirecting to Home..."
-:"Kembali ke Beranda...");
-window.location.href="/";
-}
-
-function executeSecureTx(actionName){
-const now=Math.floor(Date.now()/1000);
-if(now-lastTransactionTime<10){
-showBanner(currentLang==="EN"
-?"Too many transactions! Wait 10 seconds."
-:"Terlalu cepat! Tunggu 10 detik.","error");
-return;
-}
-lastTransactionTime=now;
-
-showBanner(
-(currentLang==="EN"
-?`Transaction ${actionName} successful`
-:`Transaksi ${actionName} berhasil`),
-"success"
-);
-}
-
-function showBanner(text,type){
-const banner=document.getElementById('securityBanner');
-banner.innerText=text;
-banner.style.display="block";
-
-if(type==="error"){banner.style.background="#ef4444";}
-else{banner.style.background="#22c55e";}
-}
-</script>
-
+        function copyLink() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Referral Link berhasil disalin!");
+        }
+    </script>
 </body>
 </html>
