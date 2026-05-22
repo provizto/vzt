@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -299,33 +299,33 @@
         }
     </style>
 </head>
-<body>
+<body onload="changeLanguage()">
 
     <!-- Navigasi / Header -->
     <header>
         <div class="logo">PROVIZTO<span>.</span></div>
         <nav>
-            <a href="#hero" id="navHome">Beranda</a>
+            <a href="#hero" id="navHome">Home</a>
             <a href="#roadmap" id="navRoadmap">Roadmap</a>
         </nav>
         <div class="nav-actions">
             <!-- Tombol Switch Bahasa ID/EN -->
             <select class="lang-switch" id="langSelect" onchange="changeLanguage()">
+                <option value="EN" selected>EN</option>
                 <option value="ID">ID</option>
-                <option value="EN">EN</option>
             </select>
             <!-- Tombol Buka App -->
-            <a href="dapp.html" class="btn-launch" id="btnLaunchNav">Buka App</a>
+            <a href="dapp.html" class="btn-launch" id="btnLaunchNav">Launch App</a>
         </div>
     </header>
 
     <!-- Bagian Utama / Hero Section -->
     <section class="hero" id="hero">
-        <h1 id="heroTitle">Infrastruktur DeFi Masa Depan yang Aman di Jaringan <span>Solana</span></h1>
-        <p id="heroDesc">Satu ekosistem terpadu yang menggabungkan AMM DEX berlatensi rendah, otomatisasi Yield Optimizer, dan sistem Afiliasi On-Chain yang kebal terhadap manipulasi Sybil Attack.</p>
+        <h1 id="heroTitle">Secure Next-Gen DeFi Infrastructure Built on <span>Solana</span></h1>
+        <p id="heroDesc">A unified ecosystem combining low-latency AMM DEX, automated Yield Optimizer vaults, and an On-Chain Affiliate engine heavily secured against Sybil and Wash Trading attacks.</p>
         <div class="hero-buttons">
             <!-- Tombol Buka App Utama -->
-            <a href="dapp.html" class="btn-launch" style="padding: 14px 32px; font-size: 1rem;" id="btnLaunchHero">Buka Aplikasi</a>
+            <a href="dapp.html" class="btn-launch" style="padding: 14px 32px; font-size: 1rem;" id="btnLaunchHero">Launch Dashboard</a>
             <!-- Tombol Dokumen Whitepaper -->
             <a href="https://github.com" target="_blank" class="btn-secondary" id="btnWhitepaper">Whitepaper</a>
         </div>
@@ -333,7 +333,7 @@
 
     <!-- Bagian Proyek Roadmap -->
     <section class="roadmap-section" id="roadmap">
-        <h2 class="section-title" id="roadmapTitle">Roadmap <span>Proyek</span></h2>
+        <h2 class="section-title" id="roadmapTitle">Project <span>Roadmap</span></h2>
         
         <div class="timeline">
             <!-- Tahap 1 -->
@@ -341,8 +341,8 @@
                 <div class="timeline-img"></div>
                 <div class="timeline-content">
                     <div class="timeline-date" id="t1Date">Q1 2026</div>
-                    <h3 id="t1Title">Pengembangan Kode Arsitektur</h3>
-                    <p id="t1Desc">Menyelesaikan kompilasi kontrak pintar utama menggunakan kerangka Anchor Rust. Mengimplementasikan logika logika pembatasan transaksi temporal guna mencegah wash trading.</p>
+                    <h3 id="t1Title">Core Architecture & Code Dev</h3>
+                    <p id="t1Desc">Finalizing primary smart contract compilation via Anchor Rust Framework. Implementing temporal cooldown logics inside codes to counter malicious transactional loops.</p>
                 </div>
             </div>
 
@@ -351,8 +351,8 @@
                 <div class="timeline-img"></div>
                 <div class="timeline-content">
                     <div class="timeline-date" id="t2Date">Q2 2026</div>
-                    <h3 id="t2Title">Peluncuran Devnet & Audit</h3>
-                    <p id="t2Desc">Melakukan deployment penuh modul AMM DEX dan Yield Optimizer ke Solana Devnet. Memulai program Bug Bounty komunitas serta mempersiapkan audit kode eksternal.</p>
+                    <h3 id="t2Title">Devnet Deployment & Audits</h3>
+                    <p id="t2Desc">Deploying AMM DEX and Yield Optimizer modules live onto Solana Devnet. Launching community-driven Bug Bounty programs while coordinating structural third-party security audits.</p>
                 </div>
             </div>
 
@@ -361,8 +361,8 @@
                 <div class="timeline-img"></div>
                 <div class="timeline-content">
                     <div class="timeline-date" id="t3Date">Q3 2026</div>
-                    <h3 id="t3Title">Integrasi Insentif & Mainnet</h3>
-                    <p id="t3Desc">Meluncurkan platform secara penuh di Solana Mainnet. Mengaktifkan fitur Lock Staking Token $VZT untuk mengklaim bagi hasil pendapatan riil berskala global dalam denominasi USDC.</p>
+                    <h3 id="t3Title">Mainnet Launch & Real Yield</h3>
+                    <p id="t3Desc">Full production deployment on Solana Mainnet. Activating the $VZT Token Locking mechanism to enable distributed protocol fees sharing natively settled in liquid USDC stablecoin.</p>
                 </div>
             </div>
         </div>
