@@ -51,38 +51,16 @@
             margin-left: 5px;
         }
 
-        /* Fitur Pemilih Bahasa (Language Switcher) */
-        .lang-switcher {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+        /* Dropdown Bahasa */
+        .lang-select {
             background-color: #1f2937;
-            padding: 6px 12px;
-            border-radius: 20px;
+            color: #fff;
             border: 1px solid #374151;
-        }
-
-        .lang-switcher a {
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .lang-switcher .lang-en {
-            color: #3b82f6; /* Warna cerah menandakan bahasa utama aktif */
-        }
-
-        .lang-switcher .lang-id {
-            color: #64748b; /* Warna agak redup untuk bahasa sekunder */
-        }
-
-        .lang-switcher .lang-id:hover {
-            color: #cbd5e1;
-        }
-
-        .lang-divider {
-            color: #4b5563;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
         }
 
         .header-right {
@@ -91,7 +69,6 @@
             gap: 15px;
         }
 
-        /* Tombol Back to Home */
         .btn-home {
             background-color: transparent;
             color: #94a3b8;
@@ -129,7 +106,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
-            flex: 1; /* Membuat container mengambil sisa ruang agar footer tetap di bawah */
+            flex: 1;
             width: 100%;
         }
 
@@ -140,7 +117,6 @@
             font-size: 0.95rem;
         }
 
-        /* Banner Notifikasi Pesan Keamanan Smart Contract */
         .security-banner {
             padding: 15px;
             border-radius: 8px;
@@ -163,9 +139,6 @@
             border: 1px solid #1f2937;
             border-radius: 12px;
             padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             transition: transform 0.2s;
         }
 
@@ -216,7 +189,6 @@
             cursor: pointer;
         }
 
-        /* Panel Afiliasi Aman */
         .affiliate-section {
             background-color: #111827;
             border: 1px solid #1f2937;
@@ -239,10 +211,6 @@
             font-size: 0.75rem;
             font-weight: 700;
             border-radius: 20px;
-        }
-
-        .affiliate-section h3 {
-            color: #fff;
         }
 
         .affiliate-section p {
@@ -277,7 +245,6 @@
             cursor: pointer;
         }
 
-        /* Panel Uji Coba Simulasi Keamanan */
         .test-panel {
             background-color: #1f2937;
             padding: 20px;
@@ -336,7 +303,6 @@
             font-weight: 600;
         }
 
-        /* Bagian Footer & Copyright */
         .dapp-footer {
             background-color: #111827;
             border-top: 1px solid #1f2937;
@@ -347,30 +313,10 @@
             margin-top: auto;
         }
 
-        .dapp-footer p {
-            letter-spacing: 0.5px;
-        }
-
-        /* Responsif untuk perangkat mobile */
         @media (max-width: 768px) {
-            .dapp-header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 20px;
-            }
-            .header-left {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .header-right {
-                width: 100%;
-                justify-content: center;
-            }
-            .btn-home, .btn-connect {
-                flex: 1;
-                text-align: center;
-                font-size: 0.85rem;
-            }
+            .dapp-header { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .header-left { flex-direction: column; gap: 10px; }
+            .header-right { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -379,11 +325,11 @@
     <header class="dapp-header">
         <div class="header-left">
             <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
-            <div class="lang-switcher">
-                <a href="#en" class="lang-en">EN</a>
-                <span class="lang-divider">|</span>
-                <a href="#id" class="lang-id">ID</a>
-            </div>
+            <!-- Dropdown Bahasa -->
+            <select class="lang-select" onchange="console.log('Language changed to:', this.value)">
+                <option value="en">EN</option>
+                <option value="id">ID</option>
+            </select>
         </div>
         <div class="header-right">
             <a href="cth.html" class="btn-home">Back to Home</a>
@@ -393,7 +339,6 @@
 
     <main class="dapp-container">
         <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
-
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
@@ -424,7 +369,7 @@
                 <h3>Secure On-Chain Affiliate</h3>
                 <span class="shield-badge">🛡️ Anti-Sybil Active</span>
             </div>
-            <p>Bagikan tautan unik Anda. Sistem membatasi manipulasi transaksi berulang (maks. 1 tx/10 detik).</p>
+            <p>Bagikan tautan unik Anda. Sistem membatasi manipulasi transaksi berulang.</p>
             
             <div class="affiliate-box">
                 <input type="text" id="refLink" value="https://provizto.hub" readonly>
@@ -432,31 +377,29 @@
             </div>
 
             <div class="test-panel">
-                <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Rust):</label>
+                <label for="testReferrer">Uji Coba Input Referrer:</label>
                 <div class="input-group">
-                    <input type="text" id="testReferrer" placeholder="Masukkan alamat dompet pengajak...">
-                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verifikasi Tautan</button>
+                    <input type="text" id="testReferrer" placeholder="Masukkan alamat dompet...">
+                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verifikasi</button>
                 </div>
             </div>
 
             <div class="tier-stats">
                 <div class="tier-item">Current Tier: <span>Bronze (10%)</span></div>
-                <div class="tier-item">Total Referral Volume: <span>$0.00</span></div>
+                <div class="tier-item">Total Volume: <span>$0.00</span></div>
             </div>
         </section>
     </main>
 
     <footer class="dapp-footer">
-        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. All Rights Reserved. Secure Protocol Edition.</p>
+        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. All Rights Reserved.</p>
     </footer>
 
     <script>
-        /* --- INTEGRASI LOGIKA JAVASCRIPT --- */
         let isConnected = false;
-        let myWalletAddress = "7xVZT...SolanaWallet";
+        const myWalletAddress = "7xVZT...SolanaWallet";
         let lastTransactionTime = 0;
 
-        // Set Tahun Copyright secara Otomatis
         document.getElementById('copyrightYear').innerText = new Date().getFullYear();
 
         function toggleWallet() {
@@ -464,78 +407,44 @@
             const status = document.getElementById('walletStatus');
             const actionButtons = document.querySelectorAll('.btn-action');
             const testBtn = document.getElementById('testBtn');
-            const refLink = document.getElementById('refLink');
 
             if (!isConnected) {
-                btn.innerText = myWalletAddress;
+                // Simulasi Koneksi Wallet (Web3 Provider)
+                btn.innerText = "Connected";
                 btn.style.background = "#22c55e";
-                status.innerText = "Wallet Status: Connected to Solana Mainnet";
+                status.innerText = "Wallet Status: Connected (" + myWalletAddress + ")";
                 status.style.color = "#22c55e";
-                refLink.value = `https://provizto.hub/${myWalletAddress}`;
+                
                 actionButtons.forEach(b => b.removeAttribute('disabled'));
                 testBtn.removeAttribute('disabled');
                 isConnected = true;
             } else {
+                // Putus Koneksi
                 btn.innerText = "Connect Wallet";
                 btn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
                 status.innerText = "Wallet Status: Disconnected (Network: Solana)";
                 status.style.color = "#94a3b8";
-                refLink.value = "https://provizto.hub";
+                
                 actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
                 testBtn.setAttribute('disabled', 'true');
-                hideBanner();
                 isConnected = false;
             }
         }
 
-        // Simulasi Validasi On-Chain Anti-Self-Referral (Mencerminkan ErrorCode::SelfReferralNotAllowed)
         function verifyReferralOnChain() {
             const inputVal = document.getElementById('testReferrer').value.trim();
-            if(inputVal === myWalletAddress) {
-                showBanner("⚠️ [Smart Contract Error]: Anda tidak bisa merujuk diri sendiri! (SelfReferralNotAllowed)", "error");
-            } else if(inputVal === "") {
-                showBanner("Silakan masukkan alamat dompet untuk simulasi tes.", "warning");
-            } else {
-                showBanner("✅ [Smart Contract Success]: Alamat perujuk valid dan dicatat aman on-chain.", "success");
-            }
+            if(inputVal === "") return;
+            alert("Memverifikasi alamat: " + inputVal);
         }
 
-        // Simulasi Proteksi Cooldown 10 Detik (Mencerminkan ErrorCode::RateLimited)
         function executeSecureTx(actionName) {
-            const now = Math.floor(Date.now() / 1000);
-            if (now - lastTransactionTime < 10) {
-                showBanner("⚠️ [Smart Contract Error]: Deteksi transaksi berulang terlalu cepat! Sesuai aturan kode Rust, harap tunggu 10 detik.", "error");
-                return;
-            }
-            lastTransactionTime = now;
-            showBanner(`✅ Transaksi ${actionName} berhasil dieksekusi secara aman di Solana network.`, "success");
-        }
-
-        function showBanner(text, type) {
-            const banner = document.getElementById('securityBanner');
-            banner.innerText = text;
-            banner.style.display = "block";
-            if(type === "error") {
-                banner.style.background = "#ef4444";
-                banner.style.borderColor = "#b91c1c";
-            } else if(type === "success") {
-                banner.style.background = "#22c55e";
-                banner.style.borderColor = "#15803d";
-            } else {
-                banner.style.background = "#eab308";
-                banner.style.borderColor = "#a16207";
-            }
-        }
-
-        function hideBanner() {
-            document.getElementById('securityBanner').style.display = "none";
+            alert("Menjalankan transaksi " + actionName + "...");
         }
 
         function copyLink() {
             const copyText = document.getElementById("refLink");
-            copyText.select();
             navigator.clipboard.writeText(copyText.value);
-            alert("Referral Link berhasil disalin!");
+            alert("Link disalin!");
         }
     </script>
 </body>
