@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provizto dApp Hub - Secure Edition</title>
-    
-    <!-- 1. Panggil library AppKit via CDN -->
-    <script type="module" src="https://unpkg.com"></script>
-
     <style>
         /* --- INTEGRASI CSS STYLE --- */
         * {
@@ -74,11 +70,11 @@
         }
 
         .lang-switcher .lang-en {
-            color: #3b82f6;
+            color: #3b82f6; /* Warna cerah menandakan bahasa utama aktif */
         }
 
         .lang-switcher .lang-id {
-            color: #64748b;
+            color: #64748b; /* Warna agak redup untuk bahasa sekunder */
         }
 
         .lang-switcher .lang-id:hover {
@@ -114,11 +110,26 @@
             border-color: #4b5563;
         }
 
+        .btn-connect {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-connect:hover {
+            opacity: 0.9;
+        }
+
         .dapp-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
-            flex: 1;
+            flex: 1; /* Membuat container mengambil sisa ruang agar footer tetap di bawah */
             width: 100%;
         }
 
@@ -355,7 +366,7 @@
                 width: 100%;
                 justify-content: center;
             }
-            .btn-home {
+            .btn-home, .btn-connect {
                 flex: 1;
                 text-align: center;
                 font-size: 0.85rem;
@@ -376,14 +387,12 @@
         </div>
         <div class="header-right">
             <a href="cth.html" class="btn-home">Back to Home</a>
-            <!-- 2. Tombol otomatis bawaan AppKit (Menggantikan tombol manual lama) -->
-            <appkit-button></appkit-button>
+            <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
         </div>
     </header>
 
     <main class="dapp-container">
-        <!-- Update placeholder jaringan ke Base -->
-        <div class="wallet-status" id="walletStatus">Wallet Status: Managed by AppKit (Network: Base)</div>
+        <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
 
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
@@ -423,7 +432,7 @@
             </div>
 
             <div class="test-panel">
-                <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Smart Contract):</label>
+                <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Rust):</label>
                 <div class="input-group">
                     <input type="text" id="testReferrer" placeholder="Masukkan alamat dompet pengajak...">
                     <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verifikasi Tautan</button>
@@ -442,17 +451,47 @@
     </footer>
 
     <script>
-        /* --- INTEGRASI LOGIKA JAVASCRIPT CADANGAN --- */
+        /* --- INTEGRASI LOGIKA JAVASCRIPT --- */
+        let isConnected = false;
+        let myWalletAddress = "7xVZT...SolanaWallet";
         let lastTransactionTime = 0;
-        let myWalletAddress = ""; // Akan diisi otomatis lewat logika js/wallet.js nantinya
 
         // Set Tahun Copyright secara Otomatis
         document.getElementById('copyrightYear').innerText = new Date().getFullYear();
 
-        // Simulasi Validasi On-Chain Anti-Self-Referral
+        function toggleWallet() {
+            const btn = document.getElementById('walletBtn');
+            const status = document.getElementById('walletStatus');
+            const actionButtons = document.querySelectorAll('.btn-action');
+            const testBtn = document.getElementById('testBtn');
+            const refLink = document.getElementById('refLink');
+
+            if (!isConnected) {
+                btn.innerText = myWalletAddress;
+                btn.style.background = "#22c55e";
+                status.innerText = "Wallet Status: Connected to Solana Mainnet";
+                status.style.color = "#22c55e";
+                refLink.value = `https://provizto.hub/${myWalletAddress}`;
+                actionButtons.forEach(b => b.removeAttribute('disabled'));
+                testBtn.removeAttribute('disabled');
+                isConnected = true;
+            } else {
+                btn.innerText = "Connect Wallet";
+                btn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+                status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+                status.style.color = "#94a3b8";
+                refLink.value = "https://provizto.hub";
+                actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
+                testBtn.setAttribute('disabled', 'true');
+                hideBanner();
+                isConnected = false;
+            }
+        }
+
+        // Simulasi Validasi On-Chain Anti-Self-Referral (Mencerminkan ErrorCode::SelfReferralNotAllowed)
         function verifyReferralOnChain() {
             const inputVal = document.getElementById('testReferrer').value.trim();
-            if(myWalletAddress && inputVal === myWalletAddress) {
+            if(inputVal === myWalletAddress) {
                 showBanner("⚠️ [Smart Contract Error]: Anda tidak bisa merujuk diri sendiri! (SelfReferralNotAllowed)", "error");
             } else if(inputVal === "") {
                 showBanner("Silakan masukkan alamat dompet untuk simulasi tes.", "warning");
@@ -461,15 +500,15 @@
             }
         }
 
-        // Simulasi Proteksi Cooldown 10 Detik
+        // Simulasi Proteksi Cooldown 10 Detik (Mencerminkan ErrorCode::RateLimited)
         function executeSecureTx(actionName) {
             const now = Math.floor(Date.now() / 1000);
             if (now - lastTransactionTime < 10) {
-                showBanner("⚠️ [Smart Contract Error]: Deteksi transaksi berulang terlalu cepat! Harap tunggu 10 detik.", "error");
+                showBanner("⚠️ [Smart Contract Error]: Deteksi transaksi berulang terlalu cepat! Sesuai aturan kode Rust, harap tunggu 10 detik.", "error");
                 return;
             }
             lastTransactionTime = now;
-            showBanner(`✅ Transaksi ${actionName} berhasil dieksekusi secara aman di jaringan Base.`, "success");
+            showBanner(`✅ Transaksi ${actionName} berhasil dieksekusi secara aman di Solana network.`, "success");
         }
 
         function showBanner(text, type) {
@@ -499,8 +538,5 @@
             alert("Referral Link berhasil disalin!");
         }
     </script>
-
-    <!-- 3. Hubungkan ke file JavaScript eksternal Anda untuk mengontrol AppKit -->
-    <script type="module" src="js/wallet.js"></script>
 </body>
 </html>
