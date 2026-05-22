@@ -17,6 +17,8 @@
             background-color: #0b0f19;
             color: #f8fafc;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .dapp-header {
@@ -26,6 +28,12 @@
             padding: 20px 40px;
             background-color: #111827;
             border-bottom: 1px solid #1f2937;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
         }
 
         .logo {
@@ -41,6 +49,65 @@
             padding: 3px 8px;
             border-radius: 12px;
             margin-left: 5px;
+        }
+
+        /* Fitur Pemilih Bahasa (Language Switcher) */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background-color: #1f2937;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #374151;
+        }
+
+        .lang-switcher a {
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .lang-switcher .lang-en {
+            color: #3b82f6; /* Warna cerah menandakan bahasa utama aktif */
+        }
+
+        .lang-switcher .lang-id {
+            color: #64748b; /* Warna agak redup untuk bahasa sekunder */
+        }
+
+        .lang-switcher .lang-id:hover {
+            color: #cbd5e1;
+        }
+
+        .lang-divider {
+            color: #4b5563;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Tombol Back to Home */
+        .btn-home {
+            background-color: transparent;
+            color: #94a3b8;
+            border: 1px solid #374151;
+            padding: 10px 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-home:hover {
+            color: #fff;
+            background-color: #1f2937;
+            border-color: #4b5563;
         }
 
         .btn-connect {
@@ -62,6 +129,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
+            flex: 1; /* Membuat container mengambil sisa ruang agar footer tetap di bawah */
+            width: 100%;
         }
 
         .wallet-status {
@@ -266,23 +335,67 @@
             color: #14b8a6;
             font-weight: 600;
         }
+
+        /* Bagian Footer & Copyright */
+        .dapp-footer {
+            background-color: #111827;
+            border-top: 1px solid #1f2937;
+            padding: 20px 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        .dapp-footer p {
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsif untuk perangkat mobile */
+        @media (max-width: 768px) {
+            .dapp-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-home, .btn-connect {
+                flex: 1;
+                text-align: center;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header dApp -->
     <header class="dapp-header">
-        <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
-        <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
+        <div class="header-left">
+            <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
+            <div class="lang-switcher">
+                <a href="#en" class="lang-en">EN</a>
+                <span class="lang-divider">|</span>
+                <a href="#id" class="lang-id">ID</a>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="/" class="btn-home">Back to Home</a>
+            <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
+        </div>
     </header>
 
     <main class="dapp-container">
         <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
 
-        <!-- Panel Notifikasi Keamanan Sistem -->
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
-        <!-- Grid 3 Produk Utama -->
         <section class="products-grid">
             <div class="product-card">
                 <h3>AMM DEX Swap</h3>
@@ -306,7 +419,6 @@
             </div>
         </section>
 
-        <!-- Modul Afiliasi Aman -->
         <section class="affiliate-section">
             <div class="section-title-container">
                 <h3>Secure On-Chain Affiliate</h3>
@@ -319,7 +431,6 @@
                 <button class="btn-copy" id="copyBtn" onclick="copyLink()">Copy Link</button>
             </div>
 
-            <!-- Panel Uji Coba Simulasi Eror Kode Rust -->
             <div class="test-panel">
                 <label for="testReferrer">Uji Coba Input Referrer (Simulasi Verifikasi Kode Rust):</label>
                 <div class="input-group">
@@ -335,11 +446,18 @@
         </section>
     </main>
 
+    <footer class="dapp-footer">
+        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. All Rights Reserved. Secure Protocol Edition.</p>
+    </footer>
+
     <script>
         /* --- INTEGRASI LOGIKA JAVASCRIPT --- */
         let isConnected = false;
         let myWalletAddress = "7xVZT...SolanaWallet";
         let lastTransactionTime = 0;
+
+        // Set Tahun Copyright secara Otomatis
+        document.getElementById('copyrightYear').innerText = new Date().getFullYear();
 
         function toggleWallet() {
             const btn = document.getElementById('walletBtn');
@@ -353,7 +471,7 @@
                 btn.style.background = "#22c55e";
                 status.innerText = "Wallet Status: Connected to Solana Mainnet";
                 status.style.color = "#22c55e";
-                refLink.value = `https://provizto.hub{myWalletAddress}`;
+                refLink.value = `https://provizto.hub/${myWalletAddress}`;
                 actionButtons.forEach(b => b.removeAttribute('disabled'));
                 testBtn.removeAttribute('disabled');
                 isConnected = true;
