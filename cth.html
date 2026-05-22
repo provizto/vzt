@@ -3,446 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provizto Hub - Next-Gen Solana DeFi Infrastructure</title>
+    <title>Provizto Hub - Next-Gen Base DeFi Infrastructure</title>
     <style>
-        /* --- INTEGRASI CSS STYLE (TEMA GELAP SOLANA PREMIUM) --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        :root {
-            --bg-main: #060913;
-            --bg-card: #0d1326;
-            --bg-nav: #090d1a;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-green: #14b8a6;
-            --accent-blue: #3b82f6;
-            --gradient-primary: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            --border-color: #1e293b;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-
-        /* Navigasi / Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(9, 13, 26, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: var(--text-primary);
-        }
-
-        .logo span {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--text-primary);
-        }
-
-        /* Pengatur Bahasa & Tombol Akses */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .lang-switch {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            outline: none;
-        }
-
-        .btn-launch {
-            background: var(--gradient-primary);
-            color: #fff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.2s, transform 0.2s;
-        }
-
-        .btn-launch:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        /* Bagian Utama (Hero Section) */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
-            margin-top: 60px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 850;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            max-width: 850px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, #14b8a6, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            max-width: 650px;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 12px 26px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-color: var(--text-secondary);
-        }
-
-        /* Bagian Roadmap */
-        .roadmap-section {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 60px;
-        }
-
-        .section-title span {
-            color: var(--accent-green);
-        }
-
-        /* Garis Alur Kontainer Roadmap */
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-green));
-        }
-
-        .timeline-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .timeline-img {
-            width: 16px;
-            height: 16px;
-            background-color: var(--bg-main);
-            border: 3px solid var(--accent-blue);
-            border-radius: 50%;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        .timeline-item:nth-child(even) .timeline-img {
-            border-color: var(--accent-green);
-        }
-
-        .timeline-content {
-            width: 45%;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            transition: border-color 0.3s;
-        }
-
-        .timeline-content:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-
-        .timeline-date {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .timeline-item:nth-child(even) .timeline-date {
-            color: var(--accent-green);
-        }
-
-        .timeline-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .timeline-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--border-color);
-            color: #475569;
-            font-size: 0.85rem;
-        }
-
-        /* Responsif Mobile */
-        @media (max-width: 768px) {
-            header { padding: 15px 20px; }
-            nav { display: none; }
-            .hero h1 { font-size: 2.3rem; }
-            .hero p { font-size: 1rem; }
-            .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; }
-            .timeline::before { left: 20px; }
-            .timeline-item { flex-direction: row !important; margin-bottom: 30px; }
-            .timeline-img { left: 20px; transform: translateX(-50%); }
-            .timeline-content { width: calc(100% - 45px); margin-left: 45px; }
-        }
+        /* --- INTEGRASI CSS STYLE (TEMA GELAP BASE PREMIUM) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; scroll-behavior: smooth; }
+        :root { --bg-main: #060913; --bg-card: #0d1326; --text-primary: #f8fafc; --text-secondary: #94a3b8; --accent-blue: #0052ff; --accent-green: #14b8a6; --gradient-primary: linear-gradient(135deg, #0052ff, #14b8a6); --border-color: #1e293b; }
+        body { background-color: var(--bg-main); color: var(--text-primary); overflow-x: hidden; }
+        header { position: fixed; top: 0; width: 100%; background-color: rgba(9, 13, 26, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; z-index: 1000; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+        .logo span { color: var(--accent-blue); }
+        .btn-launch { background: var(--gradient-primary); color: #fff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
+        .hero h1 { font-size: 3.5rem; font-weight: 850; margin-bottom: 20px; }
+        .hero h1 span { color: var(--accent-blue); }
+        .roadmap-section { max-width: 1000px; margin: 0 auto; padding: 100px 20px; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 60px; }
+        .timeline { position: relative; padding: 20px 0; }
+        .timeline::before { content: ''; position: absolute; top: 0; left: 20px; width: 2px; height: 100%; background: var(--border-color); }
+        .timeline-item { margin-bottom: 40px; padding-left: 50px; position: relative; }
+        .timeline-date { font-weight: 700; color: var(--accent-blue); margin-bottom: 5px; }
+        .timeline-content { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--border-color); color: #475569; }
     </style>
 </head>
-<body onload="changeLanguage()">
+<body>
 
-    <!-- Navigasi / Header -->
     <header>
         <div class="logo">PROVIZTO<span>.</span></div>
-        <nav>
-            <a href="#hero" id="navHome">Home</a>
-            <a href="#roadmap" id="navRoadmap">Roadmap</a>
-        </nav>
-        <div class="nav-actions">
-            <!-- Tombol Switch Bahasa ID/EN -->
-            <select class="lang-switch" id="langSelect" onchange="changeLanguage()">
-                <option value="EN" selected>EN</option>
-                <option value="ID">ID</option>
-            </select>
-            <!-- Tombol Buka App -->
-            <a href="draft.html" class="btn-launch" id="btnLaunchNav">Launch App</a>
-        </div>
+        <a href="draft.html" class="btn-launch">Launch App</a>
     </header>
 
-    <!-- Bagian Utama / Hero Section -->
     <section class="hero" id="hero">
-        <h1 id="heroTitle">Secure Next-Gen DeFi Infrastructure Built on <span>Solana</span></h1>
-        <p id="heroDesc">A unified ecosystem combining low-latency AMM DEX, automated Yield Optimizer vaults, and an On-Chain Affiliate engine heavily secured against Sybil and Wash Trading attacks.</p>
-        <div class="hero-buttons">
-            <!-- Tombol Buka App Utama -->
-            <a href="draft.html" class="btn-launch" style="padding: 14px 32px; font-size: 1rem;" id="btnLaunchHero">Launch Dashboard</a>
-            <!-- Tombol Dokumen Whitepaper -->
-            <a href="/" class="btn-secondary" id="btnWhitepaper">Whitepaper</a>
-        </div>
+        <h1>Secure Next-Gen DeFi on <span>Base</span></h1>
+        <p>A unified ecosystem for DEX, Yield Optimizer, and On-Chain Affiliate engine.</p>
     </section>
 
-    <!-- Bagian Proyek Roadmap -->
     <section class="roadmap-section" id="roadmap">
-        <h2 class="section-title" id="roadmapTitle">Project <span>Roadmap</span></h2>
-        
+        <h2 class="section-title">Project <span>Roadmap</span></h2>
         <div class="timeline">
-            <!-- Tahap 1 -->
             <div class="timeline-item">
-                <div class="timeline-img"></div>
+                <div class="timeline-date">Q1 - Q2 2026: Fondasi & Peluncuran Web Utama</div>
                 <div class="timeline-content">
-                    <div class="timeline-date" id="t1Date">Q1 2026</div>
-                    <h3 id="t1Title">Core Architecture & Code Dev</h3>
-                    <p id="t1Desc">Finalizing primary smart contract compilation via Anchor Rust Framework. Implementing temporal cooldown logics inside codes to counter malicious transactional loops.</p>
+                    <p>Integrasi Web3 Core (Reown AppKit), Audit Smart Contract $VZT di Base Testnet, Penyediaan Likuiditas Awal di Aerodrome/Uniswap, Penguncian Likuiditas (Anti-Rugpull), dan Peluncuran Web Provizto v1.0.</p>
                 </div>
             </div>
-
-            <!-- Tahap 2 -->
             <div class="timeline-item">
-                <div class="timeline-img"></div>
+                <div class="timeline-date">Q3 2026: Sistem Affiliate & Migrasi APK</div>
                 <div class="timeline-content">
-                    <div class="timeline-date" id="t2Date">Q2 2026</div>
-                    <h3 id="t2Title">Devnet Deployment & Audits</h3>
-                    <p id="t2Desc">Deploying AMM DEX and Yield Optimizer modules live onto Solana Devnet. Launching community-driven Bug Bounty programs while coordinating structural third-party security audits.</p>
+                    <p>Aktivasi fitur Referral/Affiliate, Konversi ke APK Android (Native WebView), Integrasi Deep-Linking Wallet, Distribusi Beta, dan kampanye Web3 Quests (Galxe/Layer3).</p>
                 </div>
             </div>
-
-            <!-- Tahap 3 -->
             <div class="timeline-item">
-                <div class="timeline-img"></div>
+                <div class="timeline-date">Q4 2026: Yield Optimizer & Listing Massal</div>
                 <div class="timeline-content">
-                    <div class="timeline-date" id="t3Date">Q3 2026</div>
-                    <h3 id="t3Title">Mainnet Launch & Real Yield</h3>
-                    <p id="t3Desc">Full production deployment on Solana Mainnet. Activating the $VZT Token Locking mechanism to enable distributed protocol fees sharing natively settled in liquid USDC stablecoin.</p>
+                    <p>Peluncuran produk Yield Optimizer (Auto-compounding vaults), Listing di CoinMarketCap/CoinGecko, Kemitraan strategis dengan Beefy Finance, Rilis resmi di Google Play Store, dan evaluasi ekosistem.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Provizto Ecosystem. Built Open-Source on Solana.</p>
+        <p>&copy; 2026 Provizto Ecosystem. Built on Base Network.</p>
     </footer>
 
-    <!-- --- INTEGRASI LOGIKA JAVASCRIPT MULTI-BAHASA --- -->
-    <script>
-        const translations = {
-            ID: {
-                navHome: "Beranda",
-                navRoadmap: "Roadmap",
-                btnLaunchNav: "Buka App",
-                btnLaunchHero: "Buka Aplikasi",
-                btnWhitepaper: "Whitepaper",
-                heroTitle: "Infrastruktur DeFi Masa Depan yang Aman di Jaringan <span>Solana</span>",
-                heroDesc: "Satu ekosistem terpadu yang menggabungkan AMM DEX berlatensi rendah, otomatisasi Yield Optimizer, dan sistem Afiliasi On-Chain yang kebal terhadap manipulasi Sybil Attack.",
-                roadmapTitle: "Roadmap <span>Proyek</span>",
-                t1Date: "Q1 2026",
-                t1Title: "Pengembangan Kode Arsitektur",
-                t1Desc: "Menyelesaikan kompilasi kontrak pintar utama menggunakan kerangka Anchor Rust. Mengimplementasikan logika pembatasan transaksi temporal guna mencegah wash trading.",
-                t2Date: "Q2 2026",
-                t2Title: "Peluncuran Devnet & Audit",
-                t2Desc: "Melakukan deployment penuh modul AMM DEX dan Yield Optimizer ke Solana Devnet. Memulai program Bug Bounty komunitas serta mempersiapkan audit kode eksternal.",
-                t3Date: "Q3 2026",
-                t3Title: "Integrasi Insentif & Mainnet",
-                t3Desc: "Meluncurkan platform secara penuh di Solana Mainnet. Mengaktifkan fitur Lock Staking Token $VZT untuk mengklaim bagi hasil pendapatan riil berskala global dalam denominasi USDC."
-            },
-            EN: {
-                navHome: "Home",
-                navRoadmap: "Roadmap",
-                btnLaunchNav: "Launch App",
-                btnLaunchHero: "Launch Dashboard",
-                btnWhitepaper: "Whitepaper",
-                heroTitle: "Secure Next-Gen DeFi Infrastructure Built on <span>Solana</span>",
-                heroDesc: "A unified ecosystem combining low-latency AMM DEX, automated Yield Optimizer vaults, and an On-Chain Affiliate engine heavily secured against Sybil and Wash Trading attacks.",
-                roadmapTitle: "Project <span>Roadmap</span>",
-                t1Date: "Q1 2026",
-                t1Title: "Core Architecture & Code Dev",
-                t1Desc: "Finalizing primary smart contract compilation via Anchor Rust Framework. Implementing temporal cooldown logics inside codes to counter malicious transactional loops.",
-                t2Date: "Q2 2026",
-                t2Title: "Devnet Deployment & Audits",
-                t2Desc: "Deploying AMM DEX and Yield Optimizer modules live onto Solana Devnet. Launching community-driven Bug Bounty programs while coordinating structural third-party security audits.",
-                t3Date: "Q3 2026",
-                t3Title: "Mainnet Launch & Real Yield",
-                t3Desc: "Full production deployment on Solana Mainnet. Activating the $VZT Token Locking mechanism to enable distributed protocol fees sharing natively settled in liquid USDC stablecoin."
-            }
-        };
-
-        function changeLanguage() {
-            const selectedLang = document.getElementById('langSelect').value;
-            const data = translations[selectedLang];
-
-            // Melakukan update text content pada elemen tanpa merusak struktur HTML bawaan
-            document.getElementById('navHome').innerText = data.navHome;
-            document.getElementById('navRoadmap').innerText = data.navRoadmap;
-            document.getElementById('btnLaunchNav').innerText = data.btnLaunchNav;
-            document.getElementById('btnLaunchHero').innerText = data.btnLaunchHero;
-            document.getElementById('btnWhitepaper').innerText = data.btnWhitepaper;
-            document.getElementById('heroTitle').innerHTML = data.heroTitle;
-            document.getElementById('heroDesc').innerText = data.heroDesc;
-            document.getElementById('roadmapTitle').innerHTML = data.roadmapTitle;
-            
-            // Update Text Node Jalur Alur Waktu Projek
-            document.getElementById('t1Date').innerText = data.t1Date;
-            document.getElementById('t1Title').innerText = data.t1Title;
-            document.getElementById('t1Desc').innerText = data.t1Desc;
-            
-            document.getElementById('t2Date').innerText = data.t2Date;
-            document.getElementById('t2Title').innerText = data.t2Title;
-            document.getElementById('t2Desc').innerText = data.t2Desc;
-            
-            document.getElementById('t3Date').innerText = data.t3Date;
-            document.getElementById('t3Title').innerText = data.t3Title;
-            document.getElementById('t3Desc').innerText = data.t3Desc;
-        }
-    </script>
 </body>
 </html>
