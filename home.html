@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provizto | Unified DeFi Hub on Solana</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --primary: #14f195; /* Solana Green */
+            --text: #ffffff;
+            --card-bg: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        nav { display: flex; justify-content: space-between; padding: 2rem 10%; align-items: center; }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); letter-spacing: 2px; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+
+        header { text-align: center; padding: 80px 10%; }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .cta-main { background: var(--primary); color: black; padding: 12px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block; margin-top: 20px; }
+
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 10% 50px 10%; }
+        .card { background: var(--card-bg); padding: 2rem; border-radius: 10px; border: 1px solid #333; transition: 0.3s; }
+
+        @media (max-width: 768px) { .features { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">PROVIZTO</div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="https://github.com/provizto" target="_blank">GitHub</a>
+            <a href="draft.html" style="color: var(--primary);">Launch dApp</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Unified DeFi Hub on Solana</h1>
+        <p>Swap, Optimize, and Grow. All in one atomic-transaction workflow.</p>
+        <a href="draft.html" class="cta-main">Get Started</a>
+    </header>
+
+    <section id="features" class="features">
+        <div class="card">
+            <h3>Smart Swap</h3>
+            <p>Atomic-speed trading with minimal slippage powered by Solana.</p>
+        </div>
+        <div class="card">
+            <h3>Yield Vault</h3>
+            <p>Automated compounding strategies for maximum capital efficiency.</p>
+        </div>
+        <div class="card">
+            <h3>Secure Affiliate</h3>
+            <p>Anti-bot, transparent, on-chain referral growth engine.</p>
+        </div>
+    </section>
+
+    <script>
+        // Interaksi Hover pada Card
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#14f195';
+                card.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#333';
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        console.log("Provizto: Solana Grant Ready.");
+    </script>
+</body>
+</html>
