@@ -1045,88 +1045,185 @@
         </div>
     </main>
 
-    <div id="walletModal" class="wallet-modal-overlay style-hidden">
-        <div class="wallet-modal-card">
-            <div class="wallet-modal-header">
-                <div>
-                    <h3 class="lang-en">Connect your Wallet</h3>
-                    <h3 class="lang-id">Hubungkan Dompet Anda</h3>
-                    <p class="lang-en">Select your preferred secure connection method</p>
-                    <p class="lang-id">Pilih metode koneksi aman pilihan Anda</p>
-                </div>
-                <button id="btnCloseModal" class="wallet-modal-close">✕</button>
-            </div>
+    <div class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 font-sans text-white">
+  
+  <div class="bg-[#0d111c] border border-gray-800 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">
+    
+    <button class="absolute top-5 right-5 text-gray-500 hover:text-gray-300 text-xl">&times;</button>
 
-            <div class="trial-notice-box">
-                <div class="trial-notice-header">
-                    <span>⚠️</span>
-                    <span class="lang-en">Beta Testnet Platform</span>
-                    <span class="lang-id">Platform Ujicoba Testnet</span>
-                </div>
-                <div class="trial-notice-body">
-                    <p class="lang-en">This dApp dashboard is currently in its experimental pilot testing stage on the Base Testnet network. Do not interact using real mainnet funds.</p>
-                    <p class="lang-id">Dasbor dApp ini saat ini berada dalam tahap ujicoba eksperimental pada jaringan Base Testnet. Jangan berinteraksi menggunakan dana mainnet asli.</p>
-                </div>
-                <label class="trial-checkbox-container">
-                    <input type="checkbox" id="chkAgreeTerms">
-                    <div class="trial-checkbox-text">
-                        <span class="lang-en">I understand and agree to the <a href="tos.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Terms of Service</a></span>
-                        <span class="lang-id">Saya paham dan menyetujui <a href="tos.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Ketentuan Layanan</a></span>
-                    </div>
-                </label>
-            </div>
+    <h2 class="text-xl font-bold mb-1">
+      <span class="lang-en">Connect your Wallet</span>
+      <span class="lang-id">Hubungkan Dompet Anda</span>
+    </h2>
+    <p class="text-sm text-gray-400 mb-5">
+      <span class="lang-en">Select your preferred secure connection method</span>
+      <span class="lang-id">Pilih metode koneksi aman pilihan Anda</span>
+    </p>
 
-            <div class="wallet-options-list">
-                <button class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
-                    <div class="wallet-option-icon logo-smart">✨</div>
-                    <div class="wallet-option-info">
-                        <div class="wallet-option-name">
-                            <span>Smart Account</span>
-                            <span class="badge-recommended">Recommended</span>
-                        </div>
-                        <div class="wallet-option-desc lang-en">Create or login via Passkey, Google, or Apple ID</div>
-                        <div class="wallet-option-desc lang-id">Buat atau masuk via Passkey, Google, atau Apple ID</div>
-                    </div>
-                </button>
-
-                <button class="wallet-option-item disabled-style" id="optMetaMask">
-                    <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
-                        <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
-                        <path d="M14 5L16 8L18 5L25 9L23 15L16 12L9 15L7 9L14 5Z" fill="#F6851B"/>
-                    </svg>
-                    <div class="wallet-option-info">
-                        <div class="wallet-option-name">MetaMask Browser</div>
-                        <div class="wallet-option-desc lang-en">Connect via MetaMask extension or mobile app</div>
-                        <div class="wallet-option-desc lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</div>
-                    </div>
-                </button>
-
-                <button class="wallet-option-item disabled-style" id="optWalletConnect">
-                    <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
-                        <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
-                    </svg>
-                    <div class="wallet-option-info">
-                        <div class="wallet-option-name">
-                            <span>WalletConnect</span>
-                            <span class="badge-beta">Base Testnet</span>
-                        </div>
-                        <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
-                        <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
-                    </div>
-                </button>
-            </div>
-            
-            <div class="wallet-modal-footer lang-en">
-                By connecting, you agree to Provizto's <a href="tos.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
-            </div>
-            <div class="wallet-modal-footer lang-id">
-                Dengan menghubungkan, Anda menyetujui <a href="tos.html" target="_blank">Ketentuan Layanan</a> Provizto. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
-            </div>
-        </div>
+    <div class="bg-[#1c150c] border border-[#ff9900]/30 rounded-xl p-4 mb-5 text-sm">
+      <div class="flex items-start gap-2 text-[#ff9900] font-semibold mb-1">
+        <span>⚠️</span>
+        <span class="lang-en">Beta Testnet Platform</span>
+        <span class="lang-id">Platform Ujicoba Testnet</span>
+      </div>
+      <p class="text-gray-400 pl-6 leading-relaxed text-xs">
+        <span class="lang-en">This dApp dashboard is currently in its experimental pilot testing stage on the Base Testnet network. Do not interact using real mainnet funds.</span>
+        <span class="lang-id">Dasbor dApp ini saat ini berada dalam tahap ujicoba eksperimental pada jaringan Base Testnet. Jangan berinteraksi menggunakan dana mainnet asli.</span>
+      </p>
+      <label class="flex items-center gap-2 mt-3 pl-6 text-xs cursor-pointer select-none">
+        <input type="checkbox" id="tos-checkbox" class="accent-blue-500 rounded">
+        <span class="text-gray-300">
+          <span class="lang-en">I understand and agree to the <a href="#" class="text-blue-400 underline">Terms of Service</a></span>
+          <span class="lang-id">Saya paham dan menyetujui <a href="#" class="text-blue-400 underline">Ketentuan Layanan</a></span>
+        </span>
+      </label>
     </div>
 
+    <div class="space-y-3">
+      
+      <button id="btn-smart-account" class="w-full flex items-center justify-between bg-[#131a2a] border border-blue-500/30 hover:border-blue-500 p-4 rounded-xl transition text-left group opacity-50 cursor-not-allowed" disabled>
+        <div class="flex items-center gap-4">
+          <div class="text-2xl">✨</div>
+          <div>
+            <div class="font-semibold flex items-center gap-2">
+              Smart Account
+              <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Recommended</span>
+            </div>
+            <div class="text-xs text-gray-400">
+              <span class="lang-en">Create or login via Passkey, Google, or Apple ID</span>
+              <span class="lang-id">Buat atau masuk via Passkey, Google, atau Apple ID</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button id="btn-metamask" class="w-full flex items-center justify-between bg-[#131a2a] border border-gray-800 hover:border-gray-700 p-4 rounded-xl transition text-left">
+        <div class="flex items-center gap-4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" class="w-7 h-7" alt="MetaMask">
+          <div>
+            <div class="font-semibold">MetaMask Browser</div>
+            <div class="text-xs text-gray-400">
+              <span class="lang-en">Connect via MetaMask extension or mobile app</span>
+              <span class="lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button id="btn-walletconnect" class="w-full flex items-center justify-between bg-[#131a2a] border border-gray-800 hover:border-gray-700 p-4 rounded-xl transition text-left">
+        <div class="flex items-center gap-4">
+          <img src="https://images.seeklogo.com/logo-png/43/b/walletconnect-logo-png_seeklogo-431871.png" class="w-7 h-7" alt="WalletConnect">
+          <div>
+            <div class="font-semibold flex items-center gap-2">
+              WalletConnect
+              <span class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold uppercase">Base Testnet</span>
+            </div>
+            <div class="text-xs text-gray-400">
+              <span class="lang-en">Scan QR code using any multi-chain mobile wallet</span>
+              <span class="lang-id">Pindai kode QR menggunakan dompet seluler apa pun</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+    </div>
+
+    <p class="text-[10px] text-gray-500 text-center mt-5 leading-normal">
+      <span class="lang-en">By connecting, you agree to Provizto's <a href="#" class="text-blue-500 hover:underline">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.</span>
+      <span class="lang-id">Dengan menghubungkan, Anda menyetujui <a href="#" class="text-blue-500 hover:underline">Ketentuan Layanan</a> Provizto. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.</span>
+    </p>
+
+  </div>
+</div>
+
+    <script>
+  const tosCheckbox = document.getElementById('tos-checkbox');
+  const btnMetaMask = document.getElementById('btn-metamask');
+  const btnWalletConnect = document.getElementById('btn-walletconnect');
+
+  // Helper untuk mendeteksi bahasa aktif saat ini ('en' atau 'id')
+  function getCurrentLanguage() {
+    const appNode = document.getElementById('appNode') || document.documentElement;
+    return appNode.getAttribute('lang') === 'id' ? 'id' : 'en';
+  }
+
+  // Kumpulan teks multi-bahasa untuk notifikasi
+  const locales = {
+    en: {
+      tosWarning: 'You must agree to the Terms of Service first!',
+      connectedSuccess: 'Successfully Connected!\nWallet Address: ',
+      notInstalled: 'MetaMask is not installed! Please install the MetaMask extension in your browser.',
+      walletConnectOpen: 'Opening WalletConnect QR Code functionality...'
+    },
+    id: {
+      tosWarning: 'Anda harus menyetujui Terms of Service terlebih dahulu!',
+      connectedSuccess: 'Berhasil Terhubung!\nAlamat Wallet: ',
+      notInstalled: 'MetaMask belum terinstal! Silakan pasang ekstensi MetaMask di browser Anda.',
+      walletConnectOpen: 'Membuka fungsi WalletConnect QR Code...'
+    }
+  };
+
+  // Logika 1: Tombol baru bisa diklik jika Checkbox Terms of Service dicentang
+  function toggleButtons() {
+    const isChecked = tosCheckbox.checked;
+    if (isChecked) {
+      btnMetaMask.classList.remove('opacity-50', 'cursor-not-allowed');
+      btnWalletConnect.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else {
+      btnMetaMask.classList.add('opacity-50', 'cursor-not-allowed');
+      btnWalletConnect.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+  }
+
+  tosCheckbox.addEventListener('change', toggleButtons);
+  // Jalankan fungsi di awal untuk mengunci tombol sebelum dicentang
+  toggleButtons(); 
+
+  // Logika 2: Mengaktifkan Fungsi MetaMask
+  btnMetaMask.addEventListener('click', async () => {
+    const lang = getCurrentLanguage();
+
+    if (!tosCheckbox.checked) {
+      alert(locales[lang].tosWarning);
+      return;
+    }
+
+    // Memeriksa apakah ekstensi MetaMask terpasang di browser
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Meminta izin pengguna untuk menghubungkan alamat wallet
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const walletAddress = accounts[0];
+        
+        alert(`${locales[lang].connectedSuccess}${walletAddress}`);
+        
+        // Integrasi dengan fungsi dasbor utama jika ada (contoh: toggleWalletUI(true, walletAddress))
+        if (typeof toggleWalletUI === 'function') {
+          toggleWalletUI(true, walletAddress);
+        }
+        
+      } catch (error) {
+        console.error("User rejected the connection / Pengguna menolak koneksi", error);
+      }
+    } else {
+      // Jika MetaMask tidak ada
+      alert(locales[lang].notInstalled);
+      window.open('https://metamask.io/download/', '_blank');
+    }
+  });
+
+  // Logika 3: WalletConnect Pemicu
+  btnWalletConnect.addEventListener('click', () => {
+    const lang = getCurrentLanguage();
+
+    if (!tosCheckbox.checked) return;
+    
+    // NOTE: Untuk mengaktifkan fungsionalitas QR Code WalletConnect dengan HTML murni, 
+    // disarankan memanggil SDK resmi mereka seperti `@web3modal/html`.
+    alert(locales[lang].walletConnectOpen);
+  });
+</script>
+    
     <script>
         // --- AMBIL ELEMEN DOM ---
         const btnConnectTrigger = document.getElementById('btnConnectTrigger');
