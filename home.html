@@ -4,82 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provizto | Unified DeFi Hub on Solana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --primary: #14f195; /* Solana Green */
-            --text: #ffffff;
-            --card-bg: #1a1a1a;
+            --bg: #0a0e14;
+            --primary: #00ffa3;
+            --text: #e0e0e0;
+            --navy: #161b22;
         }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        nav { display: flex; justify-content: space-between; padding: 2rem 10%; align-items: center; }
-        .logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); letter-spacing: 2px; }
-        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
-
-        header { text-align: center; padding: 80px 10%; }
-        h1 { font-size: 3rem; margin-bottom: 1rem; }
-        .cta-main { background: var(--primary); color: black; padding: 12px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block; margin-top: 20px; }
-
-        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 10% 50px 10%; }
-        .card { background: var(--card-bg); padding: 2rem; border-radius: 10px; border: 1px solid #333; transition: 0.3s; }
-
-        @media (max-width: 768px) { .features { grid-template-columns: 1fr; } }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        .container { max-width: 1100px; margin: auto; padding: 20px; }
+        
+        /* Hero */
+        .hero { text-align: center; padding: 100px 20px; }
+        h1 { font-size: 3rem; color: var(--primary); }
+        .btn { padding: 12px 25px; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: bold; margin: 10px; }
+        .btn-main { background: var(--primary); color: var(--bg); }
+        
+        /* Flywheel */
+        .flywheel-container { display: flex; justify-content: center; padding: 50px; position: relative; }
+        .circle { width: 300px; height: 300px; border: 2px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+        
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 50px 0; }
+        .card { background: var(--navy); padding: 20px; border-radius: 10px; border-left: 4px solid var(--primary); }
+        
+        /* Roadmap */
+        .roadmap { padding: 50px 0; font-family: 'Roboto Mono', monospace; }
+        
+        footer { text-align: center; padding: 40px; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">PROVIZTO</div>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="https://github.com/provizto" target="_blank">GitHub</a>
-            <a href="draft.html" style="color: var(--primary);">Launch dApp</a>
-        </div>
-    </nav>
+<div class="container">
+    <section class="hero">
+        <h1>Unified DeFi Hub: Swap, Optimize, and Grow on Solana.</h1>
+        <p>Experience atomic-speed trading, automated yield strategies, and a transparent affiliate ecosystem.</p>
+        <a href="#" class="btn btn-main">Launch dApp</a>
+        <a href="#" class="btn" style="border: 1px solid white;">View GitHub Docs</a>
+        <div style="margin-top:20px"><span style="background: var(--navy); padding: 5px 10px;">🟢 Open Source</span></div>
+    </section>
 
-    <header>
-        <h1>Unified DeFi Hub on Solana</h1>
-        <p>Swap, Optimize, and Grow. All in one atomic-transaction workflow.</p>
-        <a href="draft.html" class="cta-main">Get Started</a>
-    </header>
-
-    <section id="features" class="features">
-        <div class="card">
-            <h3>Smart Swap</h3>
-            <p>Atomic-speed trading with minimal slippage powered by Solana.</p>
-        </div>
-        <div class="card">
-            <h3>Yield Vault</h3>
-            <p>Automated compounding strategies for maximum capital efficiency.</p>
-        </div>
-        <div class="card">
-            <h3>Secure Affiliate</h3>
-            <p>Anti-bot, transparent, on-chain referral growth engine.</p>
+    <section class="flywheel-container">
+        <div class="circle">
+            <strong>PROVIZTO ($VZT)</strong>
+            <div style="position:absolute; top:-40px">Yield Optimizer</div>
+            <div style="position:absolute; left:-100px">Smart Swap</div>
+            <div style="position:absolute; right:-100px">Secure Affiliate</div>
         </div>
     </section>
 
-    <script>
-        // Interaksi Hover pada Card
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.borderColor = '#14f195';
-                card.style.transform = 'translateY(-5px)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.borderColor = '#333';
-                card.style.transform = 'translateY(0)';
-            });
-        });
+    <section class="features">
+        <div class="card"><h3>Smart Swap</h3><p>Solana-native, high-speed trading with atomic execution.</p></div>
+        <div class="card"><h3>Yield Vault</h3><p>Multi-strategy auto-compounding with risk-managed pools.</p></div>
+        <div class="card"><h3>Secure Affiliate</h3><p>Anti-bot, transparent rewards & real-volume verification.</p></div>
+    </section>
 
-        console.log("Provizto: Solana Grant Ready.");
-    </script>
+    <section>
+        <h2>Why Solana?</h2>
+        <ul>
+            <li><strong>Low-Latency:</strong> Executing complex strategies at sub-second finality.</li>
+            <li><strong>Composability:</strong> Bridging DEX and Vault without fragmentation.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Phase 1: Security Audit | Phase 2: Beta | Phase 3: Mainnet</p>
+        <p>© 2026 Provizto Capital. Built for the Solana Ecosystem.</p>
+    </footer>
+</div>
+
+<script>
+    // Simple interactivity: Log to console to simulate dApp metrics
+    console.log("Provizto Hub Initialized. Metrics: TVL $2.4M, Volume $12M+");
+</script>
+
 </body>
 </html>
