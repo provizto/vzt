@@ -143,10 +143,9 @@
 <body>
 
     <div class="dashboard-container">
-        <!-- Demo Controller (Hidden on Production) -->
         <div class="demo-controls">
-            <span><strong>Simulasi Akun (Ganti Role):</strong></span>
-            <button class="btn active" id="btn-reguler" onclick="switchUserRole('reguler')">User Reguler</button>
+            <span><strong>Account Simulation (Switch Role):</strong></span>
+            <button class="btn active" id="btn-reguler" onclick="switchUserRole('reguler')">Regular User</button>
             <button class="btn" id="btn-kol" onclick="switchUserRole('kol')">KOL / Influencer</button>
         </div>
 
@@ -155,7 +154,6 @@
             <div id="user-tier-badge" class="tier-badge tier-1">Tier 1: Advocate</div>
         </header>
 
-        <!-- Main Stats Overview -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h4>Total Referrals</h4>
@@ -175,41 +173,39 @@
             </div>
         </div>
 
-        <!-- Dynamic Content Area -->
         <div class="stat-card" style="text-align: left;" id="target-box">
-            <h3 style="margin-top:0;">Progress Menuju Tier Selanjutnya</h3>
-            <p style="font-size: 1rem; color: #aaa;" id="progress-text">Bawa volume transaksi $7,550 lagi untuk naik ke Tier 2.</p>
+            <h3 style="margin-top:0;">Progress to Next Tier</h3>
+            <p style="font-size: 1rem; color: #aaa;" id="progress-text">Generate $7,550 more in volume to reach Tier 2.</p>
             <div class="progress-container">
                 <div class="progress-bar" id="main-progress" style="width: 24.5%;"></div>
             </div>
         </div>
 
-        <!-- ADVANCED ANTI-BOT SECTION FOR KOLs -->
         <div id="kol-metrics" class="kol-only-section">
             <h3>🛡️ Advanced KOL Matrix (On-Chain Heuristics)</h3>
-            <p style="color: #aaa; margin-bottom: 20px;">Data berikut digunakan untuk memverifikasi kualitas likuiditas organik Anda guna mencegah eksploitasi <i>Sybil/Wash Trading</i>.</p>
+            <p style="color: #aaa; margin-bottom: 20px;">The following data is used to verify the quality of your organic liquidity and prevent <i>Sybil/Wash Trading</i> exploitation.</p>
             
             <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
                 <div class="stat-card" style="background: #111;">
                     <h4>User Retention Rate (Vault)</h4>
                     <p style="color: var(--primary); font-size: 1.5rem;" id="kol-retention">78.4%</p>
-                    <small style="color: #666;">Persentase referral yang melakukan staking > 7 hari</small>
+                    <small style="color: #666;">Percentage of referrals staking for > 7 days</small>
                 </div>
                 <div class="stat-card" style="background: #111;">
                     <h4>Traffic Quality Score</h4>
                     <p style="color: var(--primary); font-size: 1.5rem;" id="kol-quality">92 / 100</p>
-                    <small style="color: #666;">Tingkat keberagaman histori dompet di Solana</small>
+                    <small style="color: #666;">Diversity score of wallet history on Solana</small>
                 </div>
             </div>
             
             <div id="bot-alert" class="alert-box">
-                <strong>Peringatan Sistem Keamanan:</strong> Terdeteksi adanya aktivitas referral tidak wajar dari 3 alamat dompet baru. Akumulasi bonus ditangguhkan sementara untuk pemeriksaan algoritma anti-wash trading.
+                <strong>Security Alert:</strong> Unusual referral activity detected from 3 new wallet addresses. Bonus accumulation is temporarily suspended pending an anti-wash trading algorithmic review.
             </div>
         </div>
     </div>
 
     <script>
-        // Simulasi Data On-Chain dari Smart Contract
+        // Simulated On-Chain Data from Smart Contract
         const databaseMocks = {
             reguler: {
                 tierLabel: "Tier 1: Advocate",
@@ -218,7 +214,7 @@
                 volume: "$2,450",
                 earnings: "45.2 VZT",
                 rate: "10%",
-                progressText: "Bawa volume transaksi $7,550 lagi untuk naik ke Tier 2 (Pro Trader).",
+                progressText: "Generate $7,550 more in volume to reach Tier 2 (Pro Trader).",
                 progressPercent: "24.5%",
                 isKOL: false
             },
@@ -229,23 +225,21 @@
                 volume: "$142,800",
                 earnings: "3,840.5 VZT",
                 rate: "20%",
-                progressText: "Maksimum Tier Tercapai. Anda berhak atas bonus distribusi performa Vault bulanan.",
+                progressText: "Maximum Tier reached. You are eligible for monthly Vault performance distributions.",
                 progressPercent: "100%",
                 isKOL: true,
                 retention: "82.1%",
                 quality: "95 / 100",
-                triggerAlert: false // Ubah ke true jika ingin mensimulasikan peringatan bot
+                triggerAlert: false 
             }
         };
 
         function switchUserRole(role) {
-            // Update Toggle Button UI
             document.querySelectorAll('.demo-controls .btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${role}`).classList.add('active');
 
             const data = databaseMocks[role];
 
-            // Update DOM Elements
             const badge = document.getElementById('user-tier-badge');
             badge.innerText = data.tierLabel;
             badge.className = `tier-badge ${data.tierClass}`;
@@ -258,7 +252,6 @@
             document.getElementById('progress-text').innerText = data.progressText;
             document.getElementById('main-progress').style.width = data.progressPercent;
 
-            // Conditional Rendering KOL Section
             const kolSection = document.getElementById('kol-metrics');
             const botAlert = document.getElementById('bot-alert');
             
@@ -266,15 +259,12 @@
                 kolSection.style.display = 'block';
                 document.getElementById('kol-retention').innerText = data.retention;
                 document.getElementById('kol-quality').innerText = data.quality;
-                
-                // Simulasi trigger deteksi bot otomatis
                 botAlert.style.display = data.triggerAlert ? 'block' : 'none';
             } else {
                 kolSection.style.display = 'none';
             }
         }
 
-        // Inisialisasi awal pada saat loading halaman
         window.onload = () => {
             switchUserRole('reguler');
         };
