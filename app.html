@@ -718,6 +718,7 @@
                 <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
                 <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
                 <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
             </ul>
         </div>
         
@@ -766,146 +767,92 @@
             </div>
         </header>
 
-        <!-- Existing content before governance -->
-<section class="dashboard-grid">
-    <div class="panel">
-        <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
-        <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
-        
-        <div class="form-group">
-            <label class="form-label lang-en">Amount to Lock</label>
-            <label class="form-label lang-id">Jumlah untuk Dikunci</label>
-            <div class="input-box">
-                <input type="number" placeholder="0.0" value="1000">
-                <span class="token-select">$VZT</span>
-            </div>
-        </div>
+        <div id="page-dashboard" class="page-section">
+            <section class="dashboard-grid">
+                <div class="panel">
+                    <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
+                    <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label lang-en">Amount to Lock</label>
+                        <label class="form-label lang-id">Jumlah untuk Dikunci</label>
+                        <div class="input-box">
+                            <input type="number" placeholder="0.0" value="1000">
+                            <span class="token-select">$VZT</span>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <label class="form-label lang-en">Lock Duration</label>
-            <label class="form-label lang-id">Durasi Penguncian</label>
-            <div class="duration-grid">
-                <div class="duration-btn">1 W</div>
-                <div class="duration-btn">1 M</div>
-                <div class="duration-btn">1 Y</div>
-                <div class="duration-btn active">4 Y (Max)</div>
-            </div>
-        </div>
+                    <div class="form-group">
+                        <label class="form-label lang-en">Lock Duration</label>
+                        <label class="form-label lang-id">Durasi Penguncian</label>
+                        <div class="duration-grid">
+                            <div class="duration-btn">1 W</div>
+                            <div class="duration-btn">1 M</div>
+                            <div class="duration-btn">1 Y</div>
+                            <div class="duration-btn active">4 Y (Max)</div>
+                        </div>
+                    </div>
 
-        <div class="summary-box">
-            <div class="summary-row">
-                <span class="summary-label lang-en">Voting Power Received</span>
-                <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
-                <span class="summary-value highlight">1,000.00 veVZT</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label lang-en">Estimated Weekly Yield</span>
-                <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
-                <span class="summary-value">~14.50 USDC</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label lang-en">Unlock Date</span>
-                <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
-                <span class="summary-value">May 18, 2030</span>
-            </div>
-        </div>
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Voting Power Received</span>
+                            <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
+                            <span class="summary-value highlight">1,000.00 veVZT</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Estimated Weekly Yield</span>
+                            <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
+                            <span class="summary-value">~14.50 USDC</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Unlock Date</span>
+                            <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
+                            <span class="summary-value">May 18, 2030</span>
+                        </div>
+                    </div>
 
-        <button class="btn-action" id="executeBtn">
-            <span class="lang-en">Execute Lock Transaction</span>
-            <span class="lang-id">Eksekusi Transaksi Kunci</span>
-        </button>
-    </div>
-
-    <!-- Governance section moved here -->
-    <div id="page-governance" class="page-section" style="display: block;">
-        <div class="gov-banner">
-            <div class="gov-banner-text">
-                <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
-                <h4 class="lang-id">Pemungutan Suara Emisi - Epoh 14 Aktif</h4>
-                <p class="lang-en">Lock your $VZT to gain veVZT. Use your voting weight weekly to direct daily $VZT reward emissions to your preferred liquidity pools.</p>
-                <p class="lang-id">Kunci $VZT Anda untuk mendapatkan veVZT. Gunakan bobot hak suara Anda setiap minggu untuk mengarahkan emisi hadiah harian $VZT ke kolam likuiditas pilihan Anda.</p>
-            </div>
-            <div style="text-align: right; min-width: 140px;">
-                <span class="lang-en" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Time Remaining</span>
-                <span class="lang-id" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Sisa Waktu</span>
-                <span style="font-size: 18px; font-weight: 700; color: #22d3ee;">2d 14h 32m</span>
-            </div>
-        </div>
-
-        <div class="vote-progress-container">
-            <div class="progress-header">
-                <div>
-                    <span class="lang-en">Your Voting Power Allocation</span>
-                    <span class="lang-id">Alokasi Kekuatan Suara Anda</span>
+                    <button class="btn-action" id="executeBtn">
+                        <span class="lang-en">Execute Lock Transaction</span>
+                        <span class="lang-id">Eksekusi Transaksi Kunci</span>
+                    </button>
                 </div>
-                <div style="color: #ffffff;"><span id="totalAllocatedPercent">0</span>% / 100%</div>
-            </div>
-            <div class="progress-bar-bg">
-                <div id="govProgressBar" class="progress-bar-fill"></div>
-            </div>
-        </div>
 
-        <div class="table-panel">
-            <h3 class="panel-title lang-en" style="margin-bottom: 6px;">Pool Weight Allocations</h3>
-            <h3 class="panel-title lang-id" style="margin-bottom: 6px;">Alokasi Bobot Kolam</h3>
-            <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veVZT weight across the available pools below. Ensure the total does not exceed 100%.</p>
-            <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veVZT Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
-            
-            <div class="gov-table-responsive">
-                <table class="gov-table">
-                    <thead>
-                        <tr>
-                            <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
-                            <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
-                            <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
-                            <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
-                            <td>42.51%</td>
-                            <td style="color: #22d3ee;">~1.42 $VZT / block</td>
-                            <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                <div class="vote-input-wrapper">
-                                    <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                    <span>%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
-                            <td>21.14%</td>
-                            <td style="color: #22d3ee;">~0.71 $VZT / block</td>
-                            <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                <div class="vote-input-wrapper">
-                                    <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                    <span>%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
-                            <td>36.35%</td>
-                            <td style="color: #22d3ee;">~1.21 $VZT / block</td>
-                            <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                <div class="vote-input-wrapper">
-                                    <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                    <span>%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Locked Balance</h4>
+                                <h4 class="lang-id">Saldo Terkunci</h4>
+                                <p>1,000 $VZT</p>
+                            </div>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Current Voting Weight</h4>
+                                <h4 class="lang-id">Bobot Suara Saat Ini</h4>
+                                <p style="color: #22d3ee;">1,000 veVZT</p>
+                            </div>
+                        </div>
+                    </div>
 
-            <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
-                <span class="lang-en">Submit Gauge Votes</span>
-                <span class="lang-id">Kirim Pilihan Suara Emisi</span>
-            </button>
-        </div>
-    </div>
-</section>
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
+                        <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
+                            <div class="reward-info">
+                                <h4>USDC Rewards</h4>
+                                <p style="color: #22d3ee;">142.50 USDC</p>
+                            </div>
+                            <button class="btn-sm" id="claimBtn">
+                                <span class="lang-en">Claim</span>
+                                <span class="lang-id">Klaim</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div id="page-swap" class="page-section" style="display: none;">
@@ -1005,6 +952,96 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <div id="page-governance" class="page-section" style="display: none;">
+            <div class="gov-banner">
+                <div class="gov-banner-text">
+                    <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
+                    <h4 class="lang-id">Pemungutan Suara Emisi - Epoh 14 Aktif</h4>
+                    <p class="lang-en">Lock your $VZT to gain veVZT. Use your voting weight weekly to direct daily $VZT reward emissions to your preferred liquidity pools.</p>
+                    <p class="lang-id">Kunci $VZT Anda untuk mendapatkan veVZT. Gunakan bobot hak suara Anda setiap minggu untuk mengarahkan emisi hadiah harian $VZT ke kolam likuiditas pilihan Anda.</p>
+                </div>
+                <div style="text-align: right; min-width: 140px;">
+                    <span class="lang-en" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Time Remaining</span>
+                    <span class="lang-id" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Sisa Waktu</span>
+                    <span style="font-size: 18px; font-weight: 700; color: #22d3ee;">2d 14h 32m</span>
+                </div>
+            </div>
+
+            <div class="vote-progress-container">
+                <div class="progress-header">
+                    <div>
+                        <span class="lang-en">Your Voting Power Allocation</span>
+                        <span class="lang-id">Alokasi Kekuatan Suara Anda</span>
+                    </div>
+                    <div style="color: #ffffff;"><span id="totalAllocatedPercent">0</span>% / 100%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="govProgressBar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div class="table-panel">
+                <h3 class="panel-title lang-en" style="margin-bottom: 6px;">Pool Weight Allocations</h3>
+                <h3 class="panel-title lang-id" style="margin-bottom: 6px;">Alokasi Bobot Kolam</h3>
+                <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veVZT weight across the available pools below. Ensure the total does not exceed 100%.</p>
+                <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veVZT Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
+                
+                <div class="gov-table-responsive">
+                    <table class="gov-table">
+                        <thead>
+                            <tr>
+                                <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
+                                <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
+                                <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
+                                <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
+                                <td>42.51%</td>
+                                <td style="color: #22d3ee;">~1.42 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
+                                <td>21.14%</td>
+                                <td style="color: #22d3ee;">~0.71 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
+                                <td>36.35%</td>
+                                <td style="color: #22d3ee;">~1.21 $VZT / block</td>
+                                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                    <div class="vote-input-wrapper">
+                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                        <span>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
+                    <span class="lang-en">Submit Gauge Votes</span>
+                    <span class="lang-id">Kirim Pilihan Suara Emisi</span>
+                </button>
+            </div>
         </div>
     </main>
 
