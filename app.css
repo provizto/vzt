@@ -554,6 +554,61 @@ tr:last-child td { border-bottom: none; }
 .vote-input-wrapper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .vote-input-wrapper span { color: #6b7280; font-size: 13px; font-weight: 700; margin-left: 4px; }
 
+/* --- DATA STATISTIK DASHBOARD GENERAL --- */
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+@media (max-width: 768px) {
+    .dashboard-stats-grid { grid-template-columns: 1fr; }
+}
+
+.stat-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.stat-main-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 8px 0;
+    letter-spacing: -0.5px;
+}
+
+/* Status Indikator Perubahan Naik Turun */
+.stat-change { font-size: 12px; font-weight: 700; }
+.stat-change.positive { color: #10b981; }
+.stat-change.text-muted { color: #6b7280; }
+.stat-change.text-cyan { color: #22d3ee; }
+
+/* --- AREA CONTAINER GRAPH GRAPHICS --- */
+.chart-container-box {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Batas tinggi maksimum grafik */
+}
+
+/* --- BADGE RIWAYAT TRANSAKSI --- */
+.tx-type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.tx-type-badge.type-lock { background-color: rgba(157, 78, 221, 0.1); color: #9d4edd; border: 1px solid rgba(157, 78, 221, 0.2); }
+.tx-type-badge.type-swap { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+.tx-type-badge.type-yield { background-color: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+.tx-hash-font {
+    font-family: monospace;
+    color: #6b7280;
+    font-weight: 600;
+}
+
 /* ==========================================================================
    4. MODAL POP-UP WALLET SELECTION
    ========================================================================== */
