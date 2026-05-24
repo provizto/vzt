@@ -28,6 +28,31 @@ html[lang="id"] div.lang-id { display: block; }
 /* Utility helper class */
 .style-hidden { display: none !important; }
 
+/* --- FIX STRUKTUR BAHASA DALAM TABEL --- */
+html[lang="en"] th span.lang-en, 
+html[lang="en"] td span.lang-en { 
+    display: inline-block !important; 
+}
+html[lang="id"] th span.lang-id, 
+html[lang="id"] td span.lang-id { 
+    display: inline-block !important; 
+}
+
+/* --- STYLING TAMBAHAN UTK MEMASTIKAN PRESISI HORIZONTAL --- */
+.gov-table th {
+    background-color: #0f131c;
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    border-bottom: 1px solid #1e2533;
+    
+    /* Memaksa semua konten di dalam th sejajar secara vertikal di tengah boks */
+    vertical-align: middle; 
+    white-space: nowrap; /* Mencegah teks judul terpotong menjadi 2 baris ke bawah di layar kecil */
+}
+
 /* ==========================================================================
    2. SIDEBAR NAVIGATION & MOBILE INTERFACE
    ========================================================================== */
