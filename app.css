@@ -601,28 +601,66 @@ tr:last-child td { border-bottom: none; }
     padding-top: 32px;
 }
  
+/* --- STYLING INPUT PERSEN VOTE AGAR PRESISI --- */
 .vote-input-wrapper {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    background-color: #080b11;
+    background-color: #0b0e14;
     border: 1px solid #1e2533;
-    border-radius: 10px;
-    padding: 6px 12px;
-    width: 110px;
+    border-radius: 8px;
+    padding: 4px 8px;
+    width: 90px; /* Batas lebar konstan agar seragam */
+    justify-content: space-between;
 }
-.vote-input-wrapper input {
-    background: none;
+
+.gauge-input {
+    background: transparent;
     border: none;
     color: #ffffff;
+    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     width: 100%;
-    outline: none;
     text-align: right;
+    padding-right: 4px;
+    outline: none;
 }
-.vote-input-wrapper input::-webkit-outer-spin-button,
-.vote-input-wrapper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.vote-input-wrapper span { color: #6b7280; font-size: 13px; font-weight: 700; margin-left: 4px; }
+
+/* Menghilangkan panah spin bawaan browser pada input number */
+.gauge-input::-webkit-outer-spin-button,
+.gauge-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.vote-input-wrapper span {
+    color: #6b7280;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* --- OPTIMALISASI PRESISI GAUGE VOTING DI HP --- */
+@media (max-width: 768px) {
+    /* Memastikan tabel gauge memiliki scrollbar internal jika layar HP terlalu kecil */
+    #page-governance .gov-table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid #1e2533;
+        border-radius: 12px;
+    }
+
+    /* Memaksa tabel mempertahankan struktur agar tidak berdesakan */
+    #page-governance .gov-table {
+        min-width: 550px;
+    }
+
+    /* Menyeimbangkan padding tabel khusus di resolusi HP */
+    #page-governance .gov-table th, 
+    #page-governance .gov-table td {
+        padding: 12px 14px;
+    }
+}
 
 /* --- DATA STATISTIK DASHBOARD GENERAL --- */
 .dashboard-stats-grid {
