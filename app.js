@@ -133,7 +133,10 @@ function switchPage(pageId, element) {
 
     const menuItems = document.querySelectorAll('.nav-item');
     menuItems.forEach(item => { item.classList.remove('active'); });
-    element.classList.add('active');
+
+    if (element) {
+        element.classList.add('active');
+    }
     
     if(window.innerWidth <= 768) toggleMobileMenu();
 }
