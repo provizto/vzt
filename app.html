@@ -435,53 +435,67 @@
                 <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veVZT weight across the available pools below. Ensure the total does not exceed 100%.</p>
                 <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veVZT Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
                 
-                <div class="gov-table-responsive">
-                    <table class="gov-table">
-                        <thead>
-                            <tr>
-                                <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
-                                <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
-                                <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
-                                <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
-                                <td>42.51%</td>
-                                <td style="color: #22d3ee;">~1.42 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
-                                <td>21.14%</td>
-                                <td style="color: #22d3ee;">~0.71 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
-                                <td>36.35%</td>
-                                <td style="color: #22d3ee;">~1.21 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="gov-table-responsive" style="margin-top: 16px;">
+    <table class="gov-table">
+        <thead>
+            <tr>
+                <th>
+                    <span class="lang-en">Pool Name</span>
+                    <span class="lang-id">Nama Kolom</span>
+                </th>
+                <th>
+                    <span class="lang-en">Current Weight</span>
+                    <span class="lang-id">Bobot Saat Ini</span>
+                </th>
+                <th>
+                    <span class="lang-en">Current Rewards</span>
+                    <span class="lang-id">Hadiah Saat Ini</span>
+                </th>
+                <th style="text-align: right; width: 130px;">
+                    <span class="lang-en">Your Vote</span>
+                    <span class="lang-id">Suara Anda</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
+                <td>42.51%</td>
+                <td>~1.42 $VZT / block</td>
+                <td style="text-align: right;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
+                <td>12.14%</td>
+                <td>~0.41 $VZT / block</td>
+                <td style="text-align: right;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
+                <td>45.35%</td>
+                <td>~1.51 $VZT / block</td>
+                <td style="text-align: right;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
                 <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
                     <span class="lang-en">Submit Gauge Votes</span>
