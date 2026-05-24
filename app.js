@@ -160,3 +160,92 @@ function toggleMobileMenu() {
 }
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
+// --- LOGIKA EMULATOR GRAFIK PORTOFOLIO (MENGGUNAKAN CANVAS API MURNI) ---
+function renderPortfolioChart() {
+    const canvas = document.getElementById('portfolioChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    
+    // Mengatur responsivitas ukuran canvas boks internal
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = 300 * dpr;
+    ctx.scale(dpr, dpr);
+
+    const width = rect.width;
+    const height = 280;
+
+    // Titik poin koordinat simulasi data portofolio (tren naik)
+    const points = [
+        {x: 0, y: 220}, {x: width * 0.15, y: 200}, {x: width * 0.3, y: 210}, 
+        {x: width * 0.45, y: 150}, {x: width * 0.6, y: 170}, {x: width * 0.8, y: 110}, 
+        {x: width, y: 40}
+    ];
+
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Gambar Garis Belakang Grid Horizontal Helper
+    ctx.strokeStyle = 'rgba(30, 37, 51, 0.4)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, (height / 5) * i);
+        ctx.lineTo(width, (height / 5) * i);
+        ctx.stroke();
+    }
+
+    // 2. Gambar Efek Gradasi Area Bawah Garis Tren (Glow Fill)
+    const gradientFill = ctx.createLinearGradient(0, 0, 0, height);
+    gradientFill.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+    gradientFill.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+    
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, height);
+    points.forEach(pt => ctx.lineTo(pt.x, pt.ptY ? pt.ptY : pt.y));
+    ctx.lineTo(points[points.length - 1].x, height);
+    ctx.closePath();
+    ctx.fillStyle = gradientFill;
+    ctx.fill();
+
+    // 3. Gambar Garis Tren Utama (Stroke Line)
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for(let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.stroke();
+
+    // 4. Gambar Pin Point Bulatan di Ujung Tren Terakhir
+    const lastPt = points[points.length - 1];
+    ctx.beginPath();
+    ctx.arc(lastPt.x - 4, lastPt.y, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#22d3ee';
+    ctx.fill();
+}
+
+// Jalankan fungsi penggambaran grafik otomatis saat halaman web dimuat pertama kali
+window.addEventListener('load', () => {
+    renderPortfolioChart();
+});
+
+// Jalankan ulang penggambaran grafik apabila user mengubah ukuran resolusi monitor/HP browser
+window.addEventListener('resize', renderPortfolioChart);
+
+
+// --- MODIFIKASI FUNGSI SWITCHPAGE SPA ---
+// Pastikan fungsi switchPage Anda memicu re-render grafik saat halaman 'dashboard' diakses kembali oleh pengguna
+const originalSwitchPage = switchPage;
+switchPage = function(pageId, element) {
+    originalSwitchPage(pageId, element);
+    if (pageId === 'dashboard') {
+        // Berikan sedikit jeda waktu render agar transisi dimensi boks halaman selesai dimuat sempurna
+        setTimeout(renderPortfolioChart, 50); 
+    }
+};
