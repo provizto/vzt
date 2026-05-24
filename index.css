@@ -1,0 +1,252 @@
+/* ==========================================================================
+   1. RESET & STRUKTUR DASAR (MURNI CSS)
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #0b0f19;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+}
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==========================================================================
+   2. LOGIKA SISTEM DUA BAHASA (EN / ID) TANPA JAVASCRIPT
+   ========================================================================== */
+/* Sembunyikan elemen ID secara default saat dokumen berbahasa EN */
+html[lang="en"] .lang-id { display: none !important; }
+html[lang="en"] .lang-en { display: block; }
+html[lang="en"] span.lang-en { display: inline; }
+html[lang="en"] tr.lang-en { display: table-row; }
+
+/* Sembunyikan elemen EN saat dokumen dialihkan ke bahasa ID */
+html[lang="id"] .lang-en { display: none !important; }
+html[lang="id"] .lang-id { display: block; }
+html[lang="id"] span.lang-id { display: inline; }
+html[lang="id"] tr.lang-id { display: table-row; }
+
+/* ==========================================================================
+   3. GAYA VISUAL KOMPONEN (STYLING)
+   ========================================================================== */
+header {
+    border-bottom: 1px solid #1e293b;
+    padding: 20px 0;
+    background-color: rgba(11, 15, 25, 0.8);
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+.logo span { color: #3b82f6; }
+ 
+.right-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.lang-select {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    color: #d1d5db;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn {
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn:hover { background-color: #1d4ed8; }
+
+/* HERO SECTION */
+.hero {
+    text-align: center;
+    padding: 80px 0 40px 0;
+}
+.badge {
+    display: inline-block;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+}
+h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    letter-spacing: -1px;
+}
+h1 span {
+    background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero p {
+    color: #9ca3af;
+    font-size: 16px;
+    max-width: 580px;
+    margin: 0 auto 32px auto;
+}
+
+/* DATA STATISTIK */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    border-top: 1px solid #111827;
+    border-bottom: 1px solid #111827;
+    padding: 32px 0;
+    margin: 40px 0;
+    background-color: rgba(17, 24, 39, 0.2);
+    border-radius: 16px;
+}
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 34px; }
+}
+.stat-item p { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-bottom: 6px; }
+.stat-item h3 { font-size: 24px; font-weight: 700; color: #ffffff; }
+.stat-item .cyan-text { color: #22d3ee; }
+.stat-item .blue-text { color: #60a5fa; }
+
+/* FITUR KARTU */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+    text-align: left;
+}
+@media (max-width: 900px) {
+    .features-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+}
+.card {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 32px;
+    border-radius: 16px;
+}
+.card h3 { color: #ffffff; font-size: 20px; margin-bottom: 12px; font-weight: 700; }
+.card p { color: #9ca3af; font-size: 14px; margin: 0; line-height: 1.6; max-width: 100%; }
+
+/* TABEL KOLAM */
+.table-section {
+    text-align: left;
+    margin-bottom: 80px;
+}
+.table-section h2 { font-size: 22px; color: #ffffff; margin-bottom: 6px; font-weight: 700; }
+.table-section p { color: #9ca3af; font-size: 14px; margin-bottom: 20px; }
+ 
+.table-responsive {
+    overflow-x: auto;
+    border: 1px solid #1e293b;
+    background-color: rgba(15, 23, 42, 0.4);
+    border-radius: 16px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+th {
+    background-color: #0f172a;
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    border-bottom: 1px solid #1e293b;
+}
+td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+    color: #d1d5db;
+}
+tr:last-child td { border-bottom: none; }
+.pool-name { font-weight: 600; color: #ffffff; }
+.boost-apr { font-weight: 700; color: #22d3ee; }
+ 
+.btn-sm {
+    background-color: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: #60a5fa;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-sm:hover { background-color: #2563eb; color: white; }
+
+/* TRADINGVIEW WIDGET SECTION */
+.market-section {
+    text-align: left;
+    margin-bottom: 80px;
+}
+.market-section h2 { font-size: 22px; color: #ffffff; margin-bottom: 6px; font-weight: 700; }
+.market-section p { color: #9ca3af; font-size: 14px; margin-bottom: 24px; }
+.tradingview-widget-copyright {
+    padding: 8px 0;
+    font-size: 12px;
+    color: #4b5563;
+}
+.tradingview-widget-copyright a {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+/* FOOTER */
+footer {
+    border-top: 1px solid #111827;
+    padding: 30px 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-links a {
+    color: #4b5563;
+    text-decoration: none;
+    margin-left: 20px;
+}
+.footer-links a:hover { color: #ffffff; }
