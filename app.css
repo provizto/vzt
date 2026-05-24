@@ -558,11 +558,13 @@ tr:last-child td { border-bottom: none; }
 .dashboard-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 16px;
 }
 @media (max-width: 768px) {
-    .dashboard-stats-grid { grid-template-columns: 1fr; }
-}
+    .dashboard-stats-grid { 
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 
 .stat-card {
     padding: 24px;
@@ -571,7 +573,7 @@ tr:last-child td { border-bottom: none; }
     justify-content: space-between;
 }
 .stat-main-value {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 800;
     color: #ffffff;
     margin: 8px 0;
@@ -588,7 +590,26 @@ tr:last-child td { border-bottom: none; }
 .chart-container-box {
     position: relative;
     width: 100%;
-    height: 300px; /* Batas tinggi maksimum grafik */
+    height: 250px; /* Batas tinggi maksimum grafik */
+}
+
+/* --- FIX TABEL TRANSAKSI AGAR TIDAK MERUSAK LAYAR HP --- */
+.gov-table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Mengizinkan geser kanan-kiri murni di dalam boks tabel */
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    border: 1px solid #1e2533;
+}
+
+.gov-table {
+    min-width: 500px; /* Memaksa tabel memiliki lebar minimum agar data di dalamnya tidak berdesakan */
+}
+
+@media (max-width: 480px) {
+    .panel {
+        padding: 16px; /* Mengurangi padding boks panel agar ruang konten lebih luas */
+    }
 }
 
 /* --- BADGE RIWAYAT TRANSAKSI --- */
