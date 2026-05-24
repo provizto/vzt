@@ -166,24 +166,25 @@ aside {
 }
 
 .menu-toggle {
-    display: none; /* Tetap tersembunyi di layar komputer/desktop */
+    display: none; /* Tetap tersembunyi di layar desktop */
     position: fixed;
     
-    /* === PERUBAHAN KOORDINAT POSISI (PINDAH KE KIRI ATAS) === */
-    top: 20px;       /* Jarak dari atas layar */
-    left: 20px;      /* Jarak dari kiri layar */
+    /* === KEMBALI KE PENGATURAN AWAL (KANAN BAWAH) === */
+    bottom: 24px;
+    right: 24px;
     
-    width: 44px;     /* Ukuran tombol disesuaikan sedikit agar lebih proporsional di topbar */
-    height: 44px;
+    width: 56px;
+    height: 56px;
     background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
     border: none;
-    border-radius: 10px; /* Diubah menjadi kotak melengkung (rounded) agar serasi dengan tema dApp */
+    border-radius: 50%; /* Kembali ke bentuk lingkaran penuh */
     color: white;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 50; /* Memastikan tombol berada di lapisan paling atas */
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    z-index: 50;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    display: flex; /* Memastikan ikon ☰ tetap berada di tengah boks di HP */
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease;
@@ -223,9 +224,6 @@ aside {
 }
 @media (max-width: 768px) {
     .topbar { flex-direction: column; align-items: flex-start; }
-   padding-left: 60px; 
-    }
-}
     .right-controls { width: 100%; justify-content: space-between; }
 }
 
