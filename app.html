@@ -32,10 +32,10 @@
             <div class="logo">PROVIZTO<span>.</span></div>
             <ul class="nav-links">
                 <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
-                <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
-                <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
-                <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
-            </ul>
+				<li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
+				<li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
+				<li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
+			</ul>
         </div>
         
         <div class="sidebar-footer">
@@ -86,92 +86,15 @@
 
         <!-- HALAMAN 1: DASHBOARD -->
         <div id="page-dashboard" class="page-section">
-            <section class="dashboard-grid">
-                <div class="panel">
-                    <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
-                    <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label lang-en">Amount to Lock</label>
-                        <label class="form-label lang-id">Jumlah untuk Dikunci</label>
-                        <div class="input-box">
-                            <input type="number" placeholder="0.0" value="1000">
-                            <span class="token-select">$VZT</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label lang-en">Lock Duration</label>
-                        <label class="form-label lang-id">Durasi Penguncian</label>
-                        <div class="duration-grid">
-                            <div class="duration-btn">1 W</div>
-                            <div class="duration-btn">1 M</div>
-                            <div class="duration-btn">1 Y</div>
-                            <div class="duration-btn active">4 Y (Max)</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-box">
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Voting Power Received</span>
-                            <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
-                            <span class="summary-value highlight">1,000.00 veVZT</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Estimated Weekly Yield</span>
-                            <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
-                            <span class="summary-value">~14.50 USDC</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Unlock Date</span>
-                            <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
-                            <span class="summary-value">May 18, 2030</span>
-                        </div>
-                    </div>
-
-                    <button class="btn-action" id="executeBtn">
-                        <span class="lang-en">Execute Lock Transaction</span>
-                        <span class="lang-id">Eksekusi Transaksi Kunci</span>
-                    </button>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <div class="panel" style="padding: 24px;">
-                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
-                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
-                        <div class="reward-card">
-                            <div class="reward-info">
-                                <h4 class="lang-en">Locked Balance</h4>
-                                <h4 class="lang-id">Saldo Terkunci</h4>
-                                <p>1,000 $VZT</p>
-                            </div>
-                        </div>
-                        <div class="reward-card">
-                            <div class="reward-info">
-                                <h4 class="lang-en">Current Voting Weight</h4>
-                                <h4 class="lang-id">Bobot Suara Saat Ini</h4>
-                                <p style="color: #22d3ee;">1,000 veVZT</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel" style="padding: 24px;">
-                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
-                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
-                        <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
-                            <div class="reward-info">
-                                <h4>USDC Rewards</h4>
-                                <p style="color: #22d3ee;">142.50 USDC</p>
-                            </div>
-                            <button class="btn-sm" id="claimBtn">
-                                <span class="lang-en">Claim</span>
-                                <span class="lang-id">Klaim</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+            <div class="panel">
+				<h3 class="panel-title lang-en">Account Portfolio Overview</h3>
+				<h3 class="panel-title lang-id">Ikhtisar Portofolio Akun</h3>
+				<p style="color: #6b7280; font-size: 14px;">
+					<span class="lang-en">Portfolio charts, transaction history, and account summaries are coming soon.</span>
+					<span class="lang-id">Grafik portofolio, riwayat transaksi, dan ringkasan akun akan segera hadir.</span>
+				</p>
+			</div>
+		</div>
 
         <!-- HALAMAN 2: SWAP DEX -->
         <div id="page-swap" class="page-section" style="display: none;">
@@ -277,6 +200,92 @@
 
         <!-- HALAMAN 4: GOVERNANCE -->
         <div id="page-governance" class="page-section" style="display: none;">
+		<section class="dashboard-grid">
+                <div class="panel">
+                    <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
+                    <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label lang-en">Amount to Lock</label>
+                        <label class="form-label lang-id">Jumlah untuk Dikunci</label>
+                        <div class="input-box">
+                            <input type="number" placeholder="0.0" value="1000">
+                            <span class="token-select">$VZT</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label lang-en">Lock Duration</label>
+                        <label class="form-label lang-id">Durasi Penguncian</label>
+                        <div class="duration-grid">
+                            <div class="duration-btn">1 W</div>
+                            <div class="duration-btn">1 M</div>
+                            <div class="duration-btn">1 Y</div>
+                            <div class="duration-btn active">4 Y (Max)</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Voting Power Received</span>
+                            <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
+                            <span class="summary-value highlight">1,000.00 veVZT</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Estimated Weekly Yield</span>
+                            <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
+                            <span class="summary-value">~14.50 USDC</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label lang-en">Unlock Date</span>
+                            <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
+                            <span class="summary-value">May 18, 2030</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-action" id="executeBtn">
+                        <span class="lang-en">Execute Lock Transaction</span>
+                        <span class="lang-id">Eksekusi Transaksi Kunci</span>
+                    </button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Locked Balance</h4>
+                                <h4 class="lang-id">Saldo Terkunci</h4>
+                                <p>1,000 $VZT</p>
+                            </div>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-info">
+                                <h4 class="lang-en">Current Voting Weight</h4>
+                                <h4 class="lang-id">Bobot Suara Saat Ini</h4>
+                                <p style="color: #22d3ee;">1,000 veVZT</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="padding: 24px;">
+                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
+                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
+                        <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
+                            <div class="reward-info">
+                                <h4>USDC Rewards</h4>
+                                <p style="color: #22d3ee;">142.50 USDC</p>
+                            </div>
+                            <button class="btn-sm" id="claimBtn">
+                                <span class="lang-en">Claim</span>
+                                <span class="lang-id">Klaim</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div class="gov-banner">
                 <div class="gov-banner-text">
                     <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
@@ -364,7 +373,8 @@
                 </button>
             </div>
         </div>
-    </main>
+    </div>
+	</main>
 
     <!-- INTERFACE POP-UP WALLET SELECTION MODAL -->
     <div id="walletModal" class="wallet-modal-overlay style-hidden">
