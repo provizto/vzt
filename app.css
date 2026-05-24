@@ -523,6 +523,12 @@ tr:last-child td { border-bottom: none; }
     vertical-align: middle;
 }
 .gov-table tr:last-child td { border-bottom: none; }
+/* Cari class .governance-embedded-section jika sempat Anda tambahkan sebelumnya, lalu hapus atau ganti menjadi: */
+.governance-gauge-section {
+    margin-top: 20px;
+    border-top: 1px solid rgba(30, 37, 51, 0.4);
+    padding-top: 25px;
+}
  
 .vote-input-wrapper {
     display: flex;
