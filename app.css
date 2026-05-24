@@ -38,6 +38,38 @@ html[lang="id"] td span.lang-id {
     display: inline-block !important; 
 }
 
+/* --- PERBAIKAN LOGIKA BAHASA DALAM SEL (SPAN) AGAR SEJAJAR --- */
+/* Memastikan span bahasa di dalam tabel bersifat inline agar tidak merusak baris */
+html[lang="en"] th span.lang-en, 
+html[lang="id"] th span.lang-id,
+html[lang="en"] td span.lang-en, 
+html[lang="id"] td span.lang-id { 
+    display: inline-block !important; 
+}
+
+/* --- OPTIMALISASI PRESiSi HP (RESPONSIF) --- */
+@media (max-width: 768px) {
+    /* Memastikan tabel vaults memiliki ruang geser independen di HP jika kolom terlalu lebar */
+    .gov-table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; 
+        border: 1px solid #1e2533;
+        border-radius: 12px;
+    }
+    
+    /* Batas lebar minimum tabel vaults di HP agar data teks tidak bertumpuk */
+    .gov-table {
+        min-width: 600px; 
+    }
+
+    /* Mengurangi sedikit jarak padding sel tabel khusus di layar HP agar hemat ruang */
+    .gov-table th, .gov-table td {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+}
+
 /* --- STYLING TAMBAHAN UTK MEMASTIKAN PRESISI HORIZONTAL --- */
 .gov-table th {
     background-color: #0f131c;
@@ -548,7 +580,20 @@ tr:last-child td { border-bottom: none; }
     color: #d1d5db;
     vertical-align: middle;
 }
-.gov-table tr:last-child td { border-bottom: none; }
+.gov-table tr:last-child td { border-bottom: none; 
+}
+/* --- GAYA KHUSUS SESUAI GAMBAR (CYAN APY) --- */
+/* Mengatur warna cyan pada JUDUL kolom APY di thead */
+.gov-table th.cyan-header {
+    color: #22d3ee !important;
+}
+
+/* Mengatur warna cyan pada NILAI APY di tbody */
+.gov-table td.cyan-value {
+    color: #22d3ee;
+    font-weight: 700;
+    font-size: 14px;
+}
 /* Cari class .governance-embedded-section jika sempat Anda tambahkan sebelumnya, lalu hapus atau ganti menjadi: */
 .governance-gauge-section {
     margin-top: 30px;
