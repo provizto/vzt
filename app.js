@@ -161,58 +161,66 @@ function toggleMobileMenu() {
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
-// --- LOGIKA EMULATOR GRAFIK PORTOFOLIO (MENGGUNAKAN CANVAS API MURNI) ---
+// --- PERBAIKAN LOGIKA GRAFIK PORTOFOLIO RESPONSIF ---
 function renderPortfolioChart() {
     const canvas = document.getElementById('portfolioChart');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    const container = canvas.parentElement;
     
-    // Mengatur responsivitas ukuran canvas boks internal
+    // Ambil ukuran boks pembungkus asli secara real-time
+    const rect = container.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    // Menangani kerapatan piksel layar HP (Retina / AMOLED Display) agar grafik tajam
     const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = 300 * dpr;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
     ctx.scale(dpr, dpr);
 
-    const width = rect.width;
-    const height = 280;
-
-    // Titik poin koordinat simulasi data portofolio (tren naik)
+    // Titik koordinat proporsional berdasarkan lebar layar HP pengguna secara dinamis
     const points = [
-        {x: 0, y: 220}, {x: width * 0.15, y: 200}, {x: width * 0.3, y: 210}, 
-        {x: width * 0.45, y: 150}, {x: width * 0.6, y: 170}, {x: width * 0.8, y: 110}, 
-        {x: width, y: 40}
+        {x: 0, y: height * 0.8}, 
+        {x: width * 0.15, y: height * 0.75}, 
+        {x: width * 0.3, y: height * 0.78}, 
+        {x: width * 0.45, y: height * 0.5}, 
+        {x: width * 0.6, y: height * 0.6}, 
+        {x: width * 0.8, y: height * 0.35}, 
+        {x: width, y: height * 0.15}
     ];
 
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Gambar Garis Belakang Grid Horizontal Helper
+    // 1. Garis Pandu Horizontal (Grid)
     ctx.strokeStyle = 'rgba(30, 37, 51, 0.4)';
     ctx.lineWidth = 1;
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 3; i++) {
         ctx.beginPath();
-        ctx.moveTo(0, (height / 5) * i);
-        ctx.lineTo(width, (height / 5) * i);
+        ctx.moveTo(0, (height / 4) * i);
+        ctx.lineTo(width, (height / 4) * i);
         ctx.stroke();
     }
 
-    // 2. Gambar Efek Gradasi Area Bawah Garis Tren (Glow Fill)
+    // 2. Gradasi Area Bawah Grafik (Glow Fill)
     const gradientFill = ctx.createLinearGradient(0, 0, 0, height);
-    gradientFill.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+    gradientFill.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
     gradientFill.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
     
     ctx.beginPath();
     ctx.moveTo(points[0].x, height);
-    points.forEach(pt => ctx.lineTo(pt.x, pt.ptY ? pt.ptY : pt.y));
+    points.forEach(pt => ctx.lineTo(pt.x, pt.y));
     ctx.lineTo(points[points.length - 1].x, height);
     ctx.closePath();
     ctx.fillStyle = gradientFill;
     ctx.fill();
 
-    // 3. Gambar Garis Tren Utama (Stroke Line)
+    // 3. Garis Tren Utama
     ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -222,10 +230,10 @@ function renderPortfolioChart() {
     }
     ctx.stroke();
 
-    // 4. Gambar Pin Point Bulatan di Ujung Tren Terakhir
+    // 4. Pin Bulatan Akhir
     const lastPt = points[points.length - 1];
     ctx.beginPath();
-    ctx.arc(lastPt.x - 4, lastPt.y, 6, 0, 2 * Math.PI);
+    ctx.arc(lastPt.x - 2, lastPt.y, 5, 0, 2 * Math.PI);
     ctx.fillStyle = '#22d3ee';
     ctx.fill();
 }
