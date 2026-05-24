@@ -463,6 +463,7 @@ tr:last-child td { border-bottom: none; }
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    margin-top: 28px;
 }
 @media (max-width: 600px) { .gov-banner { flex-direction: column; align-items: flex-start; } }
  
@@ -527,7 +528,7 @@ tr:last-child td { border-bottom: none; }
 .governance-gauge-section {
     margin-top: 30px;
     border-top: 1px solid rgba(30, 37, 51, 0.4);
-    padding-top: 25px;
+    padding-top: 28px;
 }
  
 .vote-input-wrapper {
