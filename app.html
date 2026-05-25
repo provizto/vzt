@@ -411,51 +411,51 @@
 
         <!-- Menu Swap (Sama seperti sebelumnya) -->
         <div id="page-swap" class="page-section" style="display: none;">
-            <div class="panel swap-box">
-                <h3 class="panel-title lang-en">Swap Tokens</h3>
-                <h3 class="panel-title lang-id">Tukar Token</h3>
-                
-                <div class="form-group">
-                    <label class="form-label lang-en">From</label>
-                    <label class="form-label lang-id">Dari</label>
-                    <div class="input-box">
-                        <input type="number" placeholder="0.0" value="1">
-                        <span class="token-select">ETH</span>
-                    </div>
-                </div>
-
-                <div class="swap-icon-container">
-                    <button class="swap-arrow-btn">⬇</button>
-                </div>
-
-                <div class="form-group" style="margin-top: 10px;">
-                    <label class="form-label lang-en">To (Estimated)</label>
-                    <label class="form-label lang-id">Ke (Estimasi)</label>
-                    <div class="input-box">
-                        <input type="number" placeholder="0.0" value="3450" readonly>
-                        <span class="token-select">USDC</span>
-                    </div>
-                </div>
-
-                <div class="summary-box">
-                    <div class="summary-row">
-                        <span class="summary-label lang-en">Slippage Tolerance</span>
-                        <span class="summary-label lang-id">Toleransi Slippage</span>
-                        <span class="summary-value">0.5%</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label lang-en">Network Fee</span>
-                        <span class="summary-label lang-id">Biaya Jaringan</span>
-                        <span class="summary-value highlight">&lt; $0.01 (Base)</span>
-                    </div>
-                </div>
-
-                <button class="btn-action" id="swapActionBtn">
-                    <span class="lang-en">Swap Assets</span>
-                    <span class="lang-id">Tukar Aset</span>
-                </button>
+    <div class="panel swap-box">
+        <h3 class="panel-title lang-en">Swap Tokens</h3>
+        <h3 class="panel-title lang-id">Tukar Token</h3>
+        
+        <div class="form-group">
+            <label class="form-label lang-en">From</label>
+            <label class="form-label lang-id">Dari</label>
+            <div class="input-box">
+                <input type="number" id="swapInputFrom" placeholder="0.0" min="0">
+                <span class="token-select" id="swapLabelFrom">ETH</span>
             </div>
         </div>
+
+        <div class="swap-icon-container">
+            <button class="swap-arrow-btn" id="btnReverseSwap">⬇</button>
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;">
+            <label class="form-label lang-en">To (Estimated)</label>
+            <label class="form-label lang-id">Ke (Estimasi)</label>
+            <div class="input-box">
+                <input type="number" id="swapInputTo" placeholder="0.0" readonly>
+                <span class="token-select" id="swapLabelTo">USDC</span>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="summary-label lang-en">Slippage Tolerance</span>
+                <span class="summary-label lang-id">Toleransi Slippage</span>
+                <span class="summary-value">0.5%</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label lang-en">Network Fee</span>
+                <span class="summary-label lang-id">Biaya Jaringan</span>
+                <span class="summary-value highlight">&lt; $0.01 (Base)</span>
+            </div>
+        </div>
+
+        <button class="btn-action" id="swapActionBtn">
+            <span class="lang-en">Swap Assets</span>
+            <span class="lang-id">Tukar Aset</span>
+        </button>
+    </div>
+</div>
 
         <!-- Menu Vaults (Sama seperti sebelumnya) -->
         <div id="page-vaults" class="page-section" style="display: none;">
