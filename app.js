@@ -154,71 +154,117 @@ function toggleMobileMenu() {
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
-// --- LOGIKA ANTI-BLANK GRAFIK APEXCHARTS ---
+// --- LOGIKA EMULASI GABUNGAN GRAFIK (TRENDLINE & DONUT) ---
 function inisialisasiGrafik() {
-    const elemenChart = document.querySelector("#yieldChart");
-    
-    // Validasi: Jika elemen tidak ditemukan di halaman aktif, jangan jalankan script agar tidak error
-    if (!elemenChart) return;
+    // 1. INISIALISASI YIELD TRENDLINE CHART
+    const elemenLineChart = document.querySelector("#yieldChart");
+    if (elemenLineChart) {
+        const lineOptions = {
+            series: [{
+                name: "Yield Earnings",
+                data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 142]
+            }],
+            chart: {
+                type: 'area',
+                height: 240,
+                width: '100%',
+                toolbar: { show: false },
+                background: 'transparent'
+            },
+            colors: ['#22d3ee'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.0,
+                    stops: [0, 90, 100]
+                }
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            grid: {
+                borderColor: '#1e2533',
+                strokeDashArray: 4,
+                xaxis: { lines: { show: false } },
+                yaxis: { lines: { show: true } }
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                labels: { style: { colors: '#6b7280' } },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: {
+                    style: { colors: '#6b7280' },
+                    formatter: function (value) { return "$" + value; }
+                }
+            },
+            tooltip: { theme: 'dark' }
+        };
+        elemenLineChart.innerHTML = "";
+        const lineChart = new ApexCharts(elemenLineChart, lineOptions);
+        lineChart.render();
+    }
 
-    const options = {
-        series: [{
-            name: "Yield Earnings",
-            data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 142]
-        }],
-        chart: {
-            type: 'area',
-            height: 240,
-            width: '100%',
-            toolbar: { show: false },
-            background: 'transparent',
-            animations: { enabled: true } // Animasi saat grafik muncul
-        },
-        colors: ['#22d3ee'], // Warna cyan dApp PROVIZTO
-        fill: {
-            type: 'gradient',
-            gradient: {
-                shadeIntensity: 1,
-                opacityFrom: 0.4,
-                opacityTo: 0.0,
-                stops: [0, 90, 100]
-            }
-        },
-        dataLabels: { enabled: false },
-        stroke: {
-            curve: 'smooth',
-            width: 3
-        },
-        grid: {
-            borderColor: '#1e2533',
-            strokeDashArray: 4,
-            xaxis: { lines: { show: false } },
-            yaxis: { lines: { show: true } }
-        },
-        xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-            labels: { style: { colors: '#6b7280' } },
-            axisBorder: { show: false },
-            axisTicks: { show: false }
-        },
-        yaxis: {
-            labels: {
-                style: { colors: '#6b7280' },
-                formatter: function (value) { return "$" + value; }
-            }
-        },
-        tooltip: {
-            theme: 'dark'
-        }
-    };
-
-    // Reset isi kontainer terlebih dahulu sebelum di-render ulang (mencegah tumpang tindih)
-    elemenChart.innerHTML = "";
-    const chart = new ApexCharts(elemenChart, options);
-    chart.render();
+    // 2. INISIALISASI ASSET ALLOCATION DONUT CHART
+    const elemenDonutChart = document.querySelector("#assetDonutChart");
+    if (elemenDonutChart) {
+        const donutOptions = {
+            // Persentase porsi masing-masing aset (Vaults, Governance, Wallet)
+            series: [54.2, 25.8, 20.0], 
+            chart: {
+                type: 'donut',
+                height: 160,
+                background: 'transparent'
+            },
+            // Sembunyikan legenda bawaan ApexCharts karena kita sudah membuat legenda kustom di HTML bawahnya
+            legend: { show: false }, 
+            dataLabels: { enabled: false },
+            // Mencocokkan warna neon dengan tema dApp PROVIZTO Anda
+            colors: ['#a855f7', '#22d3ee', '#3b82f6'], 
+            stroke: {
+                show: true,
+                colors: ['#0f131c'], // Memberikan batas pemisah gelap antar potongan donut
+                width: 3
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '75%', // Ketebalan lingkaran donut
+                        background: 'transparent',
+                        labels: {
+                            show: true,
+                            name: { show: false },
+                            value: {
+                                show: true,
+                                fontSize: '16px',
+                                fontWeight: '700',
+                                color: '#ffffff',
+                                offsetY: 5,
+                                formatter: function (val) { return val + "%"; }
+                            }
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'dark',
+                y: {
+                    formatter: function (val) { return val + "% of Portfolio"; }
+                }
+            },
+            // Menentukan label saat kursor diarahkan ke potongan donut
+            labels: ['Vaults Optimizer', 'veVZT Governance', 'Wallet Liquid']
+        };
+        elemenDonutChart.innerHTML = "";
+        const donutChart = new ApexCharts(elemenDonutChart, donutOptions);
+        donutChart.render();
+    }
 }
 
-// Jalankan fungsi grafik setelah seluruh dokumen selesai dimuat secara sempurna
+// Menjaga agar pemanggilan fungsi grafik tetap aman dan anti-blank saat refresh
 if (document.readyState === "complete" || document.readyState === "interactive") {
     inisialisasiGrafik();
 } else {
