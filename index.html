@@ -6,6 +6,19 @@
     <title>PROVIZTO - Base Ecosystem Hub</title>
     <!-- Menghubungkan file CSS eksternal -->
     <link rel="stylesheet" href="index.css">
+
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f131c">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((reg) => console.log('Service Worker terdaftar dengan sukses!', reg.scope))
+        .catch((err) => console.log('Pendaftaran Service Worker gagal:', err));
+    });
+  }
+</script>
 </head>
 <body>
 
