@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROVIZTO - dApp Dashboard</title>
     <link rel="stylesheet" href="app.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
 
@@ -118,9 +119,7 @@
                 </div>
             </div>
             
-            <div style="height: 240px; background-color: #080b11; border: 1px dashed #1e2533; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 13px;">
-                📊 [Yield Trendline Chart Placeholder - Chart.js / ApexCharts]
-            </div>
+            <div id="yieldChart" style="min-height: 240px;"></div>
         </div>
 
         <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
