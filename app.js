@@ -62,39 +62,34 @@ async function connectSmartAccount() {
 async function connectMetaMask() {
     if (document.getElementById('optMetaMask').classList.contains('disabled-style')) return;
 
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            // Meminta izin membaca alamat dompet
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            
-            // Otomasi pengalihan jaringan langsung ke Base Testnet
+    // 1. Deteksi apakah pengguna menggunakan HP (Mobile)
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        // Bersihkan URL dApp Anda dari "https://"
+        const dAppUrl = window.location.href.replace(/^https?:\/\//, '');
+        
+        // Skema Deep Link resmi MetaMask untuk membuka dApp di browser internal mereka
+        const metamaskDeepLink = `https://metamask.app.link/dapp/${dAppUrl}`;
+        
+        console.log("Mengarahkan pengguna ke Aplikasi MetaMask Mobile...");
+        window.location.href = metamaskDeepLink;
+    } else {
+        // 2. Jika pengguna di Laptop/PC, gunakan logika ekstensi biasa
+        if (typeof window.ethereum !== 'undefined') {
             try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: BASE_TESTNET_HEX }],
                 });
-            } catch (switchError) {
-                // Kode error 4902 berarti jaringan belum terdaftar di MetaMask pengguna
-                if (switchError.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: BASE_TESTNET_HEX,
-                            chainName: 'Base Sepolia Testnet',
-                            nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-                            rpcUrls: ['https://sepolia.base.org'],
-                            blockExplorerUrls: ['https://sepolia.basescan.org']
-                        }]
-                    });
-                }
+                handleWalletConnected(accounts[0]);
+            } catch (error) {
+                console.error("Koneksi dibatalkan:", error);
             }
-            // Kirim data alamat akun ke sistem UI
-            handleWalletConnected(accounts[0]);
-        } catch (error) {
-            console.error("Proses koneksi dibatalkan atau terganggu:", error);
+        } else {
+            alert("Ekstensi MetaMask tidak ditemukan di browser PC Anda.");
         }
-    } else {
-        alert("Ekstensi MetaMask tidak terdeteksi! Silakan gunakan dApp Browser di dalam aplikasi MetaMask Mobile jika Anda menggunakan handphone.");
     }
 }
 
@@ -113,76 +108,6 @@ function disconnectWallet() {
         window.location.reload(); // Memuat ulang halaman adalah metode pembersihan state Web3 paling aman
     }
 }
-
-// --- AMBIL ELEMEN DOM ---
-const btnConnectTrigger = document.getElementById('btnConnectTrigger');
-const walletModal = document.getElementById('walletModal');
-const btnCloseModal = document.getElementById('btnCloseModal');
-const walletConnectedStatus = document.getElementById('walletConnectedStatus');
-const userAddress = document.getElementById('userAddress');
-const btnDisconnect = document.getElementById('btnDisconnect');
-const toast = document.getElementById('transactionToast');
- 
-// Elemen Validasi Checkbox Terms
-const chkAgreeTerms = document.getElementById('chkAgreeTerms');
-const walletOptions = document.querySelectorAll('.wallet-option-item');
-
-// --- 1. LOGIKA INTERAKSI WALLET MODAL ---
-btnConnectTrigger.addEventListener('click', () => {
-    chkAgreeTerms.checked = false;
-    walletOptions.forEach(opt => opt.classList.add('disabled-style'));
-    walletModal.classList.remove('style-hidden');
-});
- 
-btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
-walletModal.addEventListener('click', (e) => { 
-    if (e.target === walletModal) walletModal.classList.add('style-hidden'); 
-});
-
-// Listener Checkbox Syarat & Ketentuan Modal
-chkAgreeTerms.addEventListener('change', function() {
-    if (this.checked) {
-        walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
-    } else {
-        walletOptions.forEach(opt => opt.classList.add('disabled-style'));
-    }
-});
-
-function toggleWalletUI(isConnected, address = "") {
-    if (isConnected) {
-        btnConnectTrigger.classList.add('style-hidden');
-        walletConnectedStatus.classList.remove('style-hidden');
-        userAddress.innerText = address.substring(0, 6) + "..." + address.substring(address.length - 4);
-    } else {
-        btnConnectTrigger.classList.remove('style-hidden');
-        walletConnectedStatus.classList.add('style-hidden');
-    }
-}
-
-function executeWalletConnection(walletType, dummyAddress) {
-    walletModal.classList.add('style-hidden');
-    toggleWalletUI(true, dummyAddress);
-    showNotification();
-}
-
-// Penanganan Klik Wallet Opsi Koneksi
-document.getElementById('optSmartAccount').addEventListener('click', function(e) {
-    if (chkAgreeTerms.checked) {
-        executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
-    }
-});
-document.getElementById('optMetaMask').addEventListener('click', function(e) {
-    if (chkAgreeTerms.checked) {
-        executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
-    }
-});
-document.getElementById('optWalletConnect').addEventListener('click', function(e) {
-    if (chkAgreeTerms.checked) {
-        executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
-    }
-});
-btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
-
 
 // --- 2. LOGIKA PERHITUNGAN GAUGE VOTING ---
 function calculateTotalVotes() {
