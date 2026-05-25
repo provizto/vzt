@@ -333,52 +333,65 @@
                 <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veVZT Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
                 
                 <div class="gov-table-responsive">
-                    <table class="gov-table">
-                        <thead>
-                            <tr>
-                                <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
-                                <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
-                                <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
-                                <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
-                                <td>42.51%</td>
-                                <td style="color: #22d3ee;">~1.42 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
-                                <td>21.14%</td>
-                                <td style="color: #22d3ee;">~0.71 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
-                                <td>36.35%</td>
-                                <td style="color: #22d3ee;">~1.21 $VZT / block</td>
-                                <td style="text-align: right; display: flex; justify-content: flex-end;">
-                                    <div class="vote-input-wrapper">
-                                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <table class="gov-table">
+        <thead>
+            <tr>
+                <!-- Judul kolom disatukan dalam satu tag th agar sejajar dengan input di bawahnya -->
+                <th>
+                    <span class="lang-en">Pool Pair</span>
+                    <span class="lang-id">Pasangan Kolam</span>
+                </th>
+                <th>
+                    <span class="lang-en">Current Total Weight</span>
+                    <span class="lang-id">Bobot Total Saat Ini</span>
+                </th>
+                <th>
+                    <span class="lang-en">Next Epoch Estimate</span>
+                    <span class="lang-id">Estimasi Epoh Berikutnya</span>
+                </th>
+                <th style="text-align: right;">
+                    <span class="lang-en">Your Allocation</span>
+                    <span class="lang-id">Alokasi Anda</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
+                <td>42.51%</td>
+                <td style="color: #22d3ee;">~1.42 $VZT / block</td>
+                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
+                <td>21.14%</td>
+                <td style="color: #22d3ee;">~0.71 $VZT / block</td>
+                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
+                <td>36.35%</td>
+                <td style="color: #22d3ee;">~1.21 $VZT / block</td>
+                <td style="text-align: right; display: flex; justify-content: flex-end;">
+                    <div class="vote-input-wrapper">
+                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                        <span>%</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
                 <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
                     <span class="lang-en">Submit Gauge Votes</span>
@@ -442,50 +455,63 @@
                 <h3 class="panel-title lang-id">Brankas Otomatisasi Hasil</h3>
                 
                 <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="lang-en">Vault Name</th><th class="lang-id">Nama Brankas</th>
-                                <th class="lang-en">Total Deposited (TVL)</th><th class="lang-id">Total Disetor (TVL)</th>
-                                <th class="lang-en">Your Balance</th><th class="lang-id">Saldo Anda</th>
-                                <th style="color: #22d3ee;">Boosted APY</th>
-                                <th style="text-align: right;" class="lang-en">Action</th><th style="text-align: right;" class="lang-id">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="pool-title">WETH / USDC</div>
-                                    <span class="badge-pool lang-en">Standard</span><span class="badge-pool lang-id">Standar</span>
-                                </td>
-                                <td>$18,452,000</td>
-                                <td>0.00 LP</td>
-                                <td style="color: #22d3ee; font-weight: 700;">32.8% 🔥</td>
-                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Deposit</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="pool-title">USDC / USDt</div>
-                                    <span class="badge-pool">Stable</span>
-                                </td>
-                                <td>$14,210,500</td>
-                                <td>540.20 LP</td>
-                                <td style="color: #22d3ee; font-weight: 700;">11.5% 🔥</td>
-                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="pool-title">$VZT / WETH</div>
-                                    <span class="badge-pool boost">Volatile</span>
-                                </td>
-                                <td>$10,188,704</td>
-                                <td>1,250.00 LP</td>
-                                <td style="color: #22d3ee; font-weight: 700;">114.6% 🔥</td>
-                                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <table>
+        <thead>
+            <tr>
+                <!-- Judul kolom disatukan dalam satu tag th agar tidak merusak grid -->
+                <th>
+                    <span class="lang-en">Vault Name</span>
+                    <span class="lang-id">Nama Brankas</span>
+                </th>
+                <th>
+                    <span class="lang-en">Total Deposited (TVL)</span>
+                    <span class="lang-id">Total Disetor (TVL)</span>
+                </th>
+                <th>
+                    <span class="lang-en">Your Balance</span>
+                    <span class="lang-id">Saldo Anda</span>
+                </th>
+                <th style="color: #22d3ee;">Boosted APY</th>
+                <th style="text-align: right;">
+                    <span class="lang-en">Action</span>
+                    <span class="lang-id">Aksi</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="pool-title">WETH / USDC</div>
+                    <span class="badge-pool lang-en">Standard</span><span class="badge-pool lang-id">Standar</span>
+                </td>
+                <td>$18,452,000</td>
+                <td>0.00 LP</td>
+                <td style="color: #22d3ee; font-weight: 700;">32.8% 🔥</td>
+                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Deposit</button></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="pool-title">USDC / USDt</div>
+                    <span class="badge-pool">Stable</span>
+                </td>
+                <td>$14,210,500</td>
+                <td>540.20 LP</td>
+                <td style="color: #22d3ee; font-weight: 700;">11.5% 🔥</td>
+                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="pool-title">$VZT / WETH</div>
+                    <span class="badge-pool boost">Volatile</span>
+                </td>
+                <td>$10,188,704</td>
+                <td>1,250.00 LP</td>
+                <td style="color: #22d3ee; font-weight: 700;">114.6% 🔥</td>
+                <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
             </div>
         </div>
     </main>
