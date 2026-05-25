@@ -262,9 +262,11 @@ function aktifkanFiturSwap() {
             if (isEthToUsdc) {
                 lblFrom.innerText = "ETH";
                 lblTo.innerText = "USDC";
+                btnRev.innerText = "⬇";
             } else {
                 lblFrom.innerText = "USDC";
                 lblTo.innerText = "ETH";
+                btnRev.innerText = "⬆";
             }
 
             // Tukar angka nilainya
