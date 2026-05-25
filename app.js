@@ -1,3 +1,119 @@
+// Konfigurasi Target Jaringan: Base Sepolia Testnet (Chain ID: 84532)
+const BASE_TESTNET_HEX = '0x14a34'; 
+
+// 🔓 FUNGSI MANAJEMEN MODAL INTERFACE
+function openWalletModal() {
+    document.getElementById('walletModal').style.display = 'flex';
+}
+
+function closeWalletModal() {
+    document.getElementById('walletModal').style.display = 'none';
+}
+
+// 🔄 LOGIKA BUKA/TUTUP KUNCI TOMBOL BERDASARKAN CHECKBOX TERMS
+function toggleWalletButtons() {
+    const isAgreed = document.getElementById('tosCheckbox').checked;
+    const buttons = ['optSmartAccount', 'optMetaMask', 'optWalletConnect'];
+    
+    buttons.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            if (isAgreed) {
+                btn.classList.remove('disabled-style'); // Tombol menyala / aktif
+            } else {
+                btn.classList.add('disabled-style');    // Tombol redup / terkunci
+            }
+        }
+    });
+}
+
+// 🌐 POST-CONNECTION PIPELINE (PERBARUI TAMPILAN DASHBOARD UTAMA)
+function handleWalletConnected(address) {
+    closeWalletModal();
+    
+    // Memotong alamat dompet agar hemat ruang (Contoh: 0x8d55...89f1)
+    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
+    
+    // Mencari kontainer tombol koneksi di bagian kanan atas topbar Anda
+    const rightControls = document.querySelector('.right-controls');
+    if (rightControls) {
+        rightControls.innerHTML = `
+            <div class="wallet-active-status">
+                <span class="address-badge">${shortAddress}</span>
+                <button class="btn-disconnect" onclick="disconnectWallet()">Disconnect</button>
+            </div>
+        `;
+    }
+}
+
+// 1. PROSES KONEKSI: SMART ACCOUNT (ACCOUNT ABSTRACTION)
+async function connectSmartAccount() {
+    if (document.getElementById('optSmartAccount').classList.contains('disabled-style')) return;
+
+    console.log("Menghubungkan via Smart Account (Social Login/Passkey)...");
+    // Simulasi penanganan SDK eksternal berdurasi 800ms
+    setTimeout(() => {
+        const mockAddress = "0x8d5594b2cb3a2e89f1c71ca55555555555589f1";
+        handleWalletConnected(mockAddress);
+    }, 800);
+}
+
+// 2. PROSES KONEKSI: METAMASK BROWSER
+async function connectMetaMask() {
+    if (document.getElementById('optMetaMask').classList.contains('disabled-style')) return;
+
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            // Meminta izin membaca alamat dompet
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            
+            // Otomasi pengalihan jaringan langsung ke Base Testnet
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BASE_TESTNET_HEX }],
+                });
+            } catch (switchError) {
+                // Kode error 4902 berarti jaringan belum terdaftar di MetaMask pengguna
+                if (switchError.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: BASE_TESTNET_HEX,
+                            chainName: 'Base Sepolia Testnet',
+                            nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+                            rpcUrls: ['https://sepolia.base.org'],
+                            blockExplorerUrls: ['https://sepolia.basescan.org']
+                        }]
+                    });
+                }
+            }
+            // Kirim data alamat akun ke sistem UI
+            handleWalletConnected(accounts[0]);
+        } catch (error) {
+            console.error("Proses koneksi dibatalkan atau terganggu:", error);
+        }
+    } else {
+        alert("Ekstensi MetaMask tidak terdeteksi! Silakan gunakan dApp Browser di dalam aplikasi MetaMask Mobile jika Anda menggunakan handphone.");
+    }
+}
+
+// 3. PROSES KONEKSI: WALLETCONNECT
+async function connectWalletConnect() {
+    if (document.getElementById('optWalletConnect').classList.contains('disabled-style')) return;
+
+    console.log("Membuka gerbang protokol WalletConnect...");
+    // Pemicu pemanggilan komponen modal Web3Modal SDK (modal.open())
+    alert("Menyambungkan ke infrastruktur QR Code WalletConnect Base Testnet.");
+}
+
+// FUNGSI MEMUTUSKAN HUBUNGAN DOMPET (RESET STATE)
+function disconnectWallet() {
+    if (confirm("Apakah Anda yakin ingin memutuskan koneksi dompet?")) {
+        window.location.reload(); // Memuat ulang halaman adalah metode pembersihan state Web3 paling aman
+    }
+}
+
 // --- AMBIL ELEMEN DOM ---
 const btnConnectTrigger = document.getElementById('btnConnectTrigger');
 const walletModal = document.getElementById('walletModal');
