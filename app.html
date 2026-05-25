@@ -4,13 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROVIZTO - dApp Dashboard</title>
+    <!-- Menghubungkan File CSS Eksternal -->
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
 
+    <!-- SISTEM TOAST NOTIFIKASI -->
+    <div class="toast-container" id="toastContainer">
+        <div class="toast" id="transactionToast">
+            <div class="toast-icon">✅</div>
+            <div class="toast-content">
+                <div class="toast-title lang-en">Transaction Successful</div>
+                <div class="toast-title lang-id">Transaksi Berhasil</div>
+                <div class="toast-desc lang-en">Action processed on Base L2 network successfully.</div>
+                <div class="toast-desc lang-id">Aksi berhasil diproses pada jaringan Base L2.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOMBOL NAVIGASI MOBILE (HAMBURGER) -->
     <button id="menuToggleBtn" class="menu-toggle">☰</button>
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
+    <!-- PANEL NAVIGASI UTAMA (SIDEBAR) -->
     <aside id="appSidebar">
         <div>
             <div class="logo">PROVIZTO<span>.</span></div>
@@ -40,6 +56,7 @@
         </div>
     </aside>
 
+    <!-- KONTEN UTAMA -->
     <main class="main-content">
         <header class="topbar">
             <div>
@@ -67,6 +84,7 @@
             </div>
         </header>
 
+        <!-- HALAMAN 1: DASHBOARD -->
         <div id="page-dashboard" class="page-section">
     
     <section class="dashboard-stats-grid">
@@ -173,6 +191,7 @@
     
 </div>
 
+        <!-- HALAMAN 2: SWAP DEX -->
         <div id="page-swap" class="page-section" style="display: none;">
             <div class="panel swap-box">
                 <h3 class="panel-title lang-en">Swap Tokens</h3>
@@ -220,6 +239,7 @@
             </div>
         </div>
 
+        <!-- HALAMAN 3: VAULTS OPTIMIZER -->
         <div id="page-vaults" class="page-section" style="display: none;">
     <div class="panel">
         <h3 class="panel-title lang-en">Automated Compounding Vaults</h3>
@@ -294,6 +314,7 @@
     </div>
 </div>
 
+        <!-- HALAMAN 4: GOVERNANCE -->
         <div id="page-governance" class="page-section" style="display: none;">
 		<section class="dashboard-grid">
                 <div class="panel">
@@ -485,6 +506,7 @@
     </div>
 	</main>
 
+    <!-- INTERFACE POP-UP WALLET SELECTION MODAL -->
     <div id="walletModal" class="wallet-modal-overlay style-hidden">
         <div class="wallet-modal-card">
             <div class="wallet-modal-header">
@@ -542,7 +564,7 @@
                     </div>
                 </button>
 
-                <a href="wallet.html" class="wallet-option-item disabled-style" id="optWalletConnect" style="text-decoration: none;">
+                <button class="wallet-option-item disabled-style" id="optWalletConnect">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
                         <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
@@ -555,7 +577,7 @@
                         <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
                         <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
                     </div>
-                </a>
+                </button>
             </div>
             
             <div class="wallet-modal-footer lang-en">
@@ -567,6 +589,7 @@
         </div>
     </div>
 
+    <!-- Menghubungkan File JS Eksternal -->
     <script src="app.js"></script>
 </body>
 </html>
