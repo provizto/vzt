@@ -1,115 +1,4 @@
-// Konfigurasi Target Jaringan: Base Sepolia Testnet (Chain ID: 84532)
-const BASE_TESTNET_HEX = '0x14a34'; 
-
-// 🔓 FUNGSI MANAJEMEN MODAL INTERFACE
-function openWalletModal() {
-    document.getElementById('walletModal').style.display = 'flex';
-}
-
-function closeWalletModal() {
-    document.getElementById('walletModal').style.display = 'none';
-}
-
-// 🔄 LOGIKA BUKA/TUTUP KUNCI TOMBOL BERDASARKAN CHECKBOX TERMS
-function toggleWalletButtons() {
-    const isAgreed = document.getElementById('tosCheckbox').checked;
-    const buttons = ['optSmartAccount', 'optMetaMask', 'optWalletConnect'];
-    
-    buttons.forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            if (isAgreed) {
-                btn.classList.remove('disabled-style'); // Tombol menyala / aktif
-            } else {
-                btn.classList.add('disabled-style');    // Tombol redup / terkunci
-            }
-        }
-    });
-}
-
-// 🌐 POST-CONNECTION PIPELINE (PERBARUI TAMPILAN DASHBOARD UTAMA)
-function handleWalletConnected(address) {
-    closeWalletModal();
-    
-    // Memotong alamat dompet agar hemat ruang (Contoh: 0x8d55...89f1)
-    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-    
-    // Mencari kontainer tombol koneksi di bagian kanan atas topbar Anda
-    const rightControls = document.querySelector('.right-controls');
-    if (rightControls) {
-        rightControls.innerHTML = `
-            <div class="wallet-active-status">
-                <span class="address-badge">${shortAddress}</span>
-                <button class="btn-disconnect" onclick="disconnectWallet()">Disconnect</button>
-            </div>
-        `;
-    }
-}
-
-// 1. PROSES KONEKSI: SMART ACCOUNT (ACCOUNT ABSTRACTION)
-async function connectSmartAccount() {
-    if (document.getElementById('optSmartAccount').classList.contains('disabled-style')) return;
-
-    console.log("Menghubungkan via Smart Account (Social Login/Passkey)...");
-    // Simulasi penanganan SDK eksternal berdurasi 800ms
-    setTimeout(() => {
-        const mockAddress = "0x8d5594b2cb3a2e89f1c71ca55555555555589f1";
-        handleWalletConnected(mockAddress);
-    }, 800);
-}
-
-// 2. PROSES KONEKSI: METAMASK BROWSER
-async function connectMetaMask() {
-    if (document.getElementById('optMetaMask').classList.contains('disabled-style')) return;
-
-    // 1. Deteksi apakah pengguna menggunakan HP (Mobile)
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-        // Bersihkan URL dApp Anda dari "https://"
-        const dAppUrl = window.location.href.replace(/^https?:\/\//, '');
-        
-        // Skema Deep Link resmi MetaMask untuk membuka dApp di browser internal mereka
-        const metamaskDeepLink = `https://metamask.app.link/dapp/${dAppUrl}`;
-        
-        console.log("Mengarahkan pengguna ke Aplikasi MetaMask Mobile...");
-        window.location.href = metamaskDeepLink;
-    } else {
-        // 2. Jika pengguna di Laptop/PC, gunakan logika ekstensi biasa
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: BASE_TESTNET_HEX }],
-                });
-                handleWalletConnected(accounts[0]);
-            } catch (error) {
-                console.error("Koneksi dibatalkan:", error);
-            }
-        } else {
-            alert("Ekstensi MetaMask tidak ditemukan di browser PC Anda.");
-        }
-    }
-}
-
-// 3. PROSES KONEKSI: WALLETCONNECT
-async function connectWalletConnect() {
-    if (document.getElementById('optWalletConnect').classList.contains('disabled-style')) return;
-
-    console.log("Membuka gerbang protokol WalletConnect...");
-    // Pemicu pemanggilan komponen modal Web3Modal SDK (modal.open())
-    alert("Menyambungkan ke infrastruktur QR Code WalletConnect Base Testnet.");
-}
-
-// FUNGSI MEMUTUSKAN HUBUNGAN DOMPET (RESET STATE)
-function disconnectWallet() {
-    if (confirm("Apakah Anda yakin ingin memutuskan koneksi dompet?")) {
-        window.location.reload(); // Memuat ulang halaman adalah metode pembersihan state Web3 paling aman
-    }
-}
-
-// --- 2. LOGIKA PERHITUNGAN GAUGE VOTING ---
+// --- 1. LOGIKA PERHITUNGAN GAUGE VOTING ---
 function calculateTotalVotes() {
     const inputs = document.querySelectorAll('.gauge-input');
     const progressFill = document.getElementById('govProgressBar');
@@ -135,10 +24,13 @@ function calculateTotalVotes() {
 }
 
 
-// --- 3. LOGIKA TOAST NOTIFIKASI ---
+// --- 2. LOGIKA TOAST NOTIFIKASI ---
 function showNotification() {
-    toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    const toast = document.getElementById('toast'); // Memastikan inisialisasi elemen toast diambil dengan benar
+    if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    }
 }
  
 document.getElementById('executeBtn').addEventListener('click', showNotification);
@@ -148,13 +40,13 @@ document.getElementById('submitVotesBtn').addEventListener('click', showNotifica
 document.querySelectorAll('.id-vault-btn').forEach(btn => btn.addEventListener('click', showNotification));
 
 
-// --- 4. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
+// --- 3. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
 document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
     document.getElementById('appNode').setAttribute('lang', e.target.value);
 });
 
 
-// --- 5. SELEKSI TOMBOL DURASI ---
+// --- 4. SELEKSI TOMBOL DURASI ---
 const durationBtns = document.querySelectorAll('.duration-btn');
 durationBtns.forEach(btn => {
     btn.addEventListener('click', function() {
@@ -164,7 +56,7 @@ durationBtns.forEach(btn => {
 });
 
 
-// --- 6. LOGIKA NAVIGASI MENU SIDEBAR (SPA / SINGLE PAGE APPLICATION) ---
+// --- 5. LOGIKA NAVIGASI MENU SIDEBAR (SPA / SINGLE PAGE APPLICATION) ---
 function switchPage(pageId, element) {
     const pages = document.querySelectorAll('.page-section');
     pages.forEach(page => { page.style.display = 'none'; });
@@ -179,11 +71,11 @@ function switchPage(pageId, element) {
         element.classList.add('active');
     }
     
-    if(window.innerWidth <= 768) toggleMobileMenu();
+    if (window.innerWidth <= 768) toggleMobileMenu();
 }
 
 
-// --- 7. LOGIKA MENU HAMBURGER (RESPONSIF SMARTPHONE) ---
+// --- 6. LOGIKA MENU HAMBURGER (RESPONSIF SMARTPHONE) ---
 const menuToggleBtn = document.getElementById('menuToggleBtn');
 const appSidebar = document.getElementById('appSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -202,7 +94,8 @@ function toggleMobileMenu() {
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
-// --- PERBAIKAN LOGIKA GRAFIK PORTOFOLIO RESPONSIF ---
+
+// --- 7. PERBAIKAN LOGIKA GRAFIK PORTOFOLIO RESPONSIF ---
 function renderPortfolioChart() {
     const canvas = document.getElementById('portfolioChart');
     if (!canvas) return;
@@ -236,7 +129,7 @@ function renderPortfolioChart() {
 
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Garis Pandu Horizontal (Grid)
+    // Garis Pandu Horizontal (Grid)
     ctx.strokeStyle = 'rgba(30, 37, 51, 0.4)';
     ctx.lineWidth = 1;
     for (let i = 1; i <= 3; i++) {
@@ -246,7 +139,7 @@ function renderPortfolioChart() {
         ctx.stroke();
     }
 
-    // 2. Gradasi Area Bawah Grafik (Glow Fill)
+    // Gradasi Area Bawah Grafik (Glow Fill)
     const gradientFill = ctx.createLinearGradient(0, 0, 0, height);
     gradientFill.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
     gradientFill.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
@@ -259,7 +152,7 @@ function renderPortfolioChart() {
     ctx.fillStyle = gradientFill;
     ctx.fill();
 
-    // 3. Garis Tren Utama
+    // Garis Tren Utama
     ctx.strokeStyle = '#3b82f6';
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
@@ -271,7 +164,7 @@ function renderPortfolioChart() {
     }
     ctx.stroke();
 
-    // 4. Pin Bulatan Akhir
+    // Pin Bulatan Akhir
     const lastPt = points[points.length - 1];
     ctx.beginPath();
     ctx.arc(lastPt.x - 2, lastPt.y, 5, 0, 2 * Math.PI);
@@ -289,7 +182,7 @@ window.addEventListener('resize', renderPortfolioChart);
 
 
 // --- MODIFIKASI FUNGSI SWITCHPAGE SPA ---
-// Pastikan fungsi switchPage Anda memicu re-render grafik saat halaman 'dashboard' diakses kembali oleh pengguna
+// Memastikan fungsi switchPage memicu re-render grafik saat halaman 'dashboard' diakses kembali oleh pengguna
 const originalSwitchPage = switchPage;
 switchPage = function(pageId, element) {
     originalSwitchPage(pageId, element);
