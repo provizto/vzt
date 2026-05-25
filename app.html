@@ -27,12 +27,11 @@
         <div>
             <div class="logo">PROVIZTO<span>.</span></div>
             <ul class="nav-links">
-                <!-- Menu default active adalah Dashboard -->
-                <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
-                <li><a href="#" class="nav-item active" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
-                <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
-                <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
-            </ul>
+    <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
+    <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
+    <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
+    <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
+</ul>
         </div>
         
         <div class="sidebar-footer">
@@ -219,7 +218,7 @@
 </section>
 </div>
         <!-- Halaman veVZT Governance (Sekarang menjadi halaman kedua) -->
-        <div id="page-governance" class="page-section">
+        <div id="page-governance" class="page-section" style="display: none;">
             <div class="gov-banner">
                 <div class="gov-banner-text">
                     <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
