@@ -27,7 +27,8 @@
         <div>
             <div class="logo">PROVIZTO<span>.</span></div>
             <ul class="nav-links">
-                <!-- Menu Dashboard dihapus, default active dipindah ke Governance -->
+                <!-- Menu default active adalah Dashboard -->
+                <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
                 <li><a href="#" class="nav-item active" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
                 <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
                 <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
@@ -79,7 +80,134 @@
             </div>
         </header>
 
-        <!-- Halaman veVZT Governance (Sekarang menjadi halaman utama / default terbuka) -->
+        <!-- Halaman Dashboard menjadi halaman utama / default terbuka) -->
+        <div id="page-dashboard" class="page-section">
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div class="panel" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+            <span class="form-label lang-en">Net Worth / Total Portfolio</span>
+            <span class="form-label lang-id">Total Portofolio / Kekayaan Bersih</span>
+            <span style="font-size: 24px; font-weight: 800; color: #ffffff;">$4,342.70</span>
+            <span style="font-size: 12px; color: #10b981; font-weight: 600;">+5.4% (Past 7d)</span>
+        </div>
+
+        <div class="panel" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+            <span class="form-label lang-en">Available Wallet Balance</span>
+            <span class="form-label lang-id">Saldo Dompet yang Tersedia</span>
+            <span style="font-size: 24px; font-weight: 800; color: #22d3ee;">$1,250.20</span>
+            <span style="font-size: 12px; color: #9ca3af;">0.35 ETH + 200 USDC</span>
+        </div>
+
+        <div class="panel" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+            <span class="form-label lang-en">Platform TVL (Base L2)</span>
+            <span class="form-label lang-id">TVL Platform (Base L2)</span>
+            <span style="font-size: 24px; font-weight: 800; color: #3b82f6;">$42,851,208</span>
+            <span style="font-size: 12px; color: #10b981; font-weight: 600;">⚡ Secure & Connected</span>
+        </div>
+    </section>
+
+    <section class="dashboard-grid" style="margin-bottom: 30px;">
+        <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h3 class="panel-title lang-en" style="margin: 0;">Yield Earnings Trend</h3>
+                    <h3 class="panel-title lang-id" style="margin: 0;">Tren Pendapatan Hasil (Yield)</h3>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <button class="btn-sm" style="padding: 4px 10px; font-size: 11px;">1 W</button>
+                    <button class="btn-sm" style="padding: 4px 10px; font-size: 11px; border-color: #3b82f6; color: #3b82f6;">1 M</button>
+                    <button class="btn-sm" style="padding: 4px 10px; font-size: 11px;">1 Y</button>
+                </div>
+            </div>
+            
+            <div style="height: 240px; background-color: #080b11; border: 1px dashed #1e2533; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 13px;">
+                📊 [Yield Trendline Chart Placeholder - Chart.js / ApexCharts]
+            </div>
+        </div>
+
+        <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h3 class="panel-title lang-en">Asset Allocation</h3>
+                <h3 class="panel-title lang-id">Alokasi Distribusi Aset</h3>
+            </div>
+            
+            <div style="height: 140px; margin: 10px 0; display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 13px; background-color: #080b11; border-radius: 50%; width: 140px; margin: 0 auto; border: 1px dashed #1e2533;">
+                🍩 Donut Chart
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                <div class="summary-row" style="margin: 0; font-size: 12px;">
+                    <span style="color: #6b7280;">🌾 Vaults Optimizer</span>
+                    <span class="summary-value">54.2%</span>
+                </div>
+                <div class="summary-row" style="margin: 0; font-size: 12px;">
+                    <span style="color: #22d3ee;">🔒 veVZT Governance</span>
+                    <span class="summary-value">25.8%</span>
+                </div>
+                <div class="summary-row" style="margin: 0; font-size: 12px;">
+                    <span style="color: #3b82f6;">💰 Wallet Liquid</span>
+                    <span class="summary-value">20.0%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h3 class="panel-title lang-en">Recent Activity</h3>
+        <h3 class="panel-title lang-id">Aktivitas Terakhir</h3>
+        
+        <div class="table-responsive" style="margin-top: 15px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="lang-en">Action Type</th><th class="lang-id">Jenis Tindakan</th>
+                        <th class="lang-en">Value / Amount</th><th class="lang-id">Nilai / Jumlah</th>
+                        <th>Network</th>
+                        <th class="lang-en" style="text-align: right;">Status / Explorer</th><th class="lang-id" style="text-align: right;">Status / Penjelajah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="pool-title">🔄 Swap Assets</div>
+                            <span style="font-size: 12px; color: #6b7280;">ETH to USDC</span>
+                        </td>
+                        <td>-0.50 ETH (<span style="color: #10b981;">+$1,725.00</span>)</td>
+                        <td><span class="badge-pool">Base Mainnet</span></td>
+                        <td style="text-align: right;">
+                            <span style="color: #10b981; font-weight: 600; font-size: 13px; margin-right: 8px;">Success</span>
+                            <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 12px;">↗</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="pool-title">🔒 Lock $VZT</div>
+                            <span style="font-size: 12px; color: #6b7280;">Governance Stake</span>
+                        </td>
+                        <td>-1,000.00 $VZT</td>
+                        <td><span class="badge-pool">Base Mainnet</span></td>
+                        <td style="text-align: right;">
+                            <span style="color: #10b981; font-weight: 600; font-size: 13px; margin-right: 8px;">Success</span>
+                            <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 12px;">↗</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="pool-title">🌾 Claim Yield Rewards</div>
+                            <span style="font-size: 12px; color: #6b7280;">Vault Incentives</span>
+                        </td>
+                        <td><span style="color: #10b981;">+42.50 USDC</span></td>
+                        <td><span class="badge-pool">Base Mainnet</span></td>
+                        <td style="text-align: right;">
+                            <span style="color: #10b981; font-weight: 600; font-size: 13px; margin-right: 8px;">Success</span>
+                            <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 12px;">↗</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+        <!-- Halaman veVZT Governance (Sekarang menjadi halaman kedua) -->
         <div id="page-governance" class="page-section">
             <div class="gov-banner">
                 <div class="gov-banner-text">
