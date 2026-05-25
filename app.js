@@ -154,21 +154,27 @@ function toggleMobileMenu() {
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
-// --- LOGIKA EMULASI GRAFIK APEXCHARTS (YIELD EARNINGS) ---
-document.addEventListener("DOMContentLoaded", function () {
+// --- LOGIKA ANTI-BLANK GRAFIK APEXCHARTS ---
+function inisialisasiGrafik() {
+    const elemenChart = document.querySelector("#yieldChart");
+    
+    // Validasi: Jika elemen tidak ditemukan di halaman aktif, jangan jalankan script agar tidak error
+    if (!elemenChart) return;
+
     const options = {
-        // Data tiruan grafik (bisa Anda hubungkan ke state dApp nanti)
         series: [{
             name: "Yield Earnings",
             data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 142]
         }],
         chart: {
-            type: 'area', // Membuat efek gradien di bawah garis
+            type: 'area',
             height: 240,
-            toolbar: { show: false }, // Sembunyikan tombol download bawaan agar rapi
-            background: 'transparent'
+            width: '100%',
+            toolbar: { show: false },
+            background: 'transparent',
+            animations: { enabled: true } // Animasi saat grafik muncul
         },
-        colors: ['#22d3ee'], // Warna cyan cerah khas dApp Anda
+        colors: ['#22d3ee'], // Warna cyan dApp PROVIZTO
         fill: {
             type: 'gradient',
             gradient: {
@@ -180,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         dataLabels: { enabled: false },
         stroke: {
-            curve: 'smooth', // Garis melengkung halus (smooth trendline)
+            curve: 'smooth',
             width: 3
         },
         grid: {
@@ -202,12 +208,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         },
         tooltip: {
-            theme: 'dark',
-            x: { show: true }
+            theme: 'dark'
         }
     };
 
-    // Render grafik ke dalam elemen HTML #yieldChart
-    const chart = new ApexCharts(document.querySelector("#yieldChart"), options);
+    // Reset isi kontainer terlebih dahulu sebelum di-render ulang (mencegah tumpang tindih)
+    elemenChart.innerHTML = "";
+    const chart = new ApexCharts(elemenChart, options);
     chart.render();
-});
+}
+
+// Jalankan fungsi grafik setelah seluruh dokumen selesai dimuat secara sempurna
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    inisialisasiGrafik();
+} else {
+    document.addEventListener("DOMContentLoaded", inisialisasiGrafik);
+}
