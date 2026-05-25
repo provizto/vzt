@@ -11,7 +11,6 @@ body {
     color: #f3f4f6;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
-    flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -28,13 +27,6 @@ html[lang="id"] div.lang-id { display: block; }
 
 /* Utility helper class */
 .style-hidden { display: none !important; }
-
-/* Layout wrapper untuk konten di samping sidebar */
-.app-container {
-    display: flex;
-    flex: 1;
-    width: 100%;
-}
 
 /* ==========================================================================
    2. SIDEBAR NAVIGATION & MOBILE INTERFACE
@@ -60,7 +52,7 @@ aside {
     padding-left: 10px;
 }
 .logo span { color: #3b82f6; }
-
+ 
 .nav-links { list-style: none; }
 .nav-links li { margin-bottom: 8px; }
 .nav-links a {
@@ -76,6 +68,44 @@ aside {
 .nav-links a:hover, .nav-links a.active {
     background-color: rgba(59, 130, 246, 0.1);
     color: #3b82f6;
+}
+
+/* Sidebar Footer Styles */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto; 
+}
+.btn-back-home {
+    background: none; 
+    border: 1px solid #1e2533; 
+    color: #9ca3af; 
+    padding: 10px 14px; 
+    border-radius: 10px; 
+    font-size: 13px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    width: 100%; 
+    text-align: left; 
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s;
+}
+.btn-back-home:hover {
+    color: #ffffff; 
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.05);
+}
+ 
+.sidebar-copyright {
+    font-size: 11px;
+    color: #4b5563;
+    padding-left: 14px;
+    line-height: 1.4;
+    border-top: 1px solid rgba(30, 37, 51, 0.5);
+    padding-top: 12px;
+    margin-top: 4px;
 }
 
 .menu-toggle {
@@ -113,7 +143,6 @@ aside {
     .menu-toggle { display: flex; }
     .main-content { margin-left: 0 !important; padding: 20px !important; }
     .sidebar-overlay.active { display: block; }
-    footer { margin-left: 0 !important; }
 }
 
 /* ==========================================================================
@@ -123,7 +152,6 @@ aside {
     margin-left: 260px;
     flex-grow: 1;
     padding: 40px;
-    width: 100%;
     max-width: 1200px;
 }
 .topbar {
@@ -151,6 +179,11 @@ aside {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    transition: border-color 0.2s;
+}
+.lang-select:focus, .lang-select:hover {
+    border-color: #3b82f6;
+    outline: none;
 }
 .btn-wallet {
     background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
@@ -161,13 +194,16 @@ aside {
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
 }
 .btn-wallet:hover {
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+.btn-wallet:active {
+    transform: translateY(1px);
 }
 
-/* Status setelah wallet terhubung */
 .wallet-active-status {
     background-color: #0f131c;
     border: 1px solid #1e2533;
@@ -212,7 +248,6 @@ aside {
 }
 .panel-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 20px; }
 
-/* Komponen Form */
 .form-group { margin-bottom: 20px; }
 .form-label {
     font-size: 11px;
@@ -311,9 +346,13 @@ aside {
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-sm:hover {
+    border-color: #3b82f6;
+    background-color: #1a2233;
 }
 
-/* TOAST POP-UP TRANSAKSI */
 .toast-container {
     position: fixed;
     top: 24px;
@@ -343,9 +382,6 @@ aside {
 .toast-title { font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
 .toast-desc { font-size: 12px; color: #9ca3af; line-height: 1.4; }
 
-/* ==========================================================================
-   4. SWAP BOX & VAULT TABLE STYLES (MURNI CSS)
-   ========================================================================== */
 .swap-box {
     max-width: 480px;
     margin: 0 auto;
@@ -417,9 +453,6 @@ tr:last-child td { border-bottom: none; }
     border-color: rgba(34, 211, 238, 0.2);
 }
 
-/* ==========================================================================
-   5. VEZNQ GOVERNANCE & GAUGE VOTING STYLES
-   ========================================================================== */
 .gov-banner {
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
     border: 1px solid rgba(59, 130, 246, 0.15);
@@ -432,10 +465,10 @@ tr:last-child td { border-bottom: none; }
     gap: 20px;
 }
 @media (max-width: 600px) { .gov-banner { flex-direction: column; align-items: flex-start; } }
-
+ 
 .gov-banner-text h4 { font-size: 16px; color: #ffffff; font-weight: 700; margin-bottom: 6px; }
 .gov-banner-text p { font-size: 13px; color: #9ca3af; line-height: 1.5; margin: 0; }
-
+ 
 .vote-progress-container {
     margin-bottom: 30px;
     background-color: #0f131c;
@@ -490,7 +523,7 @@ tr:last-child td { border-bottom: none; }
     vertical-align: middle;
 }
 .gov-table tr:last-child td { border-bottom: none; }
-
+ 
 .vote-input-wrapper {
     display: flex;
     align-items: center;
@@ -559,17 +592,27 @@ tr:last-child td { border-bottom: none; }
     padding: 14px 18px;
     display: flex; align-items: center; gap: 16px;
     cursor: pointer; text-align: left; width: 100%;
+    text-decoration: none; 
     transition: all 0.2s ease;
 }
 .wallet-option-item:hover {
     background-color: #121824; border-color: #2e374a; transform: scale(1.01);
 }
+ 
+/* Modifikasi efek disabled apabila persetujuan belum dicentang */
+.wallet-option-item.disabled-style {
+    opacity: 0.15;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
 .wallet-option-icon {
     width: 36px; height: 36px; display: flex;
     align-items: center; justify-content: center;
     font-size: 20px; flex-shrink: 0;
 }
-
+ 
 .logo-smart {
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
     border-radius: 10px; border: 1px solid rgba(37, 99, 235, 0.3);
@@ -586,7 +629,7 @@ tr:last-child td { border-bottom: none; }
 .wallet-option-info { flex-grow: 1; }
 .wallet-option-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
 .wallet-option-desc { font-size: 11px; color: #6b7280; line-height: 1.3; }
-
+ 
 .badge-recommended {
     background-color: rgba(34, 211, 238, 0.1); color: #22d3ee;
     font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;
@@ -600,91 +643,44 @@ tr:last-child td { border-bottom: none; }
 .wallet-modal-footer a { color: #3b82f6; text-decoration: none; }
 
 /* ==========================================================================
-   7. RISK DISCLAIMER & TERMS OF ACCESS (CLICK-WRAP)
+   7. STYLE TAMBAHAN: POP-UP PILOT/UJICUBA PERINGATAN
    ========================================================================== */
-.disclaimer-modal-overlay {
-    position: fixed; inset: 0;
-    background-color: rgba(3, 5, 9, 0.9);
-    backdrop-filter: blur(10px);
-    z-index: 300;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+.trial-notice-box {
+    background-color: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
-.disclaimer-modal-card {
-    background-color: #0f131c;
-    border: 1px solid #1e2533;
-    border-radius: 20px;
-    width: 100%; max-width: 540px;
-    padding: 30px;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
-    display: flex; flex-direction: column;
+.trial-notice-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f59e0b;
+    font-size: 13px;
+    font-weight: 700;
 }
-.disclaimer-modal-header {
-    font-size: 18px; font-weight: 800; color: #ffffff;
-    border-bottom: 1px solid #1e2533; padding-bottom: 14px; margin-bottom: 16px;
+.trial-notice-body {
+    font-size: 11px;
+    color: #9ca3af;
+    line-height: 1.5;
 }
-.disclaimer-modal-body {
-    max-height: 260px; overflow-y: auto;
-    font-size: 13.5px; line-height: 1.6; color: #9ca3af;
-    padding-right: 8px; margin-bottom: 20px;
+.trial-checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 4px;
+    cursor: pointer;
 }
-.disclaimer-modal-body::-webkit-scrollbar { width: 6px; }
-.disclaimer-modal-body::-webkit-scrollbar-thumb { background-color: #1e2533; border-radius: 3px; }
-
-.disclaimer-item-title { font-weight: 700; color: #e5e7eb; margin-top: 14px; margin-bottom: 4px; }
-.disclaimer-item-title:first-child { margin-top: 0; }
-
-.disclaimer-checkbox-container {
-    display: flex; align-items: flex-start; gap: 12px;
-    background-color: rgba(30, 37, 51, 0.4); border: 1px solid #1e2533;
-    padding: 14px; border-radius: 12px; margin-bottom: 16px; cursor: pointer;
+.trial-checkbox-container input {
+    margin-top: 2px;
+    cursor: pointer;
 }
-.disclaimer-checkbox-container input { margin-top: 3px; cursor: pointer; }
-.disclaimer-checkbox-label { font-size: 12.5px; color: #d1d5db; line-height: 1.4; user-select: none; }
-
-.disclaimer-footer-text { font-size: 12px; color: #6b7280; margin-bottom: 24px; line-height: 1.4; }
-.disclaimer-footer-text a { color: #3b82f6; text-decoration: none; font-weight: 600; }
-.disclaimer-footer-text a:hover { text-decoration: underline; }
-
-.disclaimer-actions { display: flex; justify-content: flex-end; gap: 12px; }
-.btn-disclaimer-cancel {
-    background-color: transparent; border: 1px solid #1e2533; color: #9ca3af;
-    padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+.trial-checkbox-text {
+    font-size: 12px;
+    color: #d1d5db;
+    user-select: none;
 }
-.btn-disclaimer-cancel:hover { background-color: #121824; color: #fff; }
-.btn-disclaimer-accept {
-    background-color: #3b82f6; color: white; border: none;
-    padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer;
-}
-.btn-disclaimer-accept:disabled {
-    background-color: #141a24; color: #4b5563; border: 1px solid #1e2533; cursor: not-allowed;
-}
-
-/* ==========================================================================
-   8. PERMANENT LEGAL FOOTER STYLE
-   ========================================================================== */
-footer {
-    margin-left: 260px;
-    background-color: #0b0e14;
-    border-top: 1px solid #1e2533;
-    padding: 24px 40px;
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 16px;
-    font-size: 13px; color: #4b5563;
-    margin-top: auto;
-}
-.footer-left { font-weight: 500; }
-.footer-links { display: flex; gap: 24px; }
-.footer-links a { color: #9ca3af; text-decoration: none; transition: color 0.2s; font-weight: 500; }
-.footer-links a:hover { color: #3b82f6; }
-
-/* ==========================================================================
-   9. GEOFENCING OVERLAY STYLE
-   ========================================================================== */
-.geofence-overlay {
-    position: fixed; inset: 0; background-color: #080b11; z-index: 1000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: #fff; text-align: center; padding: 20px;
-}
-.geofence-card { max-width: 480px; background: #0f131c; border: 1px solid #ef4444; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-.geofence-icon { font-size: 48px; margin-bottom: 20px; }
