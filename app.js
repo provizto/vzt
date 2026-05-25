@@ -224,3 +224,61 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 } else {
     document.addEventListener("DOMContentLoaded", inisialisasiGrafik);
 }
+
+// --- LOGIKA SIMULASI SWAP DINAMIS (LIVE MOCK SWAP) ---
+document.addEventListener("DOMContentLoaded", function() {
+    const inputFrom = document.getElementById('swapInputFrom');
+    const inputTo = document.getElementById('swapInputTo');
+    const labelFrom = document.getElementById('swapLabelFrom');
+    const labelTo = document.getElementById('swapLabelTo');
+    const btnReverse = document.getElementById('btnReverseSwap');
+
+    // Kurs simulasi: 1 ETH = 3450 USDC
+    const hargaKurs = 3450; 
+    let arahSwapNormal = true; // True = ETH ke USDC, False = USDC ke ETH
+
+    // Fungsi menghitung hasil konversi secara otomatis
+    function hitungKonversi() {
+        const nilaiInput = parseFloat(inputFrom.value);
+        
+        if (isNaN(nilaiInput) || nilaiInput <= 0) {
+            inputTo.value = "";
+            return;
+        }
+
+        if (arahSwapNormal) {
+            // ETH -> USDC (dikali harga kurs)
+            inputTo.value = (nilaiInput * hargaKurs).toFixed(2);
+        } else {
+            // USDC -> ETH (dibagi harga kurs)
+            inputTo.value = (nilaiInput / hargaKurs).toFixed(5);
+        }
+    }
+
+    // Trigger kalkulasi setiap kali user mengetik angka
+    if(inputFrom) {
+        inputFrom.addEventListener('input', hitungKonversi);
+    }
+
+    // Logika ketika tombol panah tengah (reverse) diklik
+    if(btnReverse) {
+        btnReverse.addEventListener('click', function() {
+            arahSwapNormal = !arahSwapNormal; // Balik status arah
+            
+            // Tukar teks label token
+            if (arahSwapNormal) {
+                labelFrom.innerText = "ETH";
+                labelTo.innerText = "USDC";
+                btnReverse.innerText = "⬇";
+            } else {
+                labelFrom.innerText = "USDC";
+                labelTo.innerText = "ETH";
+                btnReverse.innerText = "⬆"; // Ubah panah jadi ke atas sebagai variasi visual
+            }
+
+            // Tukar atau bersihkan nilai input saat berbalik arah
+            inputFrom.value = inputTo.value;
+            hitungKonversi();
+        });
+    }
+});
