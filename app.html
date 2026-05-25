@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROVIZTO - dApp Dashboard</title>
-    <!-- Menghubungkan File CSS Eksternal -->
-    <link rel="stylesheet" href="app.css">
+    <title>ZoniqFi - dApp Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="./app.css">
 </head>
 <body>
 
-    <!-- SISTEM TOAST NOTIFIKASI -->
+    <div id="geofenceBlocker" class="geofence-overlay style-hidden">
+        <div class="geofence-card">
+            <div class="geofence-icon">⚠️</div>
+            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 12px;" class="lang-en">Access Restricted</h2>
+            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 12px;" class="lang-id">Akses Terbatas</h2>
+            <p class="lang-en" style="color: #9ca3af; line-height: 1.6;">Sorry, your region is not supported yet for legal and regulatory compliance requirements.</p>
+            <p class="lang-id" style="color: #9ca3af; line-height: 1.6;">Maaf, wilayah Anda belum didukung demi memenuhi kepatuhan hukum dan persyaratan regulasi.</p>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer">
         <div class="toast" id="transactionToast">
             <div class="toast-icon">✅</div>
@@ -22,491 +31,343 @@
         </div>
     </div>
 
-    <!-- TOMBOL NAVIGASI MOBILE (HAMBURGER) -->
     <button id="menuToggleBtn" class="menu-toggle">☰</button>
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <!-- PANEL NAVIGASI UTAMA (SIDEBAR) -->
-    <aside id="appSidebar">
-        <div>
-            <div class="logo">PROVIZTO<span>.</span></div>
-            <ul class="nav-links">
-                <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
-				<li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
-				<li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
-				<li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veVZT Governance</a></li>
-			</ul>
-        </div>
-        
-        <div class="sidebar-footer">
-            <a href="index.html" class="btn-back-home">
-                <span class="lang-en">← Back to Home</span>
-                <span class="lang-id">← Kembali ke Beranda</span>
-            </a>
-            
-            <div style="font-size: 11px; color: #3b82f6; padding-left: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                <span style="width: 6px; height: 6px; background-color: #10b981; border-radius: 50%; display: inline-block;"></span>
-                Base Network Connected
-            </div>
-
-            <div class="sidebar-copyright">
-                <span class="lang-en">© 2026 PROVIZTO. <br>All rights reserved.</span>
-                <span class="lang-id">© 2026 PROVIZTO. <br>Hak cipta dilindungi undang-undang.</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- KONTEN UTAMA -->
-    <main class="main-content">
-        <header class="topbar">
+    <div class="app-container">
+        <aside id="appSidebar">
             <div>
-                <h2 class="lang-en" style="font-size: 24px; font-weight: 700;">Console Account</h2>
-                <h2 class="lang-id" style="font-size: 24px; font-weight: 700;">Konsol Akun</h2>
-            </div>
-            <div class="right-controls">
-                <select id="appLangSwitcher" class="lang-select">
-                    <option value="en">🌐 EN</option>
-                    <option value="id">🌐 ID</option>
-                </select>
-                
-                <button class="btn-wallet" id="btnConnectTrigger">
-                    <span class="lang-en">Connect Wallet</span>
-                    <span class="lang-id">Hubungkan Dompet</span>
+                <button onclick="window.location.href='index.html'" style="background: none; border: 1px solid #1e2533; color: #6b7280; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 24px; width: 100%; text-align: left; transition: all 0.2s;" onmouseover="this.style.color='#ffffff'; this.style.borderColor='#3b82f6';" onmouseout="this.style.color='#6b7280'; this.style.borderColor='#1e2533';">
+                    <span class="lang-en">← Back to Home</span>
+                    <span class="lang-id">← Kembali ke Beranda</span>
                 </button>
-
-                <div id="walletConnectedStatus" class="wallet-active-status style-hidden">
-                    <div id="userAddress" class="address-badge">0x000...0000</div>
-                    <button id="btnDisconnect" class="btn-disconnect">
-                        <span class="lang-en">Disconnect</span>
-                        <span class="lang-id">Putuskan</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- HALAMAN 1: DASHBOARD -->
-        <div id="page-dashboard" class="page-section">
-    
-    <section class="dashboard-stats-grid">
-        <div class="panel stat-card">
-            <span class="form-label lang-en">Net Worth</span>
-            <span class="form-label lang-id">Total Kekayaan</span>
-            <h2 class="stat-main-value" id="dashNetWorth">$12,450.80</h2>
-            <div class="stat-change positive">▲ 4.2% (24h)</div>
-        </div>
-        <div class="panel stat-card">
-            <span class="form-label lang-en">Wallet Balance</span>
-            <span class="form-label lang-id">Saldo Dompet</span>
-            <h2 class="stat-main-value">$3,450.00</h2>
-            <div class="stat-change text-muted">Base L2 Wallet</div>
-        </div>
-        <div class="panel stat-card">
-            <span class="form-label lang-en">Staked & Locked</span>
-            <span class="form-label lang-id">Disetor & Dikunci</span>
-            <h2 class="stat-main-value" style="color: #22d3ee;">$9,000.80</h2>
-            <div class="stat-change text-cyan">1,000 $VZT Locked</div>
-        </div>
-    </section>
-
-    <section class="panel chart-panel" style="margin-top: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div>
-                <h3 class="panel-title lang-en" style="margin-bottom: 4px;">Portfolio Performance</h3>
-                <h3 class="panel-title lang-id" style="margin-bottom: 4px;">Kinerja Portofolio</h3>
-                <p class="lang-en" style="color: #6b7280; font-size: 13px;">Historical value track of your connected assets</p>
-                <p class="lang-id" style="color: #6b7280; font-size: 13px;">Pelacakan nilai historis dari aset terhubung Anda</p>
-            </div>
-            <div class="duration-grid" style="margin: 0; width: auto; gap: 6px;">
-                <div class="duration-btn" style="padding: 6px 12px; font-size: 11px;">1W</div>
-                <div class="duration-btn active" style="padding: 6px 12px; font-size: 11px;">1M</div>
-                <div class="duration-btn" style="padding: 6px 12px; font-size: 11px;">1Y</div>
-            </div>
-        </div>
-        
-        <div class="chart-container-box">
-            <canvas id="portfolioChart"></canvas>
-        </div>
-    </section>
-
-    <section class="panel table-panel" style="margin-top: 24px;">
-        <h3 class="panel-title lang-en" style="margin-bottom: 4px;">Recent Transaction History</h3>
-        <h3 class="panel-title lang-id" style="margin-bottom: 4px;">Riwayat Transaksi Terakhir</h3>
-        <p class="lang-en" style="color: #6b7280; font-size: 13px;">Real-time on-chain logs of your latest activities</p>
-        <p class="lang-id" style="color: #6b7280; font-size: 13px;">Log on-chain waktu-nyata dari aktivitas terakhir Anda</p>
-
-        <div class="gov-table-responsive" style="margin-top: 16px;">
-            <table class="gov-table">
-                <thead>
-    				<tr>
-        				<th>
-            				<span class="lang-en">Action</span>
-            				<span class="lang-id">Aksi</span>
-        				</th>
-        				<th>
-            				<span class="lang-en">Value / Amount</span>
-            				<span class="lang-id">Nilai / Jumlah</span>
-        				</th>
-        				<th>Token</th>
-        				<th>Tx Hash</th>
-        				<th>
-            				<span class="lang-en">Status</span>
-            				<span class="lang-id">Status</span>
-        				</th>
-    				</tr>
-				</thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <span class="tx-type-badge type-lock lang-en">🔐 Lock</span>
-                            <span class="tx-type-badge type-lock lang-id">🔐 Kunci</span>
-                        </td>
-                        <td style="font-weight: 700; color: #ffffff;">1,000.00</td>
-                        <td>$VZT</td>
-                        <td class="tx-hash-font">0x3a2e...89f1</td>
-                        <td><span class="status-badge status-active">Success</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="tx-type-badge type-swap">🔄 Swap</span>
-                        </td>
-                        <td style="font-weight: 700; color: #ffffff;">3,450.00</td>
-                        <td>USDC</td>
-                        <td class="tx-hash-font">0x8d55...bb2c</td>
-                        <td><span class="status-badge status-active">Success</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="tx-type-badge type-yield lang-en">🌾 Claim Yield</span>
-                            <span class="tx-type-badge type-yield lang-id">🌾 Klaim Hasil</span>
-                        </td>
-                        <td style="font-weight: 700; color: #ffffff;">142.50</td>
-                        <td>USDC</td>
-                        <td class="tx-hash-font">0x9e59...71ca</td>
-                        <td><span class="status-badge status-active">Success</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-    
-</div>
-
-        <!-- HALAMAN 2: SWAP DEX -->
-        <div id="page-swap" class="page-section" style="display: none;">
-            <div class="panel swap-box">
-                <h3 class="panel-title lang-en">Swap Tokens</h3>
-                <h3 class="panel-title lang-id">Tukar Token</h3>
                 
-                <div class="form-group">
-                    <label class="form-label lang-en">From</label>
-                    <label class="form-label lang-id">Dari</label>
-                    <div class="input-box">
-                        <input type="number" placeholder="0.0" value="1">
-                        <span class="token-select">ETH</span>
+                <div class="logo">ZoniqFi<span>.</span></div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-item active" onclick="switchPage('dashboard', this)">📊 Dashboard</a></li>
+                    <li><a href="#" class="nav-item" onclick="switchPage('swap', this)">🔄 Swap (DEX)</a></li>
+                    <li><a href="#" class="nav-item" onclick="switchPage('vaults', this)">🌾 Vaults (Optimizer)</a></li>
+                    <li><a href="#" class="nav-item" onclick="switchPage('governance', this)">🔒 veZNF Governance</a></li>
+                </ul>
+            </div>
+            <div style="font-size: 11px; color: #4b5563; padding-left: 16px;">Base Network Connected</div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <h2 class="lang-en" style="font-size: 24px; font-weight: 700;">Console Account</h2>
+                    <h2 class="lang-id" style="font-size: 24px; font-weight: 700;">Konsol Akun</h2>
+                </div>
+                <div class="right-controls">
+                    <select id="appLangSwitcher" class="lang-select">
+                        <option value="en">🌐 EN</option>
+                        <option value="id">🌐 ID</option>
+                    </select>
+                    
+                    <button class="btn-wallet" id="btnConnectTrigger">
+                        <span class="lang-en">Connect Wallet</span>
+                        <span class="lang-id">Hubungkan Dompet</span>
+                    </button>
+
+                    <div id="walletConnectedStatus" class="wallet-active-status style-hidden">
+                        <div id="userAddress" class="address-badge">0x000...0000</div>
+                        <button id="btnDisconnect" class="btn-disconnect">
+                            <span class="lang-en">Disconnect</span>
+                            <span class="lang-id">Putuskan</span>
+                        </button>
                     </div>
                 </div>
+            </header>
 
-                <div class="swap-icon-container">
-                    <button class="swap-arrow-btn">⬇</button>
-                </div>
-
-                <div class="form-group" style="margin-top: 10px;">
-                    <label class="form-label lang-en">To (Estimated)</label>
-                    <label class="form-label lang-id">Ke (Estimasi)</label>
-                    <div class="input-box">
-                        <input type="number" placeholder="0.0" value="3450" readonly>
-                        <span class="token-select">USDC</span>
-                    </div>
-                </div>
-
-                <div class="summary-box">
-                    <div class="summary-row">
-                        <span class="summary-label lang-en">Slippage Tolerance</span>
-                        <span class="summary-label lang-id">Toleransi Slippage</span>
-                        <span class="summary-value">0.5%</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label lang-en">Network Fee</span>
-                        <span class="summary-label lang-id">Biaya Jaringan</span>
-                        <span class="summary-value highlight">&lt; $0.01 (Base)</span>
-                    </div>
-                </div>
-
-                <button class="btn-action" id="swapActionBtn">
-                    <span class="lang-en">Swap Assets</span>
-                    <span class="lang-id">Tukar Aset</span>
+            <div id="lockoutScreen" style="text-align: center; padding: 80px 20px;" class="panel">
+                <div style="font-size: 40px; margin-bottom: 20px;">🔒</div>
+                <h3 class="lang-en" style="font-size: 22px; margin-bottom: 10px;">dApp Dashboard Locked</h3>
+                <h3 class="lang-id" style="font-size: 22px; margin-bottom: 10px;">Dasbor dApp Terkunci</h3>
+                <p class="lang-en" style="color: #6b7280; max-width: 400px; margin: 0 auto 24px;">Please connect your Web3 wallet and complete the cryptographic signature to access the ZoniqFi ecosystem features.</p>
+                <p class="lang-id" style="color: #6b7280; max-width: 400px; margin: 0 auto 24px;">Silakan hubungkan dompet Web3 Anda dan selesaikan tanda tangan kriptografi untuk mengakses fitur ekosistem ZoniqFi.</p>
+                <button class="btn-wallet" onclick="triggerWalletFlow()">
+                    <span class="lang-en">Connect Wallet to Unlock</span>
+                    <span class="lang-id">Hubungkan Dompet untuk Membuka</span>
                 </button>
             </div>
-        </div>
 
-        <!-- HALAMAN 3: VAULTS OPTIMIZER -->
-        <div id="page-vaults" class="page-section" style="display: none;">
-    <div class="panel">
-        <h3 class="panel-title lang-en">Automated Compounding Vaults</h3>
-        <h3 class="panel-title lang-id">Brankas Otomatisasi Hasil</h3>
-        
-        <div class="gov-table-responsive" style="margin-top: 16px;">
-            <table class="gov-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <span class="lang-en">Vault Name</span>
-                            <span class="lang-id">Nama Brankas</span>
-                        </th>
-                        <th>
-                            <span class="lang-en">Total Deposited (TVL)</span>
-                            <span class="lang-id">Total Disetor (TVL)</span>
-                        </th>
-                        <th>
-                            <span class="lang-en">Your Balance</span>
-                            <span class="lang-id">Saldo Anda</span>
-                        </th>
-                        <th class="cyan-header">Boosted APY</th>
-                        <th style="text-align: right;">
-                            <span class="lang-en">Action</span>
-                            <span class="lang-id">Aksi</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="pool-title">WETH / USDC</div>
-                            <span class="badge-pool lang-en">Standard</span>
-                            <span class="badge-pool lang-id">Standar</span>
-                        </td>
-                        <td>$18,452,000</td>
-                        <td>0.00 LP</td>
-                        <td class="cyan-value">32.8% 🔥</td>
-                        <td style="text-align: right;">
-                            <button class="btn-sm id-vault-btn">Deposit</button>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>
-                            <div class="pool-title">USDC / USDt</div>
-                            <span class="badge-pool">Stable</span>
-                        </td>
-                        <td>$14,210,500</td>
-                        <td>540.20 LP</td>
-                        <td class="cyan-value">11.5% 🔥</td>
-                        <td style="text-align: right;">
-                            <button class="btn-sm id-vault-btn">Manage</button>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>
-                            <div class="pool-title">$VZT / WETH</div>
-                            <span class="badge-pool boost">Volatile</span>
-                        </td>
-                        <td>$10,188,704</td>
-                        <td>1,250.00 LP</td>
-                        <td class="cyan-value">114.6% 🔥</td>
-                        <td style="text-align: right;">
-                            <button class="btn-sm id-vault-btn">Manage</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-        <!-- HALAMAN 4: GOVERNANCE -->
-        <div id="page-governance" class="page-section" style="display: none;">
-		<section class="dashboard-grid">
-                <div class="panel">
-                    <h3 class="panel-title lang-en">Lock $VZT for veVZT</h3>
-                    <h3 class="panel-title lang-id">Kunci $VZT untuk veVZT</h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label lang-en">Amount to Lock</label>
-                        <label class="form-label lang-id">Jumlah untuk Dikunci</label>
-                        <div class="input-box">
-                            <input type="number" placeholder="0.0" value="1000">
-                            <span class="token-select">$VZT</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label lang-en">Lock Duration</label>
-                        <label class="form-label lang-id">Durasi Penguncian</label>
-                        <div class="duration-grid">
-                            <div class="duration-btn">1 W</div>
-                            <div class="duration-btn">1 M</div>
-                            <div class="duration-btn">1 Y</div>
-                            <div class="duration-btn active">4 Y (Max)</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-box">
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Voting Power Received</span>
-                            <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
-                            <span class="summary-value highlight">1,000.00 veVZT</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Estimated Weekly Yield</span>
-                            <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
-                            <span class="summary-value">~14.50 USDC</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label lang-en">Unlock Date</span>
-                            <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
-                            <span class="summary-value">May 18, 2030</span>
-                        </div>
-                    </div>
-
-                    <button class="btn-action" id="executeBtn">
-                        <span class="lang-en">Execute Lock Transaction</span>
-                        <span class="lang-id">Eksekusi Transaksi Kunci</span>
-                    </button>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <div class="panel" style="padding: 24px;">
-                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
-                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
-                        <div class="reward-card">
-                            <div class="reward-info">
-                                <h4 class="lang-en">Locked Balance</h4>
-                                <h4 class="lang-id">Saldo Terkunci</h4>
-                                <p>1,000 $VZT</p>
+            <div id="authenticatedContent" class="style-hidden">
+                <div id="page-dashboard" class="page-section">
+                    <section class="dashboard-grid">
+                        <div class="panel">
+                            <h3 class="panel-title lang-en">Lock $ZNF for veZNF</h3>
+                            <h3 class="panel-title lang-id">Kunci $ZNF untuk veZNF</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label lang-en">Amount to Lock</label>
+                                <label class="form-label lang-id">Jumlah untuk Dikunci</label>
+                                <div class="input-box">
+                                    <input type="number" placeholder="0.0" value="1000">
+                                    <span class="token-select">$ZNF</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="reward-card">
-                            <div class="reward-info">
-                                <h4 class="lang-en">Current Voting Weight</h4>
-                                <h4 class="lang-id">Bobot Suara Saat Ini</h4>
-                                <p style="color: #22d3ee;">1,000 veVZT</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="panel" style="padding: 24px;">
-                        <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
-                        <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
-                        <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
-                            <div class="reward-info">
-                                <h4>USDC Rewards</h4>
-                                <p style="color: #22d3ee;">142.50 USDC</p>
+                            <div class="form-group">
+                                <label class="form-label lang-en">Lock Duration</label>
+                                <label class="form-label lang-id">Durasi Penguncian</label>
+                                <div class="duration-grid">
+                                    <div class="duration-btn">1 W</div>
+                                    <div class="duration-btn">1 M</div>
+                                    <div class="duration-btn">1 Y</div>
+                                    <div class="duration-btn active">4 Y (Max)</div>
+                                </div>
                             </div>
-                            <button class="btn-sm" id="claimBtn">
-                                <span class="lang-en">Claim</span>
-                                <span class="lang-id">Klaim</span>
+
+                            <div class="summary-box">
+                                <div class="summary-row">
+                                    <span class="summary-label lang-en">Voting Power Received</span>
+                                    <span class="summary-label lang-id">Kekuatan Suara Diterima</span>
+                                    <span class="summary-value highlight">1,000.00 veZNF</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label lang-en">Estimated Weekly Yield</span>
+                                    <span class="summary-label lang-id">Estimasi Hasil Mingguan</span>
+                                    <span class="summary-value">~14.50 USDC</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label lang-en">Unlock Date</span>
+                                    <span class="summary-label lang-id">Tanggal Pembukaan Kunci</span>
+                                    <span class="summary-value">May 18, 2030</span>
+                                </div>
+                            </div>
+
+                            <button class="btn-action" id="executeBtn">
+                                <span class="lang-en">Execute Lock Transaction</span>
+                                <span class="lang-id">Eksekusi Transaksi Kunci</span>
                             </button>
                         </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div class="panel" style="padding: 24px;">
+                                <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Your Governance Stash</h3>
+                                <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Simpanan Tata Kelola Anda</h3>
+                                <div class="reward-card">
+                                    <div class="reward-info">
+                                        <h4 class="lang-en">Locked Balance</h4>
+                                        <h4 class="lang-id">Saldo Terkunci</h4>
+                                        <p>1,000 $ZNF</p>
+                                    </div>
+                                </div>
+                                <div class="reward-card">
+                                    <div class="reward-info">
+                                        <h4 class="lang-en">Current Voting Weight</h4>
+                                        <h4 class="lang-id">Bobot Suara Saat Ini</h4>
+                                        <p style="color: #22d3ee;">1,000 veZNF</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel" style="padding: 24px;">
+                                <h3 class="panel-title lang-en" style="font-size: 15px; margin-bottom: 16px;">Claimable Real Yield</h3>
+                                <h3 class="panel-title lang-id" style="font-size: 15px; margin-bottom: 16px;">Bagi Hasil yang Dapat Diklaim</h3>
+                                <div class="reward-card" style="background-color: rgba(34, 211, 238, 0.02); border-color: rgba(34, 211, 238, 0.1);">
+                                    <div class="reward-info">
+                                        <h4>USDC Rewards</h4>
+                                        <p style="color: #22d3ee;">142.50 USDC</p>
+                                    </div>
+                                    <button class="btn-sm" id="claimBtn">Claim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="page-swap" class="page-section" style="display: none;">
+                    <div class="panel swap-box">
+                        <h3 class="panel-title lang-en">Swap Tokens</h3>
+                        <h3 class="panel-title lang-id">Tukar Token</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label lang-en">From</label>
+                            <label class="form-label lang-id">Dari</label>
+                            <div class="input-box">
+                                <input type="number" placeholder="0.0" value="1">
+                                <span class="token-select">ETH</span>
+                            </div>
+                        </div>
+
+                        <div class="swap-icon-container">
+                            <button class="swap-arrow-btn">⬇</button>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label class="form-label lang-en">To (Estimated)</label>
+                            <label class="form-label lang-id">Ke (Estimasi)</label>
+                            <div class="input-box">
+                                <input type="number" placeholder="0.0" value="3450" readonly>
+                                <span class="token-select">USDC</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-box">
+                            <div class="summary-row">
+                                <span class="summary-label lang-en">Slippage Tolerance</span>
+                                <span class="summary-label lang-id">Toleransi Slippage</span>
+                                <span class="summary-value">0.5%</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label lang-en">Network Fee</span>
+                                <span class="summary-label lang-id">Biaya Jaringan</span>
+                                <span class="summary-value highlight">&lt; $0.01 (Base)</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-action" id="swapActionBtn">
+                            <span class="lang-en">Swap Assets</span>
+                            <span class="lang-id">Tukar Aset</span>
+                        </button>
                     </div>
                 </div>
-            </section>
-			
-            <div class="gov-banner">
-                <div class="gov-banner-text">
-                    <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
-                    <h4 class="lang-id">Pemungutan Suara Emisi - Epoh 14 Aktif</h4>
-                    <p class="lang-en">Lock your $VZT to gain veVZT. Use your voting weight weekly to direct daily $VZT reward emissions to your preferred liquidity pools.</p>
-                    <p class="lang-id">Kunci $VZT Anda untuk mendapatkan veVZT. Gunakan bobot hak suara Anda setiap minggu untuk mengarahkan emisi hadiah harian $VZT ke kolam likuiditas pilihan Anda.</p>
+
+                <div id="page-vaults" class="page-section" style="display: none;">
+                    <div class="panel">
+                        <h3 class="panel-title lang-en">Automated Compounding Vaults</h3>
+                        <h3 class="panel-title lang-id">Brankas Otomatisasi Hasil</h3>
+                        
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="lang-en">Vault Name</th><th class="lang-id">Nama Brankas</th>
+                                        <th class="lang-en">Total Deposited (TVL)</th><th class="lang-id">Total Disetor (TVL)</th>
+                                        <th class="lang-en">Your Balance</th><th class="lang-id">Saldo Anda</th>
+                                        <th style="color: #22d3ee;">Boosted APY</th>
+                                        <th style="text-align: right;" class="lang-en">Action</th><th style="text-align: right;" class="lang-id">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="pool-title">WETH / USDC</div>
+                                            <span class="badge-pool lang-en">Standard</span><span class="badge-pool lang-id">Standar</span>
+                                        </td>
+                                        <td>$18,452,000</td>
+                                        <td>0.00 LP</td>
+                                        <td style="color: #22d3ee; font-weight: 700;">32.8% 🔥</td>
+                                        <td style="text-align: right;"><button class="btn-sm id-vault-btn">Deposit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="pool-title">USDC / USDt</div>
+                                            <span class="badge-pool">Stable</span>
+                                        </td>
+                                        <td>$14,210,500</td>
+                                        <td>540.20 LP</td>
+                                        <td style="color: #22d3ee; font-weight: 700;">11.5% 🔥</td>
+                                        <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="pool-title">$ZNF / WETH</div>
+                                            <span class="badge-pool boost">Volatile</span>
+                                        </td>
+                                        <td>$10,188,704</td>
+                                        <td>1,250.00 LP</td>
+                                        <td style="color: #22d3ee; font-weight: 700;">114.6% 🔥</td>
+                                        <td style="text-align: right;"><button class="btn-sm id-vault-btn">Manage</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div style="text-align: right; min-width: 140px;">
-                    <span class="lang-en" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Time Remaining</span>
-                    <span class="lang-id" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Sisa Waktu</span>
-                    <span style="font-size: 18px; font-weight: 700; color: #22d3ee;">2d 14h 32m</span>
+
+                <div id="page-governance" class="page-section" style="display: none;">
+                    <div class="gov-banner">
+                        <div class="gov-banner-text">
+                            <h4 class="lang-en">Gauge Voting - Epoch 14 Active</h4>
+                            <h4 class="lang-id">Pemungutan Suara Emisi - Epoh 14 Aktif</h4>
+                            <p class="lang-en">Lock your $ZNF to gain veZNF. Use your voting weight weekly to direct daily $ZNF reward emissions to your preferred liquidity pools.</p>
+                            <p class="lang-id">Kunci $ZNF Anda untuk mendapatkan veZNF. Gunakan bobot hak suara Anda setiap minggu untuk mengarahkan emisi hadiah harian $ZNF ke kolam likuiditas pilihan Anda.</p>
+                        </div>
+                        <div style="text-align: right; min-width: 140px;">
+                            <span class="lang-en" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Time Remaining</span>
+                            <span class="lang-id" style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; display:block; margin-bottom:4px;">Sisa Waktu</span>
+                            <span style="font-size: 18px; font-weight: 700; color: #22d3ee;">2d 14h 32m</span>
+                        </div>
+                    </div>
+
+                    <div class="vote-progress-container">
+                        <div class="progress-header">
+                            <div>
+                                <span class="lang-en">Your Voting Power Allocation</span>
+                                <span class="lang-id">Alokasi Kekuatan Suara Anda</span>
+                            </div>
+                            <div style="color: #ffffff;"><span id="totalAllocatedPercent">0</span>% / 100%</div>
+                        </div>
+                        <div id="govProgressBar" class="progress-bar-fill"></div>
+                    </div>
+
+                    <div class="table-panel">
+                        <h3 class="panel-title lang-en" style="margin-bottom: 6px;">Pool Weight Allocations</h3>
+                        <h3 class="panel-title lang-id" style="margin-bottom: 6px;">Alokasi Bobot Kolam</h3>
+                        <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veZNF weight across the available pools below. Ensure the total does not exceed 100%.</p>
+                        <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veZNF Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
+                        
+                        <div class="gov-table-responsive">
+                            <table class="gov-table">
+                                <thead>
+                                    <tr>
+                                        <th class="lang-en">Pool Pair</th><th class="lang-id">Pasangan Kolam</th>
+                                        <th class="lang-en">Current Total Weight</th><th class="lang-id">Bobot Total Saat Ini</th>
+                                        <th class="lang-en">Next Epoch Estimate</th><th class="lang-id">Estimasi Epoh Berikutnya</th>
+                                        <th class="lang-en" style="text-align: right;">Your Allocation</th><th class="lang-id" style="text-align: right;">Alokasi Anda</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
+                                        <td>42.51%</td>
+                                        <td style="color: #22d3ee;">~1.42 $ZNF / block</td>
+                                        <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                            <div class="vote-input-wrapper">
+                                                <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
+                                        <td>21.14%</td>
+                                        <td style="color: #22d3ee;">~0.71 $ZNF / block</td>
+                                        <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                            <div class="vote-input-wrapper">
+                                                <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 700; color: #ffffff;">$ZNF / WETH</td>
+                                        <td>36.35%</td>
+                                        <td style="color: #22d3ee;">~1.21 $ZNF / block</td>
+                                        <td style="text-align: right; display: flex; justify-content: flex-end;">
+                                            <div class="vote-input-wrapper">
+                                                <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
+                            <span class="lang-en">Submit Gauge Votes</span>
+                            <span class="lang-id">Kirim Pilihan Suara Emisi</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <div class="vote-progress-container">
-                <div class="progress-header">
-                    <div>
-                        <span class="lang-en">Your Voting Power Allocation</span>
-                        <span class="lang-id">Alokasi Kekuatan Suara Anda</span>
-                    </div>
-                    <div style="color: #ffffff;"><span id="totalAllocatedPercent">0</span>% / 100%</div>
-                </div>
-                <div class="progress-bar-bg">
-                    <div id="govProgressBar" class="progress-bar-fill"></div>
-                </div>
-            </div>
-
-            <div class="table-panel">
-                <h3 class="panel-title lang-en" style="margin-bottom: 6px;">Pool Weight Allocations</h3>
-                <h3 class="panel-title lang-id" style="margin-bottom: 6px;">Alokasi Bobot Kolam</h3>
-                <p class="lang-en" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribute your total veVZT weight across the available pools below. Ensure the total does not exceed 100%.</p>
-                <p class="lang-id" style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">Distribusikan total bobot veVZT Anda ke kolam-kolam yang tersedia di bawah ini. Pastikan jumlah totalnya tidak melebihi 100%.</p>
-                
-                <div class="gov-table-responsive" style="margin-top: 16px;">
-    <table class="gov-table">
-        <thead>
-            <tr>
-                <th>
-                    <span class="lang-en">Pool Name</span>
-                    <span class="lang-id">Nama Kolom</span>
-                </th>
-                <th>
-                    <span class="lang-en">Current Weight</span>
-                    <span class="lang-id">Bobot Saat Ini</span>
-                </th>
-                <th>
-                    <span class="lang-en">Current Rewards</span>
-                    <span class="lang-id">Hadiah Saat Ini</span>
-                </th>
-                <th style="text-align: right; width: 130px;">
-                    <span class="lang-en">Your Vote</span>
-                    <span class="lang-id">Suara Anda</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="font-weight: 700; color: #ffffff;">WETH / USDC</td>
-                <td>42.51%</td>
-                <td>~1.42 $VZT / block</td>
-                <td style="text-align: right;">
-                    <div class="vote-input-wrapper">
-                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                        <span>%</span>
-                    </div>
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="font-weight: 700; color: #ffffff;">USDC / USDt</td>
-                <td>12.14%</td>
-                <td>~0.41 $VZT / block</td>
-                <td style="text-align: right;">
-                    <div class="vote-input-wrapper">
-                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                        <span>%</span>
-                    </div>
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="font-weight: 700; color: #ffffff;">$VZT / WETH</td>
-                <td>45.35%</td>
-                <td>~1.51 $VZT / block</td>
-                <td style="text-align: right;">
-                    <div class="vote-input-wrapper">
-                        <input type="number" class="gauge-input" min="0" max="100" value="0" oninput="calculateTotalVotes()">
-                        <span>%</span>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-                <button class="btn-action" id="submitVotesBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);">
-                    <span class="lang-en">Submit Gauge Votes</span>
-                    <span class="lang-id">Kirim Pilihan Suara Emisi</span>
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
-	</main>
 
-    <!-- INTERFACE POP-UP WALLET SELECTION MODAL -->
     <div id="walletModal" class="wallet-modal-overlay style-hidden">
         <div class="wallet-modal-card">
             <div class="wallet-modal-header">
@@ -519,27 +380,8 @@
                 <button id="btnCloseModal" class="wallet-modal-close">✕</button>
             </div>
 
-            <div class="trial-notice-box">
-                <div class="trial-notice-header">
-                    <span>⚠️</span>
-                    <span class="lang-en">Beta Testnet Platform</span>
-                    <span class="lang-id">Platform Ujicoba Testnet</span>
-                </div>
-                <div class="trial-notice-body">
-                    <p class="lang-en">This dApp dashboard is currently in its experimental pilot testing stage on the Base Testnet network. Do not interact using real mainnet funds.</p>
-                    <p class="lang-id">Dasbor dApp ini saat ini berada dalam tahap ujicoba eksperimental pada jaringan Base Testnet. Jangan berinteraksi menggunakan dana mainnet asli.</p>
-                </div>
-                <label class="trial-checkbox-container">
-                    <input type="checkbox" id="chkAgreeTerms">
-                    <div class="trial-checkbox-text">
-                        <span class="lang-en">I understand and agree to the <a href="tos.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Terms of Service</a></span>
-                        <span class="lang-id">Saya paham dan menyetujui <a href="tos.html" target="_blank" style="color:#3b82f6; text-decoration:underline;">Ketentuan Layanan</a></span>
-                    </div>
-                </label>
-            </div>
-
             <div class="wallet-options-list">
-                <button class="wallet-option-item highlight-smart disabled-style" id="optSmartAccount">
+                <button class="wallet-option-item highlight-smart" id="optSmartAccount">
                     <div class="wallet-option-icon logo-smart">✨</div>
                     <div class="wallet-option-info">
                         <div class="wallet-option-name">
@@ -551,20 +393,32 @@
                     </div>
                 </button>
 
-                <button class="wallet-option-item disabled-style" id="optMetaMask">
+                <button class="wallet-option-item" id="optMetaMask">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M29 16L25 9L18 5L16 8L14 5L7 9L3 16L7 21L16 27L25 21L29 16Z" fill="#E2761B"/>
                         <path d="M16 27L25 21L22 17L16 20L10 17L7 21L16 27Z" fill="#E4761B"/>
                         <path d="M14 5L16 8L18 5L25 9L23 15L16 12L9 15L7 9L14 5Z" fill="#F6851B"/>
                     </svg>
                     <div class="wallet-option-info">
-                        <div class="wallet-option-name">MetaMask Browser</div>
-                        <div class="wallet-option-desc lang-en">Connect via MetaMask extension or mobile app</div>
-                        <div class="wallet-option-desc lang-id">Hubungkan via ekstensi atau aplikasi MetaMask</div>
+                        <div class="wallet-option-name">Browser Extension Wallet</div>
+                        <div class="wallet-option-desc lang-en">Connect MetaMask, Trust Wallet extension natively</div>
+                        <div class="wallet-option-desc lang-id">Hubungkan ekstensi MetaMask, Trust Wallet secara bawaan</div>
                     </div>
                 </button>
 
-                <button class="wallet-option-item disabled-style" id="optWalletConnect">
+                <button class="wallet-option-item" id="optTrustWallet">
+                    <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L4 6V15C4 21.4 8.7 27.3 16 30C23.3 27.3 28 21.4 28 15V6L16 2Z" fill="#3375BB"/>
+                        <path d="M16 6L7 9V15C7 20 10.6 24.7 16 26.8V6Z" fill="#FFFFFF" opacity="0.2"/>
+                    </svg>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">Trust Wallet Mobile Link</div>
+                        <div class="wallet-option-desc lang-en">Launch Trust Wallet deep-link protocol</div>
+                        <div class="wallet-option-desc lang-id">Jalankan protokol tautan dalam Trust Wallet</div>
+                    </div>
+                </button>
+
+                <button class="wallet-option-item" id="optWalletConnect">
                     <svg class="wallet-option-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.5 10.5C19.3579 6.35786 12.6421 6.35786 8.5 10.5L6.5 12.5L10.5 16.5L12.5 14.5C14.433 12.567 17.567 12.567 19.5 14.5L21.5 16.5L25.5 12.5L23.5 10.5Z" fill="#3B99FC"/>
                         <path d="M12.5 18.5L8.5 14.5L4.5 18.5L10.5 24.5L12.5 22.5L14.5 24.5L20.5 18.5L16.5 14.5L12.5 18.5Z" fill="#3B99FC"/>
@@ -572,24 +426,81 @@
                     <div class="wallet-option-info">
                         <div class="wallet-option-name">
                             <span>WalletConnect</span>
-                            <span class="badge-beta">Base Testnet</span>
+                            <span class="badge-beta">Base L2</span>
                         </div>
-                        <div class="wallet-option-desc lang-en">Scan QR code using any multi-chain mobile wallet</div>
-                        <div class="wallet-option-desc lang-id">Pindai kode QR menggunakan dompet seluler apa pun</div>
+                        <div class="wallet-option-desc lang-en">Trigger standard system QR or inter-app registry</div>
+                        <div class="wallet-option-desc lang-id">Picu sistem QR standar atau registri antar-aplikasi</div>
                     </div>
                 </button>
             </div>
             
             <div class="wallet-modal-footer lang-en">
-                By connecting, you agree to Provizto's <a href="tos.html" target="_blank">Terms of Service</a>. This experimental platform is provided "AS IS" during the beta stage.
+                Baru di dunia DeFi? <a href="https://ethereum.org/en/wallets/" target="_blank">Klik di sini</a> untuk panduan membuat dompet kripto pertama Anda.
             </div>
             <div class="wallet-modal-footer lang-id">
-                Dengan menghubungkan, Anda menyetujui <a href="tos.html" target="_blank">Ketentuan Layanan</a> Provizto. Platform eksperimental ini disediakan "APA ADANYA" selama tahap ujicoba.
+                Baru di dunia DeFi? <a href="https://ethereum.org/id/wallets/" target="_blank">Klik di sini</a> untuk panduan membuat dompet kripto pertama Anda.
             </div>
         </div>
     </div>
 
-    <!-- Menghubungkan File JS Eksternal -->
-    <script src="app.js"></script>
+    <div id="disclaimerModal" class="disclaimer-modal-overlay style-hidden">
+        <div class="disclaimer-modal-card">
+            <div class="disclaimer-modal-header">
+                ZoniqFi Terms of Access & Risk Disclaimer
+            </div>
+            <div class="disclaimer-modal-body">
+                <p style="margin-top:0; color:#ffffff; font-weight:600;" class="lang-en">Before connecting your wallet, please read and confirm the following terms:</p>
+                <p style="margin-top:0; color:#ffffff; font-weight:600;" class="lang-id">Sebelum menghubungkan dompet Anda, harap baca dan konfirmasikan ketentuan berikut:</p>
+                
+                <div class="disclaimer-item-title lang-en">Jurisdiction Restriction:</div>
+                <div class="disclaimer-item-title lang-id">Pembatasan Yurisdiksi:</div>
+                <div class="lang-en">You certify that you are NOT a resident, citizen, or agent of the United States, the People's Republic of China, or any country subject to international sanctions (e.g., North Korea, Iran, Syria). You agree not to use a VPN to bypass these restrictions.</div>
+                <div class="lang-id">Anda menyatakan bahwa Anda BUKAN penduduk, warga negara, atau agen dari Amerika Serikat, Republik Rakyat Tiongkok, atau negara mana pun yang dikenakan sanksi internasional (misalnya, Korea Utara, Iran, Suriah). Anda setuju untuk tidak menggunakan VPN untuk menghindari pembatasan ini.</div>
+
+                <div class="disclaimer-item-title lang-en">Non-Custodial & "As-Is" Technology:</div>
+                <div class="disclaimer-item-title lang-id">Teknologi Non-Kustodian & "Apa Adanya":</div>
+                <div class="lang-en">ZoniqFi is a decentralized, non-custodial software protocol. You retain full control over your private keys and digital assets. The platform is provided "as-is" and "as-available" without any financial or technical warranties.</div>
+                <div class="lang-id">ZoniqFi adalah protokol perangkat lunak terdesentralisasi dan non-kustodian. Anda memegang kendali penuh atas kunci privat dan aset digital Anda. Platform ini disediakan berbasis "apa adanya" dan "sebagaimana tersedia" tanpa jaminan finansial atau teknis apa pun.</div>
+
+                <div class="disclaimer-item-title lang-en">Smart Contract & Market Risks:</div>
+                <div class="disclaimer-item-title lang-id">Risiko Kontrak Pintar & Pasar:</div>
+                <div class="lang-en">Interacting with DeFi protocols involves extreme risks, including market volatility, temporary or permanent token loss, and potential smart contract vulnerabilities or exploits. You acknowledge that you are solely responsible for your investment decisions.</div>
+                <div class="lang-id">Berinteraksi dengan protokol DeFi melibatkan risiko ekstrem, termasuk volatilitas pasar, kehilangan token sementara atau permanen, serta potensi kerentanan atau eksploitasi kontrak pintar. Anda mengakui bahwa Anda bertanggung jawab penuh atas keputusan investasi Anda.</div>
+            </div>
+
+            <label class="disclaimer-checkbox-container">
+                <input type="checkbox" id="chkAgreeDisclaimer">
+                <div class="disclaimer-checkbox-label lang-en">I confirm that I am not from a restricted country, and I fully accept all smart contract and volatility risks.</div>
+                <div class="disclaimer-checkbox-label lang-id">Saya mengonfirmasi bahwa saya bukan dari negara terlarang, dan saya menerima sepenuhnya semua risiko kontrak pintar dan volatilitas pasar.</div>
+            </label>
+
+            <div class="disclaimer-footer-text lang-en">
+                By clicking "Accept & Connect", you agree to our full <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>.
+            </div>
+            <div class="disclaimer-footer-text lang-id">
+                Dengan mengklik "Accept & Connect", Anda menyetujui seluruh <a href="terms.html" target="_blank">Ketentuan Layanan</a> dan <a href="privacy.html" target="_blank">Kebijakan Privasi</a> kami.
+            </div>
+
+            <div class="disclaimer-actions">
+                <button id="btnDisclaimerCancel" class="btn-disclaimer-cancel">
+                    <span class="lang-en">Cancel</span><span class="lang-id">Batal</span>
+                </button>
+                <button id="btnDisclaimerAccept" class="btn-disclaimer-accept" disabled>Accept & Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-left">
+            &copy; 2026 ZoniqFi Protocol. All rights reserved.
+        </div>
+        <div class="footer-links">
+            <a href="terms.html" target="_blank">Ketentuan Layanan Lengkap</a>
+            <a href="privacy.html" target="_blank">Kebijakan Privasi</a>
+            <a href="disclaimer.html" target="_blank">Penafian Risiko Lengkap</a>
+        </div>
+    </footer>
+
+    <script src="./app.js"></script>
 </body>
 </html>
