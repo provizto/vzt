@@ -1,5 +1,92 @@
-// --- 1. LOGIKA PERHITUNGAN GAUGE VOTING ---
-function calculateTotalVotes() {
+// ==========================================================================
+// 1. IMPORT & INISIALISASI WALLETCONNECT (WEB3MODAL ES MODULES)
+// ==========================================================================
+import { createWeb3Modal, defaultWagmiConfig } from 'https://esm.sh/@web3modal/wagmi@3.5.0';
+import { watchAccount } from 'https://esm.sh/@wagmi/core@2.0.0';
+import { mainnet, polygon, bsc } from 'https://esm.sh/@wagmi/core/chains';
+
+// Konfigurasi Project ID Anda (Dapatkan di https://cloud.walletconnect.com/)
+const projectId = 'PASTE_YOUR_PROJECT_ID_HERE'; 
+
+if (projectId === 'PASTE_YOUR_PROJECT_ID_HERE') {
+    console.warn('Perhatian: Harap masukkan WalletConnect Project ID Anda agar tombol berfungsi.');
+}
+
+// Tentukan Blockchain yang didukung oleh DeFi Anda
+const chains = [mainnet, polygon, bsc];
+ 
+// Metadata Aplikasi yang muncul di layar HP user saat scan/pairing
+const metadata = {
+    name: 'vVZT DeFi Platform',
+    description: 'DEX, Vaults, Governance and Affiliate Protocol',
+    url: window.location.origin,
+    icons: ['https://avatars.githubusercontent.com/u/37784886']
+};
+
+const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+
+// Inisialisasi Modal Utama Web3Modal
+const modal = createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    chains,
+    themeMode: 'dark', // Menyesuaikan tema gelap PROVIZTO
+    themeVariables: {
+        '--w3m-accent': '#3861fb', // Warna aksen utama
+        '--w3m-border-radius-master': '12px'
+    }
+});
+
+
+// ==========================================================================
+// 2. LOGIKA INTEGRASI INTERFASE WALLET / DOM
+// ==========================================================================
+const connectBtn = document.getElementById('connect-btn');
+const walletInfoDiv = document.getElementById('wallet-info');
+const walletAddressSpan = document.getElementById('wallet-address');
+const chainIdSpan = document.getElementById('chain-id');
+const manageBtn = document.getElementById('btnDisconnectTrigger');
+
+// Fungsi untuk mempersingkat alamat wallet (Contoh: 0x1234...abcd)
+function truncateAddress(address) {
+    if (!address) return '';
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+}
+
+// Menghubungkan fungsi klik tombol ke Modal Web3
+if (connectBtn) {
+    connectBtn.addEventListener('click', () => modal.open());
+}
+if (manageBtn) {
+    manageBtn.addEventListener('click', () => modal.open());
+}
+
+// Watcher: Memantau perubahan status wallet secara Real-Time
+watchAccount(wagmiConfig, {
+    onChange(account) {
+        if (account.isConnected) {
+            // Update UI saat terkoneksi
+            if (connectBtn) connectBtn.style.display = 'none';
+            if (walletAddressSpan) walletAddressSpan.innerText = truncateAddress(account.address);
+            if (chainIdSpan) chainIdSpan.innerText = account.chainId || '-';
+            if (walletInfoDiv) walletInfoDiv.style.display = 'flex';
+            
+            console.log("Wallet Terhubung:", account.address);
+        } else {
+            // Reset UI jika disconnect
+            if (connectBtn) connectBtn.style.display = 'block';
+            if (walletInfoDiv) walletInfoDiv.style.display = 'none';
+            
+            console.log("Wallet Terputus");
+        }
+    }
+});
+
+
+// ==========================================================================
+// 3. LOGIKA PERHITUNGAN GAUGE VOTING
+// ==========================================================================
+window.calculateTotalVotes = function() {
     const inputs = document.querySelectorAll('.gauge-input');
     const progressFill = document.getElementById('govProgressBar');
     const totalText = document.getElementById('totalAllocatedPercent');
@@ -15,38 +102,59 @@ function calculateTotalVotes() {
     if (total > 100) {
         alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
         let excess = total - 100;
-        event.target.value = Math.max(0, parseInt(event.target.value) - excess);
+        if (event && event.target) {
+            event.target.value = Math.max(0, parseInt(event.target.value) - excess);
+        }
         total = 100;
     }
 
-    totalText.innerText = total;
-    progressFill.style.width = total + '%';
-}
+    if (totalText) totalText.innerText = total;
+    if (progressFill) progressFill.style.width = total + '%';
+};
 
 
-// --- 2. LOGIKA TOAST NOTIFIKASI ---
+// ==========================================================================
+// 4. LOGIKA TOAST NOTIFIKASI
+// ==========================================================================
 function showNotification() {
-    const toast = document.getElementById('toast'); // Memastikan inisialisasi elemen toast diambil dengan benar
+    const toast = document.getElementById('transactionToast'); // Menyelaraskan ID dengan 'transactionToast' di HTML integrasi
     if (toast) {
         toast.classList.add('show');
         setTimeout(() => { toast.classList.remove('show'); }, 4000);
     }
 }
  
-document.getElementById('executeBtn').addEventListener('click', showNotification);
-document.getElementById('claimBtn').addEventListener('click', showNotification);
-document.getElementById('swapActionBtn').addEventListener('click', showNotification);
-document.getElementById('submitVotesBtn').addEventListener('click', showNotification);
-document.querySelectorAll('.id-vault-btn').forEach(btn => btn.addEventListener('click', showNotification));
+// Pemasangan Event Listener Notifikasi secara aman (Safe Check)
+const bindNotification = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', showNotification);
+};
 
+bindNotification('executeBtn');
+bindNotification('claimBtn');
+bindNotification('swapActionBtn');
+bindNotification('submitVotesBtn');
 
-// --- 3. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
-document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
-    document.getElementById('appNode').setAttribute('lang', e.target.value);
+document.querySelectorAll('.id-vault-btn').forEach(btn => {
+    btn.addEventListener('click', showNotification);
 });
 
 
-// --- 4. SELEKSI TOMBOL DURASI ---
+// ==========================================================================
+// 5. LOGIKA PENGALIHAN DUA BAHASA (EN/ID)
+// ==========================================================================
+const langSwitcher = document.getElementById('appLangSwitcher');
+if (langSwitcher) {
+    langSwitcher.addEventListener('change', function(e) {
+        const appNode = document.getElementById('appNode');
+        if (appNode) appNode.setAttribute('lang', e.target.value);
+    });
+}
+
+
+// ==========================================================================
+// 6. SELEKSI TOMBOL DURASI
+// ==========================================================================
 const durationBtns = document.querySelectorAll('.duration-btn');
 durationBtns.forEach(btn => {
     btn.addEventListener('click', function() {
@@ -56,8 +164,10 @@ durationBtns.forEach(btn => {
 });
 
 
-// --- 5. LOGIKA NAVIGASI MENU SIDEBAR (SPA / SINGLE PAGE APPLICATION) ---
-function switchPage(pageId, element) {
+// ==========================================================================
+// 7. LOGIKA NAVIGASI MENU SIDEBAR (SPA / SINGLE PAGE APPLICATION)
+// ==========================================================================
+window.switchPage = function(pageId, element) {
     const pages = document.querySelectorAll('.page-section');
     pages.forEach(page => { page.style.display = 'none'; });
 
@@ -72,15 +182,24 @@ function switchPage(pageId, element) {
     }
     
     if (window.innerWidth <= 768) toggleMobileMenu();
-}
+    
+    // Integrasi langsung pemicu re-render grafik portofolio saat kembali ke dashboard
+    if (pageId === 'dashboard') {
+        setTimeout(renderPortfolioChart, 50); 
+    }
+};
 
 
-// --- 6. LOGIKA MENU HAMBURGER (RESPONSIF SMARTPHONE) ---
+// ==========================================================================
+// 8. LOGIKA MENU HAMBURGER (RESPONSIF SMARTPHONE)
+// ==========================================================================
 const menuToggleBtn = document.getElementById('menuToggleBtn');
 const appSidebar = document.getElementById('appSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 
 function toggleMobileMenu() {
+    if (!appSidebar || !sidebarOverlay || !menuToggleBtn) return;
+    
     const isOpen = appSidebar.classList.toggle('open');
     sidebarOverlay.classList.toggle('active');
     if (isOpen) {
@@ -91,11 +210,14 @@ function toggleMobileMenu() {
         menuToggleBtn.style.background = 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)';
     }
 }
-menuToggleBtn.addEventListener('click', toggleMobileMenu);
-sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
+if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleMobileMenu);
+if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
 
-// --- 7. PERBAIKAN LOGIKA GRAFIK PORTOFOLIO RESPONSIF ---
+// ==========================================================================
+// 9. PERBAIKAN LOGIKA GRAFIK PORTOFOLIO RESPONSIF (CANVAS RENDERING)
+// ==========================================================================
 function renderPortfolioChart() {
     const canvas = document.getElementById('portfolioChart');
     if (!canvas) return;
@@ -108,7 +230,7 @@ function renderPortfolioChart() {
     const width = rect.width;
     const height = rect.height;
 
-    // Menangani kerapatan piksel layar HP (Retina / AMOLED Display) agar grafik tajam
+    // Menangani kerapatan piksel layar HP agar grafik tajam
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
@@ -116,7 +238,7 @@ function renderPortfolioChart() {
     canvas.style.height = height + 'px';
     ctx.scale(dpr, dpr);
 
-    // Titik koordinat proporsional berdasarkan lebar layar HP pengguna secara dinamis
+    // Titik koordinat proporsional berdasarkan lebar layar dinamis
     const points = [
         {x: 0, y: height * 0.8}, 
         {x: width * 0.15, y: height * 0.75}, 
@@ -172,22 +294,6 @@ function renderPortfolioChart() {
     ctx.fill();
 }
 
-// Jalankan fungsi penggambaran grafik otomatis saat halaman web dimuat pertama kali
-window.addEventListener('load', () => {
-    renderPortfolioChart();
-});
-
-// Jalankan ulang penggambaran grafik apabila user mengubah ukuran resolusi monitor/HP browser
+// Event trigger pemuatan & perubahan ukuran layar untuk chart
+window.addEventListener('load', renderPortfolioChart);
 window.addEventListener('resize', renderPortfolioChart);
-
-
-// --- MODIFIKASI FUNGSI SWITCHPAGE SPA ---
-// Memastikan fungsi switchPage memicu re-render grafik saat halaman 'dashboard' diakses kembali oleh pengguna
-const originalSwitchPage = switchPage;
-switchPage = function(pageId, element) {
-    originalSwitchPage(pageId, element);
-    if (pageId === 'dashboard') {
-        // Berikan sedikit jeda waktu render agar transisi dimensi boks halaman selesai dimuat sempurna
-        setTimeout(renderPortfolioChart, 50); 
-    }
-};
