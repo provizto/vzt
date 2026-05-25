@@ -225,60 +225,56 @@ if (document.readyState === "complete" || document.readyState === "interactive")
     document.addEventListener("DOMContentLoaded", inisialisasiGrafik);
 }
 
-// --- LOGIKA SIMULASI SWAP DINAMIS (LIVE MOCK SWAP) ---
-document.addEventListener("DOMContentLoaded", function() {
-    const inputFrom = document.getElementById('swapInputFrom');
-    const inputTo = document.getElementById('swapInputTo');
-    const labelFrom = document.getElementById('swapLabelFrom');
-    const labelTo = document.getElementById('swapLabelTo');
-    const btnReverse = document.getElementById('btnReverseSwap');
+// --- JALAN PINTAS LOGIKA SWAP (ANTI-GAGAL) ---
+function aktifkanFiturSwap() {
+    const inFrom = document.getElementById('swapInputFrom');
+    const inTo = document.getElementById('swapInputTo');
+    const lblFrom = document.getElementById('swapLabelFrom');
+    const lblTo = document.getElementById('swapLabelTo');
+    const btnRev = document.getElementById('btnReverseSwap');
 
-    // Kurs simulasi: 1 ETH = 3450 USDC
-    const hargaKurs = 3450; 
-    let arahSwapNormal = true; // True = ETH ke USDC, False = USDC ke ETH
+    if (!inFrom || !inTo) return; // Mencegah error jika element belum ada
 
-    // Fungsi menghitung hasil konversi secara otomatis
-    function hitungKonversi() {
-        const nilaiInput = parseFloat(inputFrom.value);
-        
-        if (isNaN(nilaiInput) || nilaiInput <= 0) {
-            inputTo.value = "";
+    const KURS = 3450;
+    let isEthToUsdc = true;
+
+    // Fungsi hitung instan
+    inFrom.oninput = function() {
+        let val = parseFloat(inFrom.value);
+        if (isNaN(val) || val <= 0) {
+            inTo.value = "";
             return;
         }
-
-        if (arahSwapNormal) {
-            // ETH -> USDC (dikali harga kurs)
-            inputTo.value = (nilaiInput * hargaKurs).toFixed(2);
+        
+        if (isEthToUsdc) {
+            inTo.value = (val * KURS).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         } else {
-            // USDC -> ETH (dibagi harga kurs)
-            inputTo.value = (nilaiInput / hargaKurs).toFixed(5);
+            inTo.value = (val / KURS).toFixed(5);
         }
-    }
+    };
 
-    // Trigger kalkulasi setiap kali user mengetik angka
-    if(inputFrom) {
-        inputFrom.addEventListener('input', hitungKonversi);
-    }
+    // Fungsi klik balik posisi token
+    if (btnRev) {
+        btnRev.onclick = function(e) {
+            e.preventDefault(); // Mencegah halaman reload otomatis
+            isEthToUsdc = !isEthToUsdc;
 
-    // Logika ketika tombol panah tengah (reverse) diklik
-    if(btnReverse) {
-        btnReverse.addEventListener('click', function() {
-            arahSwapNormal = !arahSwapNormal; // Balik status arah
-            
-            // Tukar teks label token
-            if (arahSwapNormal) {
-                labelFrom.innerText = "ETH";
-                labelTo.innerText = "USDC";
-                btnReverse.innerText = "⬇";
+            if (isEthToUsdc) {
+                lblFrom.innerText = "ETH";
+                lblTo.innerText = "USDC";
+                btnRev.innerText = "⬇";
             } else {
-                labelFrom.innerText = "USDC";
-                labelTo.innerText = "ETH";
-                btnReverse.innerText = "⬆"; // Ubah panah jadi ke atas sebagai variasi visual
+                lblFrom.innerText = "USDC";
+                lblTo.innerText = "ETH";
+                btnRev.innerText = "⬆";
             }
 
-            // Tukar atau bersihkan nilai input saat berbalik arah
-            inputFrom.value = inputTo.value;
-            hitungKonversi();
-        });
+            // Tukar angka nilainya
+            inFrom.value = inTo.value.replace(/,/g, '');
+            inFrom.dispatchEvent(new Event('input')); // Paksa hitung ulang
+        };
     }
-});
+}
+
+// Jalankan paksa tanpa menunggu DOMContentLoaded jika browser lambat
+setTimeout(aktifkanFiturSwap, 500);
