@@ -7,7 +7,6 @@ const userAddress = document.getElementById('userAddress');
 const btnDisconnect = document.getElementById('btnDisconnect');
 const toast = document.getElementById('transactionToast');
  
-// Elemen baru untuk Logika Ujicoba Terms
 const chkAgreeTerms = document.getElementById('chkAgreeTerms');
 const walletOptions = document.querySelectorAll('.wallet-option-item');
 
@@ -21,7 +20,6 @@ btnConnectTrigger.addEventListener('click', () => {
 btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
 walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
 
-// Perbaikan Responsivitas Checkbox Syarat & Ketentuan Modal
 chkAgreeTerms.addEventListener('change', function() {
     if (this.checked) {
         walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
@@ -47,7 +45,6 @@ function executeWalletConnection(walletType, dummyAddress) {
     showNotification();
 }
 
-// Penanganan Klik Wallet yang Jauh Lebih Responsif (Mencegah Trigger Redirect Sembarangan)
 document.getElementById('optSmartAccount').addEventListener('click', function(e) {
     if (chkAgreeTerms.checked) {
         executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
@@ -82,8 +79,9 @@ function calculateTotalVotes() {
 
     if (total > 100) {
         alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
+        // Diganti menggunakan global window.event agar aman saat di-trigger dari oninput HTML
         let excess = total - 100;
-        event.target.value = Math.max(0, parseInt(event.target.value) - excess);
+        window.event.target.value = Math.max(0, parseInt(window.event.target.value) - excess);
         total = 100;
     }
 
