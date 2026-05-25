@@ -1,14 +1,28 @@
 /* ==========================================================================
-   1. RESET & LOGIKA DUA BAHASA (MURNI CSS)
+   1. RESET, VARIABEL GLOBAL, & LOGIKA DUA BAHASA (MURNI CSS)
    ========================================================================== */
+:root {
+    /* Identitas Warna PROVIZTO & Komponen Web3 */
+    --bg-color: #080b11;
+    --card-bg: #0f131c;
+    --primary-color: #3861fb;
+    --primary-hover: #2b4ecf;
+    --text-color: #f3f4f6;
+    --text-muted: #8f96a3;
+    --success-color: #00c853;
+    --border-radius: 12px;
+    --panel-border: #1e2533;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
+
 body {
-    background-color: #080b11;
-    color: #f3f4f6;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
     min-height: 100vh;
@@ -36,46 +50,13 @@ html[lang="id"] td span.lang-id {
     display: inline-block !important; 
 }
 
-/* --- OPTIMALISASI PRESISI HP (RESPONSIF) --- */
-@media (max-width: 768px) {
-    .gov-table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch; 
-        border: 1px solid #1e2533;
-        border-radius: 12px;
-    }
-    
-    .gov-table {
-        min-width: 600px; 
-    }
-
-    .gov-table th, .gov-table td {
-        padding: 12px 14px;
-        font-size: 13px;
-    }
-}
-
-/* --- STYLING TAMBAHAN UTK MEMASTIKAN PRESISI HORIZONTAL --- */
-.gov-table th {
-    background-color: #0f131c;
-    color: #9ca3af;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 16px 20px;
-    border-bottom: 1px solid #1e2533;
-    vertical-align: middle; 
-    white-space: nowrap; 
-}
-
 /* ==========================================================================
    2. SIDEBAR NAVIGATION & MOBILE INTERFACE
    ========================================================================== */
 aside {
     width: 260px;
-    background-color: #0f131c;
-    border-right: 1px solid #1e2533;
+    background-color: var(--card-bg);
+    border-right: 1px solid var(--panel-border);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -85,14 +66,16 @@ aside {
     z-index: 40;
     transition: transform 0.3s ease;
 }
-.logo {
+
+/* Selektor .logo disesuaikan agar tidak merusak logo DeFi lama jika ada */
+aside .logo, .main-content .logo {
     font-size: 22px;
     font-weight: 800;
     color: #ffffff;
     margin-bottom: 40px;
     padding-left: 10px;
 }
-.logo span { color: #3b82f6; }
+aside .logo span { color: #3b82f6; }
  
 .nav-links { list-style: none; }
 .nav-links li { margin-bottom: 8px; }
@@ -103,7 +86,7 @@ aside {
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     transition: all 0.2s;
 }
 .nav-links a:hover, .nav-links a.active {
@@ -119,7 +102,7 @@ aside {
 }
 .btn-back-home {
     background: none; 
-    border: 1px solid #1e2533; 
+    border: 1px solid var(--panel-border); 
     color: #9ca3af; 
     padding: 10px 14px; 
     border-radius: 10px; 
@@ -177,14 +160,6 @@ aside {
     z-index: 35;
 }
 
-@media (max-width: 768px) {
-    aside { transform: translateX(-100%); }
-    aside.open { transform: translateX(0); }
-    .menu-toggle { display: flex; }
-    .main-content { margin-left: 0 !important; padding: 20px !important; }
-    .sidebar-overlay.active { display: block; }
-}
-
 /* ==========================================================================
    3. AREA KONTEN UTAMA & DASHBOARD LAYOUT
    ========================================================================== */
@@ -201,10 +176,6 @@ aside {
     margin-bottom: 40px;
     gap: 16px;
 }
-@media (max-width: 480px) {
-    .topbar { flex-direction: column; align-items: flex-start; }
-    .right-controls { width: 100%; justify-content: space-between; }
-}
 .right-controls {
     display: flex;
     align-items: center;
@@ -215,7 +186,7 @@ aside {
     border: 1px solid #2e374a;
     color: #d1d5db;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -231,18 +202,91 @@ aside {
     grid-template-columns: 2fr 1fr;
     gap: 30px;
 }
-@media (max-width: 1024px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-}
 
 .panel {
-    background-color: #0f131c;
-    border: 1px solid #1e2533;
+    background-color: var(--card-bg);
+    border: 1px solid var(--panel-border);
     border-radius: 20px;
     padding: 30px;
 }
 .panel-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 20px; }
 
+/* ==========================================================================
+   4. KOMPONEN INTEGRASI WEB3 (TOMBOl & INFO DOMPET)
+   ========================================================================== */
+/* Tombol Pemicu Utama (Aksen Sinkron dengan Sistem DApp) */
+.btn-connect, .btn-wallet {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(56, 97, 251, 0.2);
+}
+.btn-connect:hover, .btn-wallet:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+.btn-connect:active, .btn-wallet:active {
+    transform: translateY(1px);
+}
+
+/* Container Info Akun Aktif di Topbar */
+.wallet-info, .wallet-active-status {
+    display: none; /* Dikontrol via JavaScript */
+    align-items: center;
+    gap: 12px;
+    background-color: #161f30;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid #2a354d;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+.info-row:last-child { margin-bottom: 0; }
+.label { color: var(--text-muted); }
+
+.value, .address-badge {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #0b0e14;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+.status-connected {
+    color: var(--success-color);
+    font-weight: 600;
+}
+.btn-disconnect {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-disconnect:hover {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* ==========================================================================
+   5. ELEMEN FORM, INPUT, & TOMBOL AKSI UTAMA
+   ========================================================================== */
 .form-group { margin-bottom: 20px; }
 .form-label {
     font-size: 11px;
@@ -254,7 +298,7 @@ aside {
 }
 .input-box {
     background-color: #080b11;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
     border-radius: 14px;
     padding: 16px;
     display: flex;
@@ -280,10 +324,10 @@ aside {
 }
 .duration-btn {
     background-color: #080b11;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
     color: #9ca3af;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
@@ -298,7 +342,7 @@ aside {
 .summary-box {
     background-color: rgba(59, 130, 246, 0.03);
     border: 1px solid rgba(59, 130, 246, 0.1);
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     padding: 16px;
     margin: 24px 0;
     font-size: 13px;
@@ -318,12 +362,13 @@ aside {
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 .btn-action:hover { background-color: #1d4ed8; }
 
 .reward-card {
     background-color: #111622;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 16px;
@@ -348,6 +393,9 @@ aside {
     background-color: #1a2233;
 }
 
+/* ==========================================================================
+   6. STRUKTUR NOTIFIKASI TOAST & SWAP LOGIC
+   ========================================================================== */
 .toast-container {
     position: fixed;
     top: 24px;
@@ -360,10 +408,10 @@ aside {
     width: 100%;
 }
 .toast {
-    background-color: #0f131c;
+    background-color: var(--card-bg);
     border: 1px solid #22c55e;
     border-left: 6px solid #22c55e;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     padding: 16px;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -403,34 +451,44 @@ aside {
 }
 .swap-arrow-btn:hover { background-color: #2e374a; color: #22d3ee; }
 
-.table-responsive {
+/* ==========================================================================
+   7. TABEL DATA (VAULTS, EMISI GAUGE, TRANSAKSI)
+   ========================================================================== */
+.table-responsive, .gov-table-responsive {
     overflow-x: auto;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
     background-color: rgba(15, 23, 42, 0.4);
     border-radius: 16px;
     margin-top: 20px;
 }
-table {
+table, .gov-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
     text-align: left;
 }
-th {
+th, .gov-table th {
     background-color: #0f131c;
     color: #9ca3af;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     padding: 16px 20px;
-    border-bottom: 1px solid #1e2533;
+    border-bottom: 1px solid var(--panel-border);
+    vertical-align: middle; 
+    white-space: nowrap; 
 }
-td {
+.gov-table th { background-color: #080b11; }
+
+td, .gov-table td {
     padding: 18px 20px;
     border-bottom: 1px solid rgba(30, 41, 59, 0.5);
     color: #d1d5db;
+    vertical-align: middle;
 }
-tr:last-child td { border-bottom: none; }
+.gov-table td { border-bottom: 1px solid rgba(30, 37, 51, 0.6); }
+tr:last-child td, .gov-table tr:last-child td { border-bottom: none; }
+
 .pool-title { font-weight: 700; color: #ffffff; }
 .badge-pool {
     display: inline-block;
@@ -448,6 +506,9 @@ tr:last-child td { border-bottom: none; }
     border-color: rgba(34, 211, 238, 0.2);
 }
 
+/* ==========================================================================
+   8. GOVERNANCE BANNER, GAUGES, & PROGRES VOTE
+   ========================================================================== */
 .gov-banner {
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
     border: 1px solid rgba(59, 130, 246, 0.15);
@@ -460,15 +521,13 @@ tr:last-child td { border-bottom: none; }
     gap: 20px;
     margin-top: 32px;
 }
-@media (max-width: 600px) { .gov-banner { flex-direction: column; align-items: flex-start; } }
- 
 .gov-banner-text h4 { font-size: 16px; color: #ffffff; font-weight: 700; margin-bottom: 6px; }
 .gov-banner-text p { font-size: 13px; color: #9ca3af; line-height: 1.5; margin: 0; }
  
 .vote-progress-container {
     margin-bottom: 30px;
-    background-color: #0f131c;
-    border: 1px solid #1e2533;
+    background-color: var(--card-bg);
+    border: 1px solid var(--panel-border);
     padding: 20px;
     border-radius: 16px;
 }
@@ -486,7 +545,7 @@ tr:last-child td { border-bottom: none; }
     height: 12px;
     border-radius: 6px;
     overflow: hidden;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
 }
 .progress-bar-fill {
     background: linear-gradient(90deg, #2563eb 0%, #22d3ee 100%);
@@ -496,30 +555,11 @@ tr:last-child td { border-bottom: none; }
 }
 
 .table-panel {
-    background-color: #0f131c;
-    border: 1px solid #1e2533;
+    background-color: var(--card-bg);
+    border: 1px solid var(--panel-border);
     border-radius: 20px;
     padding: 24px;
 }
-.gov-table-responsive { overflow-x: auto; margin-top: 15px; }
-.gov-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
-.gov-table th {
-    background-color: #080b11;
-    color: #6b7280;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 14px 20px;
-    border-bottom: 1px solid #1e2533;
-}
-.gov-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(30, 37, 51, 0.6);
-    color: #d1d5db;
-    vertical-align: middle;
-}
-.gov-table tr:last-child td { border-bottom: none; }
-
 .gov-table th.cyan-header { color: #22d3ee !important; }
 .gov-table td.cyan-value {
     color: #22d3ee;
@@ -537,13 +577,12 @@ tr:last-child td { border-bottom: none; }
     display: inline-flex;
     align-items: center;
     background-color: #0b0e14;
-    border: 1px solid #1e2533;
+    border: 1px solid var(--panel-border);
     border-radius: 8px;
     padding: 4px 8px;
     width: 90px; 
     justify-content: space-between;
 }
-
 .gauge-input {
     background: transparent;
     border: none;
@@ -567,33 +606,14 @@ tr:last-child td { border-bottom: none; }
     font-size: 13px;
 }
 
-@media (max-width: 768px) {
-    #page-governance .gov-table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border: 1px solid #1e2533;
-        border-radius: 12px;
-    }
-    #page-governance .gov-table { min-width: 550px; }
-    #page-governance .gov-table th, 
-    #page-governance .gov-table td { padding: 12px 14px; }
-}
-
-/* --- DATA STATISTIK DASHBOARD GENERAL --- */
+/* ==========================================================================
+   9. KARTU STATISTIK DASHBOARD & HISTORIS METRIK
+   ========================================================================== */
 .dashboard-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
-
-@media (max-width: 768px) {
-    .dashboard-stats-grid { 
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-}
-
 .stat-card {
     padding: 24px;
     display: flex;
@@ -607,7 +627,6 @@ tr:last-child td { border-bottom: none; }
     margin: 8px 0;
     letter-spacing: -0.5px;
 }
-
 .stat-change { font-size: 12px; font-weight: 700; }
 .stat-change.positive { color: #10b981; }
 .stat-change.text-muted { color: #6b7280; }
@@ -617,10 +636,6 @@ tr:last-child td { border-bottom: none; }
     position: relative;
     width: 100%;
     height: 250px; 
-}
-
-@media (max-width: 480px) {
-    .panel { padding: 16px; }
 }
 
 .tx-type-badge {
@@ -638,4 +653,50 @@ tr:last-child td { border-bottom: none; }
     font-family: monospace;
     color: #6b7280;
     font-weight: 600;
+}
+
+/* ==========================================================================
+   10. MEDIA QUERIES (OPTIMALISASI LAYAR SMARTPHONE & TABLET)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    aside { transform: translateX(-100%); }
+    aside.open { transform: translateX(0); }
+    .menu-toggle { display: flex; }
+    .main-content { margin-left: 0 !important; padding: 20px !important; }
+    .sidebar-overlay.active { display: block; }
+
+    .dashboard-stats-grid { 
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .table-responsive, .gov-table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; 
+        border: 1px solid var(--panel-border);
+        border-radius: var(--border-radius);
+    }
+    
+    table, .gov-table { min-width: 600px; }
+    #page-governance .gov-table { min-width: 550px; }
+
+    th, td, .gov-table th, .gov-table td {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 600px) { 
+    .gov-banner { flex-direction: column; align-items: flex-start; } 
+}
+
+@media (max-width: 480px) {
+    .topbar { flex-direction: column; align-items: flex-start; }
+    .right-controls { width: 100%; justify-content: space-between; }
+    .panel { padding: 16px; }
 }
