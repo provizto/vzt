@@ -153,3 +153,61 @@ function toggleMobileMenu() {
 }
 menuToggleBtn.addEventListener('click', toggleMobileMenu);
 sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
+// --- LOGIKA EMULASI GRAFIK APEXCHARTS (YIELD EARNINGS) ---
+document.addEventListener("DOMContentLoaded", function () {
+    const options = {
+        // Data tiruan grafik (bisa Anda hubungkan ke state dApp nanti)
+        series: [{
+            name: "Yield Earnings",
+            data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 142]
+        }],
+        chart: {
+            type: 'area', // Membuat efek gradien di bawah garis
+            height: 240,
+            toolbar: { show: false }, // Sembunyikan tombol download bawaan agar rapi
+            background: 'transparent'
+        },
+        colors: ['#22d3ee'], // Warna cyan cerah khas dApp Anda
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.0,
+                stops: [0, 90, 100]
+            }
+        },
+        dataLabels: { enabled: false },
+        stroke: {
+            curve: 'smooth', // Garis melengkung halus (smooth trendline)
+            width: 3
+        },
+        grid: {
+            borderColor: '#1e2533',
+            strokeDashArray: 4,
+            xaxis: { lines: { show: false } },
+            yaxis: { lines: { show: true } }
+        },
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            labels: { style: { colors: '#6b7280' } },
+            axisBorder: { show: false },
+            axisTicks: { show: false }
+        },
+        yaxis: {
+            labels: {
+                style: { colors: '#6b7280' },
+                formatter: function (value) { return "$" + value; }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            x: { show: true }
+        }
+    };
+
+    // Render grafik ke dalam elemen HTML #yieldChart
+    const chart = new ApexCharts(document.querySelector("#yieldChart"), options);
+    chart.render();
+});
