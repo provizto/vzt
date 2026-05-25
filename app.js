@@ -119,18 +119,26 @@ durationBtns.forEach(btn => {
 });
 
 
-// --- 6. LOGIKA NAVIGASI MENU SIDEBAR (SPA) ---
+// --- LOGIKA NAVIGASI MENU SIDEBAR (SPA) - VERSI FIX GRAPH BLANK ---
 function switchPage(pageId, element) {
     const pages = document.querySelectorAll('.page-section');
     pages.forEach(page => { page.style.display = 'none'; });
 
     const activePage = document.getElementById(`page-${pageId}`);
-    if (activePage) { activePage.style.display = 'block'; }
+    if (activePage) { 
+        activePage.style.display = 'block'; 
+    }
 
     const menuItems = document.querySelectorAll('.nav-item');
     menuItems.forEach(item => { item.classList.remove('active'); });
     element.classList.add('active');
      
+    // TRICK UTAMA: Jika user masuk ke dashboard, gambar ulang grafiknya secara instan!
+    if (pageId === 'dashboard') {
+        // Beri jeda 50ms agar browser selesai mengubah display: none menjadi block terlebih dahulu
+        setTimeout(inisialisasiGrafik, 50); 
+    }
+
     if(window.innerWidth <= 768) toggleMobileMenu();
 }
 
