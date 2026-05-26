@@ -1,0 +1,334 @@
+// --- AMBIL ELEMEN DOM ---
+const btnConnectTrigger = document.getElementById('btnConnectTrigger');
+const walletModal = document.getElementById('walletModal');
+const btnCloseModal = document.getElementById('btnCloseModal');
+const walletConnectedStatus = document.getElementById('walletConnectedStatus');
+const userAddress = document.getElementById('userAddress');
+const btnDisconnect = document.getElementById('btnDisconnect');
+const toast = document.getElementById('transactionToast');
+ 
+const chkAgreeTerms = document.getElementById('chkAgreeTerms');
+const walletOptions = document.querySelectorAll('.wallet-option-item');
+
+// --- 1. LOGIKA INTERAKSI WALLET MODAL ---
+btnConnectTrigger.addEventListener('click', () => {
+    chkAgreeTerms.checked = false;
+    walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+    walletModal.classList.remove('style-hidden');
+});
+ 
+btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
+walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
+
+chkAgreeTerms.addEventListener('change', function() {
+    if (this.checked) {
+        walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
+    } else {
+        walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+    }
+});
+
+function toggleWalletUI(isConnected, address = "") {
+    if (isConnected) {
+        btnConnectTrigger.classList.add('style-hidden');
+        walletConnectedStatus.classList.remove('style-hidden');
+        userAddress.innerText = address.substring(0, 6) + "..." + address.substring(address.length - 4);
+    } else {
+        btnConnectTrigger.classList.remove('style-hidden');
+        walletConnectedStatus.classList.add('style-hidden');
+    }
+}
+
+function executeWalletConnection(walletType, dummyAddress) {
+    walletModal.classList.add('style-hidden');
+    toggleWalletUI(true, dummyAddress);
+    showNotification();
+}
+
+document.getElementById('optSmartAccount').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
+    }
+});
+document.getElementById('optMetaMask').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+    }
+});
+document.getElementById('optWalletConnect').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+    }
+});
+btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
+
+
+// --- 2. LOGIKA PERHITUNGAN GAUGE VOTING ---
+function calculateTotalVotes() {
+    const inputs = document.querySelectorAll('.gauge-input');
+    const progressFill = document.getElementById('govProgressBar');
+    const totalText = document.getElementById('totalAllocatedPercent');
+     
+    let total = 0;
+    inputs.forEach(input => {
+        let value = parseInt(input.value) || 0;
+        if (value < 0) value = 0;
+        if (value > 100) value = 100;
+        total += value;
+    });
+
+    if (total > 100) {
+        alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
+        // Diganti menggunakan global window.event agar aman saat di-trigger dari oninput HTML
+        let excess = total - 100;
+        window.event.target.value = Math.max(0, parseInt(window.event.target.value) - excess);
+        total = 100;
+    }
+
+    totalText.innerText = total;
+    progressFill.style.width = total + '%';
+}
+
+
+// --- 3. LOGIKA TOAST NOTIFIKASI ---
+function showNotification() {
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 4000);
+}
+ 
+document.getElementById('executeBtn').addEventListener('click', showNotification);
+document.getElementById('claimBtn').addEventListener('click', showNotification);
+document.getElementById('swapActionBtn').addEventListener('click', showNotification);
+document.getElementById('submitVotesBtn').addEventListener('click', showNotification);
+document.querySelectorAll('.id-vault-btn').forEach(btn => btn.addEventListener('click', showNotification));
+
+
+// --- 4. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
+document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
+    document.getElementById('appNode').setAttribute('lang', e.target.value);
+});
+
+
+// --- 5. SELEKSI TOMBOL DURASI ---
+const durationBtns = document.querySelectorAll('.duration-btn');
+durationBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        durationBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+
+// --- LOGIKA NAVIGASI MENU SIDEBAR (SPA) - VERSI FIX GRAPH BLANK ---
+function switchPage(pageId, element) {
+    const pages = document.querySelectorAll('.page-section');
+    pages.forEach(page => { page.style.display = 'none'; });
+
+    const activePage = document.getElementById(`page-${pageId}`);
+    if (activePage) { 
+        activePage.style.display = 'block'; 
+    }
+
+    const menuItems = document.querySelectorAll('.nav-item');
+    menuItems.forEach(item => { item.classList.remove('active'); });
+    element.classList.add('active');
+     
+    // TRICK UTAMA: Jika user masuk ke dashboard, gambar ulang grafiknya secara instan!
+    if (pageId === 'dashboard') {
+        // Beri jeda 50ms agar browser selesai mengubah display: none menjadi block terlebih dahulu
+        setTimeout(inisialisasiGrafik, 50); 
+    }
+
+    if(window.innerWidth <= 768) toggleMobileMenu();
+}
+
+
+// --- 7. LOGIKA MENU HAMBURGER (RESPONSIF HP) ---
+const menuToggleBtn = document.getElementById('menuToggleBtn');
+const appSidebar = document.getElementById('appSidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function toggleMobileMenu() {
+    const isOpen = appSidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('active');
+    if (isOpen) {
+        menuToggleBtn.innerHTML = '✕';
+        menuToggleBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #991b1b 100%)';
+    } else {
+        menuToggleBtn.innerHTML = '☰';
+        menuToggleBtn.style.background = 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)';
+    }
+}
+menuToggleBtn.addEventListener('click', toggleMobileMenu);
+sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
+// --- LOGIKA EMULASI GABUNGAN GRAFIK (TRENDLINE & DONUT) ---
+function inisialisasiGrafik() {
+    // 1. INISIALISASI YIELD TRENDLINE CHART
+    const elemenLineChart = document.querySelector("#yieldChart");
+    if (elemenLineChart) {
+        const lineOptions = {
+            series: [{
+                name: "Yield Earnings",
+                data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 142]
+            }],
+            chart: {
+                type: 'area',
+                height: 240,
+                width: '100%',
+                toolbar: { show: false },
+                background: 'transparent'
+            },
+            colors: ['#22d3ee'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.0,
+                    stops: [0, 90, 100]
+                }
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            grid: {
+                borderColor: '#1e2533',
+                strokeDashArray: 4,
+                xaxis: { lines: { show: false } },
+                yaxis: { lines: { show: true } }
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                labels: { style: { colors: '#6b7280' } },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: {
+                    style: { colors: '#6b7280' },
+                    formatter: function (value) { return "$" + value; }
+                }
+            },
+            tooltip: { theme: 'dark' }
+        };
+        elemenLineChart.innerHTML = "";
+        const lineChart = new ApexCharts(elemenLineChart, lineOptions);
+        lineChart.render();
+    }
+
+    // 2. INISIALISASI ASSET ALLOCATION DONUT CHART
+    const elemenDonutChart = document.querySelector("#assetDonutChart");
+    if (elemenDonutChart) {
+        const donutOptions = {
+            // Persentase porsi masing-masing aset (Vaults, Governance, Wallet)
+            series: [54.2, 25.8, 20.0], 
+            chart: {
+                type: 'donut',
+                height: 160,
+                background: 'transparent'
+            },
+            // Sembunyikan legenda bawaan ApexCharts karena kita sudah membuat legenda kustom di HTML bawahnya
+            legend: { show: false }, 
+            dataLabels: { enabled: false },
+            // Mencocokkan warna neon dengan tema dApp PROVIZTO Anda
+            colors: ['#a855f7', '#22d3ee', '#3b82f6'], 
+            stroke: {
+                show: true,
+                colors: ['#0f131c'], // Memberikan batas pemisah gelap antar potongan donut
+                width: 3
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '75%', // Ketebalan lingkaran donut
+                        background: 'transparent',
+                        labels: {
+                            show: true,
+                            name: { show: false },
+                            value: {
+                                show: true,
+                                fontSize: '16px',
+                                fontWeight: '700',
+                                color: '#ffffff',
+                                offsetY: 5,
+                                formatter: function (val) { return val + "%"; }
+                            }
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'dark',
+                y: {
+                    formatter: function (val) { return val + "% of Portfolio"; }
+                }
+            },
+            // Menentukan label saat kursor diarahkan ke potongan donut
+            labels: ['Vaults Optimizer', 'veVZT Governance', 'Wallet Liquid']
+        };
+        elemenDonutChart.innerHTML = "";
+        const donutChart = new ApexCharts(elemenDonutChart, donutOptions);
+        donutChart.render();
+    }
+}
+
+// Menjaga agar pemanggilan fungsi grafik tetap aman dan anti-blank saat refresh
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    inisialisasiGrafik();
+} else {
+    document.addEventListener("DOMContentLoaded", inisialisasiGrafik);
+}
+
+// --- JALAN PINTAS LOGIKA SWAP (ANTI-GAGAL) ---
+function aktifkanFiturSwap() {
+    const inFrom = document.getElementById('swapInputFrom');
+    const inTo = document.getElementById('swapInputTo');
+    const lblFrom = document.getElementById('swapLabelFrom');
+    const lblTo = document.getElementById('swapLabelTo');
+    const btnRev = document.getElementById('btnReverseSwap');
+
+    if (!inFrom || !inTo) return; // Mencegah error jika element belum ada
+
+    const KURS = 3450;
+    let isEthToUsdc = true;
+
+    // Fungsi hitung instan
+    inFrom.oninput = function() {
+        let val = parseFloat(inFrom.value);
+        if (isNaN(val) || val <= 0) {
+            inTo.value = "";
+            return;
+        }
+        
+        if (isEthToUsdc) {
+            inTo.value = (val * KURS).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            inTo.value = (val / KURS).toFixed(5);
+        }
+    };
+
+    // Fungsi klik balik posisi token
+    if (btnRev) {
+        btnRev.onclick = function(e) {
+            e.preventDefault(); // Mencegah halaman reload otomatis
+            isEthToUsdc = !isEthToUsdc;
+
+            if (isEthToUsdc) {
+                lblFrom.innerText = "ETH";
+                lblTo.innerText = "USDC";
+                btnRev.innerText = "⬇";
+            } else {
+                lblFrom.innerText = "USDC";
+                lblTo.innerText = "ETH";
+                btnRev.innerText = "⬆";
+            }
+
+            // Tukar angka nilainya
+            inFrom.value = inTo.value.replace(/,/g, '');
+            inFrom.dispatchEvent(new Event('input')); // Paksa hitung ulang
+        };
+    }
+}
+
+// Jalankan paksa tanpa menunggu DOMContentLoaded jika browser lambat
+setTimeout(aktifkanFiturSwap, 500);
