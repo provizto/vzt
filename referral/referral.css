@@ -342,6 +342,22 @@ footer {
     transform: translateX(-3px);
 }
 
+.btn-dapp {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #0070f3; /* Ganti dengan warna tema dApp-mu */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    margin-left: 10px; /* Jarak dari tombol Back to Home */
+}
+
+.btn-dapp:hover {
+    background-color: #0051a8; /* Warna saat kursor diarahkan ke tombol */
+}
+
 /* --- RESPONSIVE ADJUSTMENT FOR EXTRA SMALL SCREENS --- */
 @media (max-width: 900px) { 
     .dashboard-container { grid-template-columns: 1fr; } 
