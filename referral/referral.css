@@ -358,17 +358,18 @@ footer {
 
 /* Menyamakan style Launch dApp dengan Back to Home */
 .btn-dapp {
-    color: #a0aec0; /* Warna abu-abu terang (samakan dengan warna Back to Home-mu) */
-    text-decoration: none; /* Menghilangkan garis bawah yang mengganggu */
-    font-size: 14px;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    color: #ffffff;
+    background-color: #2563eb; /* Warna biru modern */
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
 }
 
-/* Efek saat kursor diarahkan ke tombol Launch dApp */
 .btn-dapp:hover {
-    color: #ffffff; /* Berubah jadi putih terang saat di-hover */
-    text-decoration: underline; /* Garis bawah baru muncul saat di-hover saja (opsional) */
+    background-color: #1d4ed8; /* Biru agak gelap saat di-hover */
 }
 
 /* Style untuk teks copyright (opsional, agar pas di bawah) */
