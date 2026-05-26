@@ -685,17 +685,17 @@ tr:last-child td { border-bottom: none; }
     user-select: none;
 }
 
-/* Media query khusus untuk layar handphone (maksimal lebar 768px) */
 @media (max-width: 768px) {
-    /* Ganti dengan class atau ID tombol bulat birumu */
-    .nama-class-tombol-bulat { 
-        position: absolute; /* Mengikuti koordinat container atas */
-        bottom: auto !important; /* Matikan posisi bawah bawaan */
+    /* Pastikan ganti .nama-class-asli sesuai class tombolmu */
+    .nama-class-asli { 
+        position: fixed !important;
+        bottom: auto !important; 
+        left: auto !important;
         
-        /* Set posisi sejajar dengan Console Account */
-        top: 24px;       /* Sesuaikan angka ini agar lurus vertikal dengan teks "Console Account" */
-        right: 20px;     /* Jarak dari pinggir kanan layar */
+        /* Paksa pindah ke kanan atas sejajar Console Account */
+        top: 24px !important;       
+        right: 20px !important;     
         
-        z-index: 999;    /* Memastikan tombol berada di lapisan paling atas */
+        z-index: 9999 !important;
     }
 }
