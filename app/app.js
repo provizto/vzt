@@ -332,3 +332,99 @@ function aktifkanFiturSwap() {
 
 // Jalankan paksa tanpa menunggu DOMContentLoaded jika browser lambat
 setTimeout(aktifkanFiturSwap, 500);
+
+// 1. Data Token Internal Platform Provizto
+const tokenList = [
+  { symbol: "ETH", name: "Ethereum", address: "0x0000000000000000000000000000000000000000" },
+  { symbol: "USDC", name: "USD Coin", address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913" },
+  { symbol: "USDt", name: "Tether USD", address: "0x50c5771a796635218ee92c92a401697e113a936d" },
+  { symbol: "WETH", name: "Wrapped Ether", address: "0x4200000000000000000000000000000000000006" },
+  { symbol: "VZT", name: "Provizto Governance Token", address: "0x1234567890abcdef1234567890abcdef12345678" } // Ganti CA asli Anda nanti
+];
+
+let activeSelectionDirection = ""; // Mencatat apakah mengedit kolom 'from' atau 'to'
+
+// 2. Fungsi Membuka Modal
+function openTokenModal(direction) {
+  activeSelectionDirection = direction;
+  document.getElementById("tokenModal").style.display = "flex";
+  document.getElementById("tokenSearchInput").value = ""; // Reset kolom pencarian
+  renderTokenList(tokenList);
+}
+
+// 3. Fungsi Menutup Modal
+function closeTokenModal() {
+  document.getElementById("tokenModal").style.display = "none";
+}
+
+// 4. Fungsi Me-render Item Token ke dalam Modal
+function renderTokenList(tokens) {
+  const container = document.getElementById("tokenListContainer");
+  container.innerHTML = ""; // Bersihkan daftar lama
+
+  if(tokens.length === 0) {
+    container.innerHTML = `<div style="color: #8b949e; text-align: center; padding: 20px;">No tokens found.</div>`;
+    return;
+  }
+
+  tokens.forEach(token => {
+    const row = document.createElement("div");
+    row.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; transition: background 0.2s;";
+    
+    // Efek hover sederhana
+    row.onmouseover = () => row.style.background = "#21262d";
+    row.onmouseout = () => row.style.background = "transparent";
+    
+    // Ketika token dipilih
+    row.onclick = () => selectToken(token.symbol);
+
+    row.innerHTML = `
+      <div>
+        <strong style="color: white; display: block;">${token.symbol}</strong>
+        <span style="color: #8b949e; font-size: 12px;">${token.name}</span>
+      </div>
+      <span style="color: #30363d; font-size: 11px;">${token.address.substring(0, 6)}...${token.address.substring(token.address.length - 4)}</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// 5. Fungsi Memilih Token & Mengupdate Tampilan Swap
+function selectToken(symbol) {
+  if (activeSelectionDirection === "from") {
+    document.getElementById("fromTokenSymbol").innerText = symbol;
+  } else if (activeSelectionDirection === "to") {
+    document.getElementById("toTokenSymbol").innerText = symbol;
+  }
+  closeTokenModal();
+}
+
+// 6. Fungsi Pencarian (Filter Berdasarkan Simbol atau Alamat Kontrak)
+function filterTokens() {
+  const query = document.getElementById("tokenSearchInput").value.toLowerCase().trim();
+  
+  // Jika mendeteksi input adalah alamat kontrak penuh (0x + 40 karakter hex)
+  if (query.startsWith("0x") && query.length === 42) {
+    // Di sini nanti Anda bisa menyisipkan fungsi Web3/ethers.js untuk call contract secara dinamis.
+    // Sementara kita filter dari list lokal:
+    const exactMatch = tokenList.filter(t => t.address.toLowerCase() === query);
+    renderTokenList(exactMatch);
+    return;
+  }
+
+  // Pencarian reguler berdasarkan simbol atau nama
+  const filtered = tokenList.filter(token => 
+    token.symbol.toLowerCase().includes(query) || 
+    token.name.toLowerCase().includes(query)
+  );
+  
+  renderTokenList(filtered);
+}
+
+// Menutup modal jika pengguna mengklik area luar modal (overlay)
+window.onclick = function(event) {
+  const modal = document.getElementById("tokenModal");
+  if (event.target === modal) {
+    closeTokenModal();
+  }
+}
