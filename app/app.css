@@ -110,22 +110,32 @@ aside {
 
 .menu-toggle {
     display: none;
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
+    position: fixed; /* Membuatnya melayang stabil */
+    
+    /* GANTI KOORDINAT KE KIRI ATAS SEJAJAR CONSOLE ACCOUNT */
+    bottom: auto; 
+    right: auto;
+    top: 22px;       /* Sesuaikan angka ini naik/turun agar pas di samping tulisan */
+    left: 16px;      /* Jarak dari pinggir kiri layar */
+    
+    /* UKURAN TOMBOL BULAT */
+    width: 42px;     /* Sedikit diperkecil agar serasi di area atas */
+    height: 42px;
     background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
     border: none;
     border-radius: 50%;
     color: white;
-    font-size: 24px;
+    
+    /* MEMBUAT SIMBOL < ATAU > BERADA DI TENGAH-TENGAH TOMBOL */
+    font-size: 18px; 
     font-weight: bold;
-    cursor: pointer;
-    z-index: 50;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    display: flex;
     align-items: center;
     justify-content: center;
+    
+    cursor: pointer;
+    z-index: 99999;  /* Angka super besar agar melayang di atas semua komponen dApp */
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
     transition: transform 0.2s ease;
 }
 
@@ -140,9 +150,14 @@ aside {
 @media (max-width: 768px) {
     aside { transform: translateX(-100%); }
     aside.open { transform: translateX(0); }
-    .menu-toggle { display: flex; }
+    .menu-toggle { display: flex; } /* Menampilkan tombol saat di HP */
     .main-content { margin-left: 0 !important; padding: 20px !important; }
     .sidebar-overlay.active { display: block; }
+    
+    /* TAMBAHKAN INI: Geser judul dApp ke kanan agar tidak ditabrak tombol */
+    .topbar h2, .console-title { 
+        margin-left: 50px !important; 
+    }
 }
 
 /* ==========================================================================
