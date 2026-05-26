@@ -684,22 +684,3 @@ tr:last-child td { border-bottom: none; }
     color: #d1d5db;
     user-select: none;
 }
-
-@media (max-width: 768px) {
-    /* GANTI .nama-class-tombol-kamu dengan class asli tombol bulat birumu */
-    .nama-class-tombol-kamu { 
-        position: fixed !important;
-        
-        /* Reset semua posisi bawaan agar tidak berbenturan */
-        bottom: auto !important; 
-        left: auto !important;
-        margin: 0 !important;
-        
-        /* Paksa melayang di pojok kanan atas */
-        top: 24px !important;    /* Naik/turunkan angka ini agar pas sejajar dengan Console Account */
-        right: 16px !important;  /* Jarak dari pinggir kanan layar */
-        
-        /* Memastikan tombol berada di lapisan paling depan (di atas text & background) */
-        z-index: 99999 !important; 
-    }
-}
