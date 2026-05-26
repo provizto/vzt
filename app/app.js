@@ -329,24 +329,3 @@ function aktifkanFiturSwap() {
         };
     }
 }
-
-// Jalankan paksa tanpa menunggu DOMContentLoaded jika browser lambat
-setTimeout(aktifkanFiturSwap, 500);
-
-// Ambil elemen tombol dan elemen menu
-const menuToggle = document.querySelector('.btn-menu-toggle'); // Ganti dengan class tombolmu
-const sideMenu = document.querySelector('.side-menu');         // Ganti dengan class halaman menumu
-
-menuToggle.addEventListener('click', () => {
-    // 1. Jalankan fungsi buka/tutup menu bawaan dApp kamu (misal toggle class)
-    sideMenu.classList.toggle('menu-open'); 
-    
-    // 2. Logika pengecekan untuk mengubah simbol < dan >
-    if (sideMenu.classList.contains('menu-open')) {
-        // Jika menu sedang TERBUKA, tampilkan < untuk menutup
-        menuToggle.innerHTML = '&lt;'; // Kode HTML untuk karakter '<'
-    } else {
-        // Jika menu sedang TERTUTUP, tampilkan > untuk membuka
-        menuToggle.innerHTML = '&gt;'; // Kode HTML untuk karakter '>'
-    }
-});
