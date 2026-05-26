@@ -687,18 +687,15 @@ tr:last-child td { border-bottom: none; }
 
 /* Media query khusus untuk layar handphone (maksimal lebar 768px) */
 @media (max-width: 768px) {
-    
-    .floating-menu { /* Ganti '.floating-menu' sesuai nama class tombolmu */
-        position: fixed; /* atau absolute, biarkan sesuai bawaan kodemu */
+    /* Ganti dengan class atau ID tombol bulat birumu */
+    .nama-class-tombol-bulat { 
+        position: absolute; /* Mengikuti koordinat container atas */
+        bottom: auto !important; /* Matikan posisi bawah bawaan */
         
-        /* 1. Matikan posisi bawah bawaan sebelumnya */
-        bottom: auto !important; 
+        /* Set posisi sejajar dengan Console Account */
+        top: 24px;       /* Sesuaikan angka ini agar lurus vertikal dengan teks "Console Account" */
+        right: 20px;     /* Jarak dari pinggir kanan layar */
         
-        /* 2. Atur posisi baru di kanan atas */
-        top: 80px;   /* Atur jarak dari atas. Sesuaikan agar tidak menutupi tombol 'Connect Wallet' */
-        right: 16px; /* Jarak dari sisi kanan layar */
-        
-        z-index: 999; /* Memastikan tombol tetap berada di lapisan paling atas */
+        z-index: 999;    /* Memastikan tombol berada di lapisan paling atas */
     }
-
 }
