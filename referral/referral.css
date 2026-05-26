@@ -342,20 +342,39 @@ footer {
     transform: translateX(-3px);
 }
 
-.btn-dapp {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #0070f3; /* Ganti dengan warna tema dApp-mu */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background 0.3s ease;
-    margin-left: 10px; /* Jarak dari tombol Back to Home */
+/* Mengatur container utama footer jika belum ada */
+footer {
+    padding: 20px 0;
+    border-top: 1px solid #333; /* Garis tipis di atas footer */
 }
 
+/* Mengatur jarak antar tombol agar sejajar dan rapi */
+.footer-nav {
+    display: flex;
+    gap: 20px; /* Jarak antara Back to Home dan Launch dApp */
+    align-items: center;
+    margin-bottom: 15px; /* Jarak ke teks copyright di bawahnya */
+}
+
+/* Menyamakan style Launch dApp dengan Back to Home */
+.btn-dapp {
+    color: #a0aec0; /* Warna abu-abu terang (samakan dengan warna Back to Home-mu) */
+    text-decoration: none; /* Menghilangkan garis bawah yang mengganggu */
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+/* Efek saat kursor diarahkan ke tombol Launch dApp */
 .btn-dapp:hover {
-    background-color: #0051a8; /* Warna saat kursor diarahkan ke tombol */
+    color: #ffffff; /* Berubah jadi putih terang saat di-hover */
+    text-decoration: underline; /* Garis bawah baru muncul saat di-hover saja (opsional) */
+}
+
+/* Style untuk teks copyright (opsional, agar pas di bawah) */
+#lblCopyright {
+    color: #4a5568;
+    font-size: 12px;
 }
 
 /* --- RESPONSIVE ADJUSTMENT FOR EXTRA SMALL SCREENS --- */
