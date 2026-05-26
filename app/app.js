@@ -11,30 +11,24 @@ const chkAgreeTerms = document.getElementById('chkAgreeTerms');
 const walletOptions = document.querySelectorAll('.wallet-option-item');
 
 // --- 1. LOGIKA INTERAKSI WALLET MODAL ---
-if (btnConnectTrigger) {
-    btnConnectTrigger.addEventListener('click', () => {
-        if (chkAgreeTerms) chkAgreeTerms.checked = false;
-        walletOptions.forEach(opt => opt.classList.add('disabled-style'));
-        if (walletModal) walletModal.classList.remove('style-hidden');
-    });
-}
+btnConnectTrigger.addEventListener('click', () => {
+    chkAgreeTerms.checked = false;
+    walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+    walletModal.classList.remove('style-hidden');
+});
  
-if (btnCloseModal && walletModal) {
-    btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
-}
+btnCloseModal.addEventListener('click', () => walletModal.classList.add('style-hidden'));
+walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.add('style-hidden'); });
 
-if (chkAgreeTerms) {
-    chkAgreeTerms.addEventListener('change', function() {
-        if (this.checked) {
-            walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
-        } else {
-            walletOptions.forEach(opt => opt.classList.add('disabled-style'));
-        }
-    });
-}
+chkAgreeTerms.addEventListener('change', function() {
+    if (this.checked) {
+        walletOptions.forEach(opt => opt.classList.remove('disabled-style'));
+    } else {
+        walletOptions.forEach(opt => opt.classList.add('disabled-style'));
+    }
+});
 
 function toggleWalletUI(isConnected, address = "") {
-    if (!btnConnectTrigger || !walletConnectedStatus || !userAddress) return;
     if (isConnected) {
         btnConnectTrigger.classList.add('style-hidden');
         walletConnectedStatus.classList.remove('style-hidden');
@@ -46,33 +40,31 @@ function toggleWalletUI(isConnected, address = "") {
 }
 
 function executeWalletConnection(walletType, dummyAddress) {
-    if (walletModal) walletModal.classList.add('style-hidden');
+    walletModal.classList.add('style-hidden');
     toggleWalletUI(true, dummyAddress);
     showNotification();
 }
 
-// Helper untuk klik opsi wallet dengan aman
-const bindWalletOption = (id, type, address) => {
-    const el = document.getElementById(id);
-    if (el) {
-        el.addEventListener('click', function() {
-            if (chkAgreeTerms && chkAgreeTerms.checked) {
-                executeWalletConnection(type, address);
-            }
-        });
+document.getElementById('optSmartAccount').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
     }
-};
-bindWalletOption('optSmartAccount', "Smart Account", "0x71C231271f3b141151955F7a5c1A55f14A3B3a90");
-bindWalletOption('optMetaMask', "MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
-bindWalletOption('optWalletConnect', "WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
-
-if (btnDisconnect) {
-    btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
-}
+});
+document.getElementById('optMetaMask').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("MetaMask", "0x9E59A83b0B286d528bBAf38A1a65Cc68F019058b");
+    }
+});
+document.getElementById('optWalletConnect').addEventListener('click', function(e) {
+    if (chkAgreeTerms.checked) {
+        executeWalletConnection("WalletConnect", "0x3Fbc5601aCc8B928aA638fdf9872f2E908ba009a");
+    }
+});
+btnDisconnect.addEventListener('click', () => toggleWalletUI(false));
 
 
 // --- 2. LOGIKA PERHITUNGAN GAUGE VOTING ---
-function calculateTotalVotes(e) {
+function calculateTotalVotes() {
     const inputs = document.querySelectorAll('.gauge-input');
     const progressFill = document.getElementById('govProgressBar');
     const totalText = document.getElementById('totalAllocatedPercent');
@@ -85,45 +77,36 @@ function calculateTotalVotes(e) {
         total += value;
     });
 
-    if (total > 100 && e && e.target) {
-        alert("Total allocation exceeds 100%! The system has automatically capped the value.");
+    if (total > 100) {
+        alert("Total alokasi melebihi 100%! Sistem otomatis membatasi nilai.");
+        // Diganti menggunakan global window.event agar aman saat di-trigger dari oninput HTML
         let excess = total - 100;
-        e.target.value = Math.max(0, parseInt(e.target.value) - excess);
+        window.event.target.value = Math.max(0, parseInt(window.event.target.value) - excess);
         total = 100;
     }
 
-    if (totalText) totalText.innerText = total;
-    if (progressFill) progressFill.style.width = total + '%';
+    totalText.innerText = total;
+    progressFill.style.width = total + '%';
 }
 
 
 // --- 3. LOGIKA TOAST NOTIFIKASI ---
 function showNotification() {
-    if (!toast) return;
     toast.classList.add('show');
     setTimeout(() => { toast.classList.remove('show'); }, 4000);
 }
  
-// Pengecekan elemen aman sebelum menambahkan Event Listener toast
-const safeBindClick = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('click', showNotification);
-};
-safeBindClick('executeBtn');
-safeBindClick('claimBtn');
-safeBindClick('swapActionBtn');
-safeBindClick('submitVotesBtn');
+document.getElementById('executeBtn').addEventListener('click', showNotification);
+document.getElementById('claimBtn').addEventListener('click', showNotification);
+document.getElementById('swapActionBtn').addEventListener('click', showNotification);
+document.getElementById('submitVotesBtn').addEventListener('click', showNotification);
 document.querySelectorAll('.id-vault-btn').forEach(btn => btn.addEventListener('click', showNotification));
 
 
 // --- 4. LOGIKA PENGALIHAN DUA BAHASA (EN/ID) ---
-const langSwitcher = document.getElementById('appLangSwitcher');
-if (langSwitcher) {
-    langSwitcher.addEventListener('change', function(e) {
-        const appNode = document.getElementById('appNode');
-        if (appNode) appNode.setAttribute('lang', e.target.value);
-    });
-}
+document.getElementById('appLangSwitcher').addEventListener('change', function(e) {
+    document.getElementById('appNode').setAttribute('lang', e.target.value);
+});
 
 
 // --- 5. SELEKSI TOMBOL DURASI ---
@@ -148,9 +131,11 @@ function switchPage(pageId, element) {
 
     const menuItems = document.querySelectorAll('.nav-item');
     menuItems.forEach(item => { item.classList.remove('active'); });
-    if (element) element.classList.add('active');
+    element.classList.add('active');
      
+    // TRICK UTAMA: Jika user masuk ke dashboard, gambar ulang grafiknya secara instan!
     if (pageId === 'dashboard') {
+        // Beri jeda 50ms agar browser selesai mengubah display: none menjadi block terlebih dahulu
         setTimeout(inisialisasiGrafik, 50); 
     }
 
@@ -164,7 +149,6 @@ const appSidebar = document.getElementById('appSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 
 function toggleMobileMenu() {
-    if (!appSidebar || !sidebarOverlay || !menuToggleBtn) return;
     const isOpen = appSidebar.classList.toggle('open');
     sidebarOverlay.classList.toggle('active');
     if (isOpen) {
@@ -175,15 +159,14 @@ function toggleMobileMenu() {
         menuToggleBtn.style.background = 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)';
     }
 }
-if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleMobileMenu);
-if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleMobileMenu);
-
+menuToggleBtn.addEventListener('click', toggleMobileMenu);
+sidebarOverlay.addEventListener('click', toggleMobileMenu);
 
 // --- LOGIKA EMULASI GABUNGAN GRAFIK (TRENDLINE & DONUT) ---
 function inisialisasiGrafik() {
     // 1. INISIALISASI YIELD TRENDLINE CHART
     const elemenLineChart = document.querySelector("#yieldChart");
-    if (elemenLineChart && typeof ApexCharts !== 'undefined') {
+    if (elemenLineChart) {
         const lineOptions = {
             series: [{
                 name: "Yield Earnings",
@@ -235,26 +218,29 @@ function inisialisasiGrafik() {
 
     // 2. INISIALISASI ASSET ALLOCATION DONUT CHART
     const elemenDonutChart = document.querySelector("#assetDonutChart");
-    if (elemenDonutChart && typeof ApexCharts !== 'undefined') {
+    if (elemenDonutChart) {
         const donutOptions = {
+            // Persentase porsi masing-masing aset (Vaults, Governance, Wallet)
             series: [54.2, 25.8, 20.0], 
             chart: {
                 type: 'donut',
                 height: 160,
                 background: 'transparent'
             },
+            // Sembunyikan legenda bawaan ApexCharts karena kita sudah membuat legenda kustom di HTML bawahnya
             legend: { show: false }, 
             dataLabels: { enabled: false },
+            // Mencocokkan warna neon dengan tema dApp PROVIZTO Anda
             colors: ['#a855f7', '#22d3ee', '#3b82f6'], 
             stroke: {
                 show: true,
-                colors: ['#0f131c'], 
+                colors: ['#0f131c'], // Memberikan batas pemisah gelap antar potongan donut
                 width: 3
             },
             plotOptions: {
                 pie: {
                     donut: {
-                        size: '75%', 
+                        size: '75%', // Ketebalan lingkaran donut
                         background: 'transparent',
                         labels: {
                             show: true,
@@ -277,6 +263,7 @@ function inisialisasiGrafik() {
                     formatter: function (val) { return val + "% of Portfolio"; }
                 }
             },
+            // Menentukan label saat kursor diarahkan ke potongan donut
             labels: ['Vaults Optimizer', 'veVZT Governance', 'Wallet Liquid']
         };
         elemenDonutChart.innerHTML = "";
@@ -285,14 +272,14 @@ function inisialisasiGrafik() {
     }
 }
 
+// Menjaga agar pemanggilan fungsi grafik tetap aman dan anti-blank saat refresh
 if (document.readyState === "complete" || document.readyState === "interactive") {
     inisialisasiGrafik();
 } else {
     document.addEventListener("DOMContentLoaded", inisialisasiGrafik);
 }
 
-
-// --- JALAN PINTAS LOGIKA SWAP ---
+// --- JALAN PINTAS LOGIKA SWAP (ANTI-GAGAL) ---
 function aktifkanFiturSwap() {
     const inFrom = document.getElementById('swapInputFrom');
     const inTo = document.getElementById('swapInputTo');
@@ -300,17 +287,19 @@ function aktifkanFiturSwap() {
     const lblTo = document.getElementById('swapLabelTo');
     const btnRev = document.getElementById('btnReverseSwap');
 
-    if (!inFrom || !inTo) return; 
+    if (!inFrom || !inTo) return; // Mencegah error jika element belum ada
 
     const KURS = 3450;
     let isEthToUsdc = true;
 
+    // Fungsi hitung instan
     inFrom.oninput = function() {
         let val = parseFloat(inFrom.value);
         if (isNaN(val) || val <= 0) {
             inTo.value = "";
             return;
         }
+        
         if (isEthToUsdc) {
             inTo.value = (val * KURS).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         } else {
@@ -318,124 +307,28 @@ function aktifkanFiturSwap() {
         }
     };
 
+    // Fungsi klik balik posisi token
     if (btnRev) {
         btnRev.onclick = function(e) {
-            e.preventDefault(); 
+            e.preventDefault(); // Mencegah halaman reload otomatis
             isEthToUsdc = !isEthToUsdc;
 
             if (isEthToUsdc) {
-                if (lblFrom) lblFrom.innerText = "ETH";
-                if (lblTo) lblTo.innerText = "USDC";
+                lblFrom.innerText = "ETH";
+                lblTo.innerText = "USDC";
                 btnRev.innerText = "⬇";
             } else {
-                if (lblFrom) lblFrom.innerText = "USDC";
-                if (lblTo) lblTo.innerText = "ETH";
+                lblFrom.innerText = "USDC";
+                lblTo.innerText = "ETH";
                 btnRev.innerText = "⬆";
             }
 
+            // Tukar angka nilainya
             inFrom.value = inTo.value.replace(/,/g, '');
-            inFrom.dispatchEvent(new Event('input')); 
+            inFrom.dispatchEvent(new Event('input')); // Paksa hitung ulang
         };
     }
 }
+
+// Jalankan paksa tanpa menunggu DOMContentLoaded jika browser lambat
 setTimeout(aktifkanFiturSwap, 500);
-
-
-// --- LOGIKA MODAL SELEKSI TOKEN (PROVIZTO EKOSISTEM) ---
-const tokenList = [
-  { symbol: "ETH", name: "Ethereum", address: "0x0000000000000000000000000000000000000000" },
-  { symbol: "USDC", name: "USD Coin", address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913" },
-  { symbol: "USDt", name: "Tether USD", address: "0x50c5771a796635218ee92c92a401697e113a936d" },
-  { symbol: "WETH", name: "Wrapped Ether", address: "0x4200000000000000000000000000000000000006" },
-  { symbol: "VZT", name: "Provizto Governance Token", address: "0x1234567890abcdef1234567890abcdef12345678" }
-];
-
-let activeSelectionDirection = ""; 
-
-function openTokenModal(direction) {
-  activeSelectionDirection = direction;
-  const tModal = document.getElementById("tokenModal");
-  if (tModal) tModal.style.display = "flex";
-  const sInput = document.getElementById("tokenSearchInput");
-  if (sInput) sInput.value = ""; 
-  renderTokenList(tokenList);
-}
-
-function closeTokenModal() {
-  const tModal = document.getElementById("tokenModal");
-  if (tModal) tModal.style.display = "none";
-}
-
-function renderTokenList(tokens) {
-  const container = document.getElementById("tokenListContainer");
-  if (!container) return;
-  container.innerHTML = ""; 
-
-  if(tokens.length === 0) {
-    container.innerHTML = `<div style="color: #8b949e; text-align: center; padding: 20px;">No tokens found.</div>`;
-    return;
-  }
-
-  tokens.forEach(token => {
-    const row = document.createElement("div");
-    row.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; transition: background 0.2s;";
-    
-    row.onmouseover = () => row.style.background = "#21262d";
-    row.onmouseout = () => row.style.background = "transparent";
-    row.onclick = () => selectToken(token.symbol);
-
-    row.innerHTML = `
-      <div>
-        <strong style="color: white; display: block;">${token.symbol}</strong>
-        <span style="color: #8b949e; font-size: 12px;">${token.name}</span>
-      </div>
-      <span style="color: #58a6ff; font-size: 11px;">${token.address.substring(0, 6)}...${token.address.substring(token.address.length - 4)}</span>
-    `;
-    container.appendChild(row);
-  });
-}
-
-function selectToken(symbol) {
-  if (activeSelectionDirection === "from") {
-    const fSymbol = document.getElementById("fromTokenSymbol");
-    if (fSymbol) fSymbol.innerText = symbol;
-  } else if (activeSelectionDirection === "to") {
-    const tSymbol = document.getElementById("toTokenSymbol");
-    if (tSymbol) tSymbol.innerText = symbol;
-  }
-  closeTokenModal();
-}
-
-function filterTokens() {
-  const sInput = document.getElementById("tokenSearchInput");
-  if (!sInput) return;
-  const query = sInput.value.toLowerCase().trim();
-  
-  if (query.startsWith("0x") && query.length === 42) {
-    const exactMatch = tokenList.filter(t => t.address.toLowerCase() === query);
-    renderTokenList(exactMatch);
-    return;
-  }
-
-  const filtered = tokenList.filter(token => 
-    token.symbol.toLowerCase().includes(query) || 
-    token.name.toLowerCase().includes(query)
-  );
-  
-  renderTokenList(filtered);
-}
-
-// --- CENTRALIZED WINDOW CLICK LISTENER (MENYATUKAN KEDUA MODAL KETIKA DIKLIK LUAR) ---
-window.onclick = function(event) {
-  const tModal = document.getElementById("tokenModal");
-  const wModal = document.getElementById("walletModal");
-  
-  // Jika user mengklik overlay token modal
-  if (tModal && event.target === tModal) {
-    closeTokenModal();
-  }
-  // Jika user mengklik overlay wallet modal
-  if (wModal && event.target === wModal) {
-    wModal.classList.add('style-hidden');
-  }
-};
