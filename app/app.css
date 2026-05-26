@@ -684,3 +684,21 @@ tr:last-child td { border-bottom: none; }
     color: #d1d5db;
     user-select: none;
 }
+
+/* Media query khusus untuk layar handphone (maksimal lebar 768px) */
+@media (max-width: 768px) {
+    
+    .floating-menu { /* Ganti '.floating-menu' sesuai nama class tombolmu */
+        position: fixed; /* atau absolute, biarkan sesuai bawaan kodemu */
+        
+        /* 1. Matikan posisi bawah bawaan sebelumnya */
+        bottom: auto !important; 
+        
+        /* 2. Atur posisi baru di kanan atas */
+        top: 80px;   /* Atur jarak dari atas. Sesuaikan agar tidak menutupi tombol 'Connect Wallet' */
+        right: 16px; /* Jarak dari sisi kanan layar */
+        
+        z-index: 999; /* Memastikan tombol tetap berada di lapisan paling atas */
+    }
+
+}
