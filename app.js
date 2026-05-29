@@ -1,90 +1,120 @@
-/* --- PROVIZTO DAPP LOGIC (ENGLISH EDITION) --- */
+/* --- PROVIZTO DAPP LOGIC (MULTI-WALLET SUPPORT) --- */
 let isConnected = false;
-let myWalletAddress = "7xVZT...SolanaWallet"; // Fallback address mock
+let myWalletAddress = ""; 
 let lastTransactionTime = 0;
+let activeProvider = null; // Menyimpan dompet yang sedang aktif digunakan
 
-// Set Automatic Copyright Year
 document.getElementById('copyrightYear').innerText = new Date().getFullYear();
 
-function toggleWallet() {
-    connectWallet();
+// --- LOGIKA CONTROL UTAMA POP-UP MODAL ---
+function openWalletModal() {
+    // Jika wallet sudah terkoneksi, klik tombol akan langsung memutuskan koneksi (Disconnect)
+    if (isConnected) {
+        disconnectWallet();
+    } else {
+        document.getElementById('walletModal').style.display = 'flex';
+    }
 }
 
-// --- REAL SOLANA WALLET CONNECTION (PHANTOM IMPLEMENTATION) ---
-async function connectWallet() {
+function closeWalletModal() {
+    document.getElementById('walletModal').style.display = 'none';
+}
+
+// --- PEMILIHAN PROVIDER DOMPET ---
+function selectWallet(walletType) {
+    closeWalletModal();
+    
+    if (walletType === 'phantom') {
+        if (window.solana && window.solana.isPhantom) {
+            activeProvider = window.solana;
+            connectWallet("Phantom");
+        } else {
+            alert("Phantom Wallet not found! Please install the Phantom extension.");
+            window.open("https://phantom.app/", "_blank");
+        }
+    } 
+    else if (walletType === 'solflare') {
+        if (window.solflare && window.solflare.isSolflare) {
+            activeProvider = window.solflare;
+            connectWallet("Solflare");
+        } else {
+            alert("Solflare Wallet not found! Please install the Solflare extension.");
+            window.open("https://solflare.com/", "_blank");
+        }
+    }
+}
+
+// --- PROSES HUBUNGKAN DOMPET ---
+async function connectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
 
-    // Check for Solana provider availability (Phantom Wallet)
-    const isSolanaAvailable = window.solana && window.solana.isPhantom;
+    if (!activeProvider) return;
 
-    if (!isSolanaAvailable) {
-        alert("Solana Wallet not found! Please install Phantom Wallet extension.");
-        window.open("https://phantom.app/", "_blank");
-        return;
-    }
+    try {
+        // Melakukan request on-chain koneksi ke dompet terpilih
+        const response = await activeProvider.connect();
+        
+        // Kompatibilitas alamat: Solflare dan Phantom mengembalikan struktur data pubkey yang sedikit berbeda pada vanilla JS
+        const pubKey = response.publicKey ? response.publicKey.toString() : activeProvider.publicKey.toString();
+        myWalletAddress = pubKey;
 
-    if (!isConnected) {
-        try {
-            // Request on-chain connection from the user
-            const response = await window.solana.connect();
-            const realWalletAddress = response.publicKey.toString();
-            myWalletAddress = realWalletAddress; // Override mock with actual connected address
-
-            // Successful connection UI adjustments
-            walletBtn.innerText = `Connected: ${realWalletAddress.slice(0, 4)}...${realWalletAddress.slice(-4)}`;
-            walletBtn.style.background = "#22c55e";
-            
-            status.innerText = "Wallet Status: Connected to Solana Mainnet";
-            status.style.color = "#22c55e";
-            
-            refLink.value = `https://provizto.hub/${realWalletAddress}`;
-            
-            // Enable interactive dApp functions
-            actionButtons.forEach(b => b.removeAttribute('disabled'));
-            testBtn.removeAttribute('disabled');
-            
-            isConnected = true;
-            console.log("Successfully connected to Solana wallet:", realWalletAddress);
-            
-            // Optional trigger: Initialize Jupiter terminal swap if available
-            if (typeof initJupiterSwap === "function") {
-                initJupiterSwap();
-            }
-        } catch (err) {
-            console.error("User rejected wallet connection:", err);
-        }
-    } else {
-        try {
-            // Disconnect wallet protocol
-            await window.solana.disconnect();
-            
-            // Reset UI to standard disconnected states
-            walletBtn.innerText = "Connect Wallet";
-            walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
-            
-            status.innerText = "Wallet Status: Disconnected (Network: Solana)";
-            status.style.color = "#94a3b8";
-            
-            refLink.value = "https://provizto.hub";
-            
-            // Disable actions until wallet re-connects
-            actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
-            testBtn.setAttribute('disabled', 'true');
-            
-            hideBanner();
-            isConnected = false;
-            console.log("Wallet disconnected successfully.");
-        } catch (err) {
-            console.error("Disconnection failed:", err);
-        }
+        // Ubah UI menjadi status Terhubung
+        walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
+        walletBtn.style.background = "#22c55e";
+        
+        status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
+        status.style.color = "#22c55e";
+        
+        refLink.value = `https://provizto.hub/${myWalletAddress}`;
+        
+        // Aktifkan interaksi dApp
+        actionButtons.forEach(b => b.removeAttribute('disabled'));
+        testBtn.removeAttribute('disabled');
+        
+        isConnected = true;
+    } catch (err) {
+        console.error(`${walletName} connection rejected:`, err);
     }
 }
 
-// Simulated On-Chain Anti-Self-Referral Validation (Reflecting Smart Contract Error codes)
+// --- PROSES PUTUSKAN DOMPET ---
+async function disconnectWallet() {
+    const walletBtn = document.getElementById('walletBtn');
+    const status = document.getElementById('walletStatus');
+    const actionButtons = document.querySelectorAll('.btn-action');
+    const testBtn = document.getElementById('testBtn');
+    const refLink = document.getElementById('refLink');
+
+    if (!activeProvider) return;
+
+    try {
+        await activeProvider.disconnect();
+        
+        // Reset UI ke kondisi awal terputus
+        walletBtn.innerText = "Connect Wallet";
+        walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+        
+        status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+        status.style.color = "#94a3b8";
+        
+        refLink.value = "https://provizto.hub";
+        
+        actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
+        testBtn.setAttribute('disabled', 'true');
+        
+        hideBanner();
+        isConnected = false;
+        activeProvider = null; // hapus provider aktif
+    } catch (err) {
+        console.error("Disconnection failed:", err);
+    }
+}
+
+// --- LOGIKA SIMULASI RUST / SMART CONTRACT TETAP SAMA ---
 function verifyReferralOnChain() {
     const inputVal = document.getElementById('testReferrer').value.trim();
     if (inputVal === myWalletAddress) {
@@ -96,7 +126,6 @@ function verifyReferralOnChain() {
     }
 }
 
-// Simulated Cooldown Protection (Reflecting Rust's RateLimited Error code)
 function executeSecureTx(actionName) {
     const now = Math.floor(Date.now() / 1000);
     if (now - lastTransactionTime < 10) {
