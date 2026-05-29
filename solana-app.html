@@ -487,6 +487,42 @@
                 isConnected = false;
             }
         }
+//ujicoba Harun
+        const connectBtn = document.getElementById('connect-btn');
+let userWalletAddress = null;
+
+// Function untuk mendeteksi dan menghubungkan dompet
+async function connectWallet() {
+    // Memeriksa apakah provider dompet Solana (seperti Phantom) tersedia di browser
+    const isSolanaAvailable = window.solana && window.solana.isPhantom;
+
+    if (!isSolanaAvailable) {
+        alert("Dompet Solana tidak ditemukan! Silakan instal Phantom Wallet terlebih dahulu.");
+        window.open("https://phantom.app/", "_blank");
+        return;
+    }
+
+    try {
+        // Meminta izin koneksi ke pengguna
+        const response = await window.solana.connect();
+        userWalletAddress = response.publicKey.toString();
+        
+        // Mengubah tampilan tombol setelah sukses terhubung
+        connectBtn.innerText = `Connected: ${userWalletAddress.slice(0, 4)}...${userWalletAddress.slice(-4)}`;
+        connectBtn.style.backgroundColor = "#10B981"; // Mengubah warna jadi hijau (sukses)
+        
+        console.log("Sukses terhubung ke Solana wallet:", userWalletAddress);
+        
+        // Setelah dompet terhubung, kita bisa memunculkan fitur dApp lainnya
+        initJupiterSwap(); 
+    } catch (err) {
+        console.error("Pengguna membatalkan koneksi dompet:", err);
+    }
+}
+//batas ujicoba
+
+// Pasang event listener ke tombol HTML Anda
+connectBtn.addEventListener('click', connectWallet);
 
         // Simulasi Validasi On-Chain Anti-Self-Referral (Mencerminkan ErrorCode::SelfReferralNotAllowed)
         function verifyReferralOnChain() {
@@ -538,5 +574,10 @@
             alert("Referral Link berhasil disalin!");
         }
     </script>
+
+    <!-- Library Utama Solana Web3 -->
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+<!-- Jupiter Terminal untuk Fitur Swap Instan -->
+<script src="https://terminal.jup.ag/main-v3.js"></script>
 </body>
 </html>
