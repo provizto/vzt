@@ -11,79 +11,75 @@
     <header class="dapp-header">
         <div class="header-left">
             <div class="logo">PROVIZTO <span class="vzt-badge">$VZT</span></div>
-            <div class="lang-switcher">
-                <a href="javascript:void(0)" class="lang-btn lang-en active" onclick="switchLanguage('en')">EN</a>
-                <span class="lang-divider">|</span>
-                <a href="javascript:void(0)" class="lang-btn lang-id" onclick="switchLanguage('id')">ID</a>
-            </div>
         </div>
         <div class="header-right">
-            <a href="cth.html" class="btn-home" data-i18n="navHome">Back to Home</a>
-            <button class="btn-connect" id="walletBtn" onclick="toggleWallet()" data-i18n="btnConnect">Connect Wallet</button>
+            <a href="cth.html" class="btn-home">Back to Home</a>
+            <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
         </div>
     </header>
 
     <main class="dapp-container">
-        <div class="wallet-status" id="walletStatus"></div>
+        <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
 
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
             <div class="product-card">
-                <h3 data-i18n="cardSwapTitle">AMM DEX Swap</h3>
-                <p class="desc" data-i18n="cardSwapDesc">Instant asset swapping with MEV protection and daily Anti-Wash Trading features.</p>
-                <div class="stat-box"><span data-i18n="tradingFee">Trading Fee</span>: 0.3%</div>
-                <button class="btn-action" onclick="executeSecureTx('Swap')" disabled data-i18n="btnLaunchSwap">Launch Swap</button>
+                <h3>AMM DEX Swap</h3>
+                <p class="desc">Instant asset swapping with MEV protection and daily Anti-Wash Trading features.</p>
+                <div class="stat-box">Trading Fee: 0.3%</div>
+                <button class="btn-action" onclick="executeSecureTx('Swap')" disabled>Launch Swap</button>
             </div>
 
             <div class="product-card">
-                <h3 data-i18n="cardVaultTitle">Yield Optimizer</h3>
-                <p class="desc" data-i18n="cardVaultDesc">Deposit once, the system automatically executes periodic auto-compounding optimization.</p>
+                <h3>Yield Optimizer</h3>
+                <p class="desc">Deposit once, the system automatically executes periodic auto-compounding optimization.</p>
                 <div class="stat-box">Boosted APY: Up to 49.1%</div>
-                <button class="btn-action" onclick="executeSecureTx('Deposit Vault')" disabled data-i18n="btnOpenVaults">Open Vaults</button>
+                <button class="btn-action" onclick="executeSecureTx('Deposit Vault')" disabled>Open Vaults</button>
             </div>
 
             <div class="product-card">
-                <h3 data-i18n="cardLockTitle">VZT Lock & Yield</h3>
-                <p class="desc" data-i18n="cardLockDesc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
-                <div class="stat-box"><span data-i18n="rewardType">Reward</span>: Real USDC</div>
-                <button class="btn-action" onclick="executeSecureTx('Token Locking')" disabled data-i18n="btnLockToken">Lock Token</button>
+                <h3>VZT Lock & Yield</h3>
+                <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
+                <div class="stat-box">Reward: Real USDC</div>
+                <button class="btn-action" onclick="executeSecureTx('Token Locking')" disabled>Lock Token</button>
             </div>
         </section>
 
         <section class="affiliate-section">
             <div class="section-title-container">
-                <h3 data-i18n="affiliateTitle">Secure On-Chain Affiliate</h3>
-                <span class="shield-badge" data-i18n="badgeSybil">🛡️ Anti-Sybil Active</span>
+                <h3>Secure On-Chain Affiliate</h3>
+                <span class="shield-badge">🛡️ Anti-Sybil Active</span>
             </div>
-            <p data-i18n="affiliateDesc">Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
+            <p>Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
              
             <div class="affiliate-box">
                 <input type="text" id="refLink" value="https://provizto.hub" readonly>
-                <button class="btn-copy" id="copyBtn" onclick="copyLink()" data-i18n="btnCopy">Copy Link</button>
+                <button class="btn-copy" id="copyBtn" onclick="copyLink()">Copy Link</button>
             </div>
 
             <div class="test-panel">
-                <label for="testReferrer" data-i18n="testLabel">Simulated Referrer Input (Rust Code Verification Mockup):</label>
+                <label for="testReferrer">Simulated Referrer Input (Rust Code Verification Mockup):</label>
                 <div class="input-group">
                     <input type="text" id="testReferrer" placeholder="Enter referrer wallet address...">
-                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled data-i18n="btnVerify">Verify Link</button>
+                    <button class="btn-test" id="testBtn" onclick="verifyReferralOnChain()" disabled>Verify Link</button>
                 </div>
             </div>
 
             <div class="tier-stats">
-                <div class="tier-item"><span data-i18n="currentTier">Current Tier</span>: <span id="tierLabel">Bronze (10%)</span></div>
-                <div class="tier-item"><span data-i18n="totalVol">Total Referral Volume</span>: <span>$0.00</span></div>
+                <div class="tier-item">Current Tier: <span>Bronze (10%)</span></div>
+                <div class="tier-item">Total Referral Volume: <span>$0.00</span></div>
             </div>
         </section>
     </main>
 
     <footer class="dapp-footer">
-        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. <span data-i18n="footerText">All Rights Reserved. Secure Protocol Edition.</span></p>
+        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. All Rights Reserved. Secure Protocol Edition.</p>
     </footer>
 
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://terminal.jup.ag/main-v3.js"></script>
+    
     <script src="app.js"></script>
 </body>
 </html>
