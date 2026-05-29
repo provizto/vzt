@@ -14,13 +14,29 @@
         </div>
         <div class="header-right">
             <a href="cth.html" class="btn-home">Back to Home</a>
-            <button class="btn-connect" id="walletBtn" onclick="toggleWallet()">Connect Wallet</button>
+            <button class="btn-connect" id="walletBtn" onclick="openWalletModal()">Connect Wallet</button>
         </div>
     </header>
 
+    <div id="walletModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Solana Wallet</h3>
+                <button class="btn-close-modal" onclick="closeWalletModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <button class="wallet-option-btn" onclick="selectWallet('phantom')">
+                    <span class="wallet-icon">👻</span> Phantom Wallet
+                </button>
+                <button class="wallet-option-btn" onclick="selectWallet('solflare')">
+                    <span class="wallet-icon">☀️</span> Solflare Wallet
+                </button>
+            </div>
+        </div>
+    </div>
+
     <main class="dapp-container">
         <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
-
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
@@ -79,7 +95,6 @@
 
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://terminal.jup.ag/main-v3.js"></script>
-    
     <script src="app.js"></script>
 </body>
 </html>
