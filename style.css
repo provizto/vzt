@@ -43,38 +43,6 @@ body {
     margin-left: 5px;
 }
 
-/* Pemilih Bahasa Moderen */
-.lang-switcher {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background-color: #1f2937;
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: 1px solid #374151;
-}
-
-.lang-switcher .lang-btn {
-    text-decoration: none;
-    color: #64748b;
-    transition: color 0.2s;
-    cursor: pointer;
-}
-
-.lang-switcher .lang-btn.active {
-    color: #3b82f6; /* Warna biru menyala jika aktif */
-}
-
-.lang-switcher .lang-btn:hover:not(.active) {
-    color: #cbd5e1;
-}
-
-.lang-divider {
-    color: #4b5563;
-}
-
 .header-right {
     display: flex;
     align-items: center;
