@@ -3,446 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provizto Hub - Next-Gen Solana DeFi Infrastructure</title>
-    <style>
-        /* --- INTEGRASI CSS STYLE (TEMA GELAP SOLANA PREMIUM) --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        :root {
-            --bg-main: #060913;
-            --bg-card: #0d1326;
-            --bg-nav: #090d1a;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-green: #14b8a6;
-            --accent-blue: #3b82f6;
-            --gradient-primary: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            --border-color: #1e293b;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-
-        /* Navigasi / Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(9, 13, 26, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: var(--text-primary);
-        }
-
-        .logo span {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--text-primary);
-        }
-
-        /* Pengatur Bahasa & Tombol Akses */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .lang-switch {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            outline: none;
-        }
-
-        .btn-launch {
-            background: var(--gradient-primary);
-            color: #fff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.2s, transform 0.2s;
-        }
-
-        .btn-launch:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        /* Bagian Utama (Hero Section) */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
-            margin-top: 60px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 850;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            max-width: 850px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, #14b8a6, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            max-width: 650px;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 12px 26px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-color: var(--text-secondary);
-        }
-
-        /* Bagian Roadmap */
-        .roadmap-section {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 60px;
-        }
-
-        .section-title span {
-            color: var(--accent-green);
-        }
-
-        /* Garis Alur Kontainer Roadmap */
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-green));
-        }
-
-        .timeline-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .timeline-img {
-            width: 16px;
-            height: 16px;
-            background-color: var(--bg-main);
-            border: 3px solid var(--accent-blue);
-            border-radius: 50%;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        .timeline-item:nth-child(even) .timeline-img {
-            border-color: var(--accent-green);
-        }
-
-        .timeline-content {
-            width: 45%;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            transition: border-color 0.3s;
-        }
-
-        .timeline-content:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-
-        .timeline-date {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .timeline-item:nth-child(even) .timeline-date {
-            color: var(--accent-green);
-        }
-
-        .timeline-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .timeline-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--border-color);
-            color: #475569;
-            font-size: 0.85rem;
-        }
-
-        /* Responsif Mobile */
-        @media (max-width: 768px) {
-            header { padding: 15px 20px; }
-            nav { display: none; }
-            .hero h1 { font-size: 2.3rem; }
-            .hero p { font-size: 1rem; }
-            .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; }
-            .timeline::before { left: 20px; }
-            .timeline-item { flex-direction: row !important; margin-bottom: 30px; }
-            .timeline-img { left: 20px; transform: translateX(-50%); }
-            .timeline-content { width: calc(100% - 45px); margin-left: 45px; }
-        }
-    </style>
+    <title>Provizto - Secure Web3 Infrastructure & Yield Hub on Solana</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body onload="changeLanguage()">
+<body>
 
-    <!-- Navigasi / Header -->
-    <header>
-        <div class="logo">PROVIZTO<span>.</span></div>
-        <nav>
-            <a href="#hero" id="navHome">Home</a>
-            <a href="#roadmap" id="navRoadmap">Roadmap</a>
-        </nav>
-        <div class="nav-actions">
-            <!-- Tombol Switch Bahasa ID/EN -->
-            <select class="lang-switch" id="langSelect" onchange="changeLanguage()">
-                <option value="EN" selected>EN</option>
-                <option value="ID">ID</option>
-            </select>
-            <!-- Tombol Buka App -->
-            <a href="app.html" class="btn-launch" id="btnLaunchNav">Launch App</a>
+    <header class="hero-header">
+        <div class="nav-container">
+            <div class="logo">PROVIZTO <span class="badge-vzt">$VZT</span></div>
+            <div class="grant-tag">Solana Grant Proposal Edition</div>
+        </div>
+        
+        <div class="hero-content">
+            <h1>The Capital Efficiency & Secure Yield Hub on Solana</h1>
+            <p class="hero-subtitle">Next-generation decentralized infrastructure engineered to prevent Sybil attacks, eliminate wash-trading, and distribute real protocol revenue securely.</p>
+            
+            <div class="hero-actions">
+                <a href="solana-app.html" class="btn btn-primary">Launch dApp</a>
+                <a href="#whitepaper" class="btn btn-secondary" onclick="simulateWhitepaperOpen()">Read Whitepaper</a>
+                <a href="#readme" class="btn btn-accent">Explore GitHub Docs</a>
+            </div>
         </div>
     </header>
 
-    <!-- Bagian Utama / Hero Section -->
-    <section class="hero" id="hero">
-        <h1 id="heroTitle">Secure Next-Gen DeFi Infrastructure Built on <span>Solana</span></h1>
-        <p id="heroDesc">A unified ecosystem combining low-latency AMM DEX, automated Yield Optimizer vaults, and an On-Chain Affiliate engine heavily secured against Sybil and Wash Trading attacks.</p>
-        <div class="hero-buttons">
-            <!-- Tombol Buka App Utama -->
-            <a href="app.html" class="btn-launch" style="padding: 14px 32px; font-size: 1rem;" id="btnLaunchHero">Launch Dashboard</a>
-            <!-- Tombol Dokumen Whitepaper -->
-            <a href="/" class="btn-secondary" id="btnWhitepaper">Whitepaper</a>
-        </div>
-    </section>
-
-    <!-- Bagian Proyek Roadmap -->
-    <section class="roadmap-section" id="roadmap">
-        <h2 class="section-title" id="roadmapTitle">Project <span>Roadmap</span></h2>
+    <main class="landing-main">
         
-        <div class="timeline">
-            <!-- Tahap 1 -->
-            <div class="timeline-item">
-                <div class="timeline-img"></div>
-                <div class="timeline-content">
-                    <div class="timeline-date" id="t1Date">Q1 2026</div>
-                    <h3 id="t1Title">Core Architecture & Code Dev</h3>
-                    <p id="t1Desc">Finalizing primary smart contract compilation via Anchor Rust Framework. Implementing temporal cooldown logics inside codes to counter malicious transactional loops.</p>
+        <section class="info-section">
+            <h2>1. Executive Summary & Overview</h2>
+            <div class="content-box">
+                <p><strong>Provizto ($VZT)</strong> is a high-performance Web3 infrastructure and decentralized Yield Hub built natively on the Solana blockchain. Traditional Decentralized Finance (DeFi) protocols suffer heavily from repetitive transaction exploitation (Sybil Attacks), artificial volume inflation (Wash Trading), and lack of transparent yield distribution architecture.</p>
+                <p>By implementing proactive, on-chain validation guardrails built with optimized Rust programs, Provizto introduces a secure three-pillar ecosystem: an MEV-protected AMM DEX Swap, an automated multi-vault Yield Optimizer, and a sustainable VZT Locking mechanism that rewards long-term stakers with real, stable USDC protocol revenue.</p>
+            </div>
+        </section>
+
+        <section id="readme" class="info-section">
+            <h2>2. Technical Architecture & Readme Framework</h2>
+            <div class="content-box">
+                <p><strong>Zero-Dependency Lightweight Frontend Structure:</strong></p>
+                <p>The Provizto ecosystem frontend is deliberately engineered using a modular vanilla code architecture (HTML5, CSS3, and Native ES6 JavaScript Core). This guarantees zero-dependency bloatware, microsecond rendering speeds, and seamless compatibility with injected browser wallet providers globally.</p>
+                
+                <div class="code-block">
+# Provizto dApp Hub - Local Development Deployment Guide
+$ git clone https://github.com/provizto/hub-core.git
+$ cd hub-core
+
+# Serve locally using native python environment 
+$ python3 -m http.server 8080
+
+# Access the secure local development anchor via browser
+$ open http://localhost:8080/solana-app.html</div>
+                
+                <p class="security-note"><strong>Security Hardening:</strong> The client-side logic couples with on-chain Rust constraints to enforce transitional rate-limiting (maximum 1 transaction per 10 seconds per unique public key) and triggers the <code>SelfReferralNotAllowed</code> smart contract protection layer.</p>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>3. Formal Project Roadmap (Grant Target Milestones)</h2>
+            <p class="section-desc">This chronological roadmap is structured to meet rigorous open-source grant milestones, full-scale security audits, and transparent delivery metrics.</p>
+            
+            <div class="table-container">
+                <table class="roadmap-table">
+                    <thead>
+                        <tr>
+                            <th>Timeline</th>
+                            <th>Milestone Objective</th>
+                            <th>Technical Deliverables & Outputs</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-cell">Q3 2025</td>
+                            <td>Architecture & Core Rust Dev</td>
+                            <td>Smart contract blueprinting on Solana Testnet. Account memory allocation optimization. Closed vanilla UI layout architecture.</td>
+                            <td><span class="badge badge-complete">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">Q4 2025</td>
+                            <td>Security Logic Implementation</td>
+                            <td>On-chain integration of transactional rate-limiting constraints. Simulation handlers for error code exceptions. Closed alpha launch.</td>
+                            <td><span class="badge badge-complete">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">Q1 2026</td>
+                            <td>Multi-Wallet Adapter Integration</td>
+                            <td>Native integration support for Phantom and Solflare window injection. On-chain secure affiliate links activation. Whitepaper v1 release.</td>
+                            <td><span class="badge badge-complete">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">Q2 2026</td>
+                            <td>Full Audit & Grant Deployment</td>
+                            <td>Third-party smart contract security audit phase. Submission for ecosystem grants. Global English-Only compliance migration.</td>
+                            <td><span class="badge badge-active">Active Phase</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">Q3 2026</td>
+                            <td>Mainnet Launch & Yield Vaults</td>
+                            <td>Official token generation event (TGE) on Solana Mainnet. Public deployment of AMM Swap. Activation of secure auto-compounding optimizer vaults.</td>
+                            <td><span class="badge badge-planned">Planned</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>4. Frequently Asked Questions (FAQ)</h2>
+            <div class="faq-container">
+                <div class="faq-card">
+                    <div class="faq-q">Q: Why does the Provizto dApp enforce a strict single English-Only interface?</div>
+                    <div class="faq-a">A: This is a core part of our global regulatory compliance strategy. By utilizing English exclusively, the protocol positions itself clearly as an international, non-domestic decentralized infrastructure project. This minimizes regional financial licensing compliance risks while allowing end-users to utilize their native browser translation tools if preferred.</div>
+                </div>
+                <div class="faq-card">
+                    <div class="faq-q">Q: How does the on-chain anti-Sybil mechanism protect the affiliate program?</div>
+                    <div class="faq-a">A: The underlying program programmatically evaluates transaction Unix timestamps. If a malicious entity attempts to trigger automated contract calls under the 10-second threshold block, the execution reverts immediately, preserving liquidity pools from volume manipulation.</div>
+                </div>
+                <div class="faq-card">
+                    <div class="faq-q">Q: Which wallets are natively supported by the Provizto interface?</div>
+                    <div class="faq-a">A: The interface is equipped to interface directly with the two premier non-custodial wallet infrastructures on Solana: Phantom Wallet and Solflare Wallet, communicating seamlessly via browser-injected API protocols.</div>
                 </div>
             </div>
+        </section>
 
-            <!-- Tahap 2 -->
-            <div class="timeline-item">
-                <div class="timeline-img"></div>
-                <div class="timeline-content">
-                    <div class="timeline-date" id="t2Date">Q2 2026</div>
-                    <h3 id="t2Title">Devnet Deployment & Audits</h3>
-                    <p id="t2Desc">Deploying AMM DEX and Yield Optimizer modules live onto Solana Devnet. Launching community-driven Bug Bounty programs while coordinating structural third-party security audits.</p>
-                </div>
+        <section class="info-section text-center">
+            <h2>5. Official Communication Channels</h2>
+            <p>Connect with our engineering core team and global community hubs via our verified channels:</p>
+            <div class="social-grid">
+                <a href="https://x.com" target="_blank" class="social-link"><strong>X (Twitter):</strong> @ProviztoHub</a>
+                <a href="https://t.me" target="_blank" class="social-link"><strong>Telegram Hub:</strong> t.me/ProviztoOfficial</a>
+                <a href="https://discord.gg" target="_blank" class="social-link"><strong>Discord Station:</strong> discord.gg/provizto</a>
             </div>
+        </section>
 
-            <!-- Tahap 3 -->
-            <div class="timeline-item">
-                <div class="timeline-img"></div>
-                <div class="timeline-content">
-                    <div class="timeline-date" id="t3Date">Q3 2026</div>
-                    <h3 id="t3Title">Mainnet Launch & Real Yield</h3>
-                    <p id="t3Desc">Full production deployment on Solana Mainnet. Activating the $VZT Token Locking mechanism to enable distributed protocol fees sharing natively settled in liquid USDC stablecoin.</p>
-                </div>
+        <section id="whitepaper" class="info-section legal-section">
+            <h2>6. Terms of Service & Legal Disclaimer Abstract</h2>
+            <div class="legal-text">
+                <p><strong>Terms of Service Agreement:</strong> By interacting with the Provizto infrastructure and dApp hub, you explicitly acknowledge that all on-chain actions are autonomously processed on the public, decentralized Solana blockchain and are entirely irreversible. The $VZT token is strictly an ecosystem utility token and must never be interpreted, marketed, or utilized as a regulated investment security or a legal tender instrument in any sovereign jurisdiction.</p>
+                <p>Users maintain sole, individual responsibility over the cryptographic safety of their private keys and non-custodial wallet setups. The Provizto core development framework functions completely open-source; it does not custody user funds, capture personally identifiable indicators, or control decentralized liquidity distribution parameters executed by third-party smart contracts. All financial exposures caused by market token volatility are borne solely by the end-user.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Provizto Ecosystem. Built Open-Source on Solana.</p>
+    </main>
+
+    <footer class="landing-footer">
+        <p>&copy; <span id="yearPlaceholder"></span> Provizto dApp Hub. All Rights Reserved. Secure Protocol Infrastructure Edition.</p>
+        <p class="footer-subtext">Optimized as an architecture pitch blueprint for open-source grants and international development proposals.</p>
     </footer>
 
-    <!-- --- INTEGRASI LOGIKA JAVASCRIPT MULTI-BAHASA --- -->
-    <script>
-        const translations = {
-            ID: {
-                navHome: "Beranda",
-                navRoadmap: "Roadmap",
-                btnLaunchNav: "Buka App",
-                btnLaunchHero: "Buka Aplikasi",
-                btnWhitepaper: "Whitepaper",
-                heroTitle: "Infrastruktur DeFi Masa Depan yang Aman di Jaringan <span>Solana</span>",
-                heroDesc: "Satu ekosistem terpadu yang menggabungkan AMM DEX berlatensi rendah, otomatisasi Yield Optimizer, dan sistem Afiliasi On-Chain yang kebal terhadap manipulasi Sybil Attack.",
-                roadmapTitle: "Roadmap <span>Proyek</span>",
-                t1Date: "Q1 2026",
-                t1Title: "Pengembangan Kode Arsitektur",
-                t1Desc: "Menyelesaikan kompilasi kontrak pintar utama menggunakan kerangka Anchor Rust. Mengimplementasikan logika pembatasan transaksi temporal guna mencegah wash trading.",
-                t2Date: "Q2 2026",
-                t2Title: "Peluncuran Devnet & Audit",
-                t2Desc: "Melakukan deployment penuh modul AMM DEX dan Yield Optimizer ke Solana Devnet. Memulai program Bug Bounty komunitas serta mempersiapkan audit kode eksternal.",
-                t3Date: "Q3 2026",
-                t3Title: "Integrasi Insentif & Mainnet",
-                t3Desc: "Meluncurkan platform secara penuh di Solana Mainnet. Mengaktifkan fitur Lock Staking Token $VZT untuk mengklaim bagi hasil pendapatan riil berskala global dalam denominasi USDC."
-            },
-            EN: {
-                navHome: "Home",
-                navRoadmap: "Roadmap",
-                btnLaunchNav: "Launch App",
-                btnLaunchHero: "Launch Dashboard",
-                btnWhitepaper: "Whitepaper",
-                heroTitle: "Secure Next-Gen DeFi Infrastructure Built on <span>Solana</span>",
-                heroDesc: "A unified ecosystem combining low-latency AMM DEX, automated Yield Optimizer vaults, and an On-Chain Affiliate engine heavily secured against Sybil and Wash Trading attacks.",
-                roadmapTitle: "Project <span>Roadmap</span>",
-                t1Date: "Q1 2026",
-                t1Title: "Core Architecture & Code Dev",
-                t1Desc: "Finalizing primary smart contract compilation via Anchor Rust Framework. Implementing temporal cooldown logics inside codes to counter malicious transactional loops.",
-                t2Date: "Q2 2026",
-                t2Title: "Devnet Deployment & Audits",
-                t2Desc: "Deploying AMM DEX and Yield Optimizer modules live onto Solana Devnet. Launching community-driven Bug Bounty programs while coordinating structural third-party security audits.",
-                t3Date: "Q3 2026",
-                t3Title: "Mainnet Launch & Real Yield",
-                t3Desc: "Full production deployment on Solana Mainnet. Activating the $VZT Token Locking mechanism to enable distributed protocol fees sharing natively settled in liquid USDC stablecoin."
-            }
-        };
-
-        function changeLanguage() {
-            const selectedLang = document.getElementById('langSelect').value;
-            const data = translations[selectedLang];
-
-            // Melakukan update text content pada elemen tanpa merusak struktur HTML bawaan
-            document.getElementById('navHome').innerText = data.navHome;
-            document.getElementById('navRoadmap').innerText = data.navRoadmap;
-            document.getElementById('btnLaunchNav').innerText = data.btnLaunchNav;
-            document.getElementById('btnLaunchHero').innerText = data.btnLaunchHero;
-            document.getElementById('btnWhitepaper').innerText = data.btnWhitepaper;
-            document.getElementById('heroTitle').innerHTML = data.heroTitle;
-            document.getElementById('heroDesc').innerText = data.heroDesc;
-            document.getElementById('roadmapTitle').innerHTML = data.roadmapTitle;
-            
-            // Update Text Node Jalur Alur Waktu Projek
-            document.getElementById('t1Date').innerText = data.t1Date;
-            document.getElementById('t1Title').innerText = data.t1Title;
-            document.getElementById('t1Desc').innerText = data.t1Desc;
-            
-            document.getElementById('t2Date').innerText = data.t2Date;
-            document.getElementById('t2Title').innerText = data.t2Title;
-            document.getElementById('t2Desc').innerText = data.t2Desc;
-            
-            document.getElementById('t3Date').innerText = data.t3Date;
-            document.getElementById('t3Title').innerText = data.t3Title;
-            document.getElementById('t3Desc').innerText = data.t3Desc;
-        }
-    </script>
+    <script src="landing.js"></script>
 </body>
 </html>
