@@ -47,10 +47,33 @@
                 <button class="btn-action" onclick="executeSecureTx('Swap')" disabled>Launch Swap</button>
             </div>
 
+            <!-- YIELD OPTIMIZER CARD WITH INTEGRATED CALCULATOR -->
             <div class="product-card">
                 <h3>Yield Optimizer</h3>
                 <p class="desc">Deposit once, the system automatically executes periodic auto-compounding optimization.</p>
                 <div class="stat-box">Boosted APY: Up to 49.1%</div>
+                
+                <!-- START OF YIELD CALCULATOR UI -->
+                <div style="padding: 15px; background: #0b0f19; color: #fff; border-radius: 8px; border: 1px solid #1f2937; margin-bottom: 20px; text-align: left; font-size: 0.9rem;">
+                    <h4 style="margin-bottom: 10px; color: #3b82f6;">Provizto Yield Calculator</h4>
+                    <label style="font-size: 0.8rem; color: #94a3b8;">Deposit Amount (USDC):</label>
+                    <!-- PERBARUI BAGIAN INPUT DI SOLANA-APP.HTML MENJADI SEPERTI INI -->
+                    <input 
+                        type="number" 
+                        id="calcAmount" 
+                        value="1000"
+                        oninput="updateYieldProjection()" 
+                        style="width: 100%; padding: 8px; margin: 8px 0 12px 0; border-radius: 6px; background: #111827; border: 1px solid #374151; color: #fff; font-weight: 600;"
+                    />
+                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #cbd5e1;">
+                        <p>Daily Rate: <strong id="dailyRate">0.11%</strong></p>
+                        <p>Est. Profit / Day: <strong id="profitDay" style="color: #22c55e;">0.00 USDC</strong></p>
+                        <p>Est. Profit / Month: <strong id="profitMonth" style="color: #22c55e;">0.00 USDC</strong></p>
+                        <p>Est. Profit / Year: <strong id="profitYear" style="color: #22c55e;">0.00 USDC</strong></p>
+                    </div>
+                </div>
+                <!-- END OF YIELD CALCULATOR UI -->
+
                 <button class="btn-action" onclick="executeSecureTx('Deposit Vault')" disabled>Open Vaults</button>
             </div>
 
