@@ -133,59 +133,50 @@
             </div>
 
             <div class="product-card">
-                <h3>VZT Lock & Yield</h3>
-                <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
+    <h3>VZT Lock & Yield</h3>
+    <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
 
-                <div class="calc-tabs">
-                    <button class="tab-btn active" id="tabManual">dApp Interface</button>
-                    <button class="tab-btn" id="tabWizard">Whitepaper Multiplier</button>
-                </div>
+    <!-- Tombol Tab Navigasi -->
+    <div class="calc-tabs">
+        <button class="tab-btn active" id="tabManual">dApp Interface</button>
+        <button class="tab-btn" id="tabWizard">Whitepaper Multiplier</button>
+    </div>
 
-                <div class="pool-meta-row">
-                    <span>Protocol TVL: <strong id="poolTvl">$1,248,500</strong></span>
-                    <span>Your Balance: <strong id="vztBalance">0.00 VZT</strong></span>
-                </div>
+    <div class="pool-meta-row">
+        <span>Protocol TVL: <strong id="poolTvl">$1,248,500</strong></span>
+        <span>Your Balance: <strong id="vztBalance">0.00 VZT</strong></span>
+    </div>
 
-                <div class="lock-input-group">
-                    <label id="inputLabel">Amount of $VZT to Lock:</label>
-                    <input 
-                        type="number" 
-                        id="lockAmount" 
-                        placeholder="0.0" 
-                        oninput="calculateLockReward()"
-                    />
-                </div>
+    <div class="lock-input-group">
+        <label id="inputLabel">Amount of $VZT to Lock:</label>
+        <input type="number" id="lockAmount" placeholder="0.0" oninput="calculateLockReward()"/>
+    </div>
 
-                <div class="wizard-section" id="wizardOptions">
-                    <label class="wizard-select-label">Select Lock Duration Incentive:</label>
-                    <select id="multiplierSelect" onchange="calculateLockReward()">
-                        <option value="1">30 Days (1× Yield Multiplier)</option>
-                        <option value="1.5">90 Days (1.5× Yield Multiplier)</option>
-                        <option value="2.5">180 Days (2.5× Yield Multiplier)</option>
-                    </select>
-                </div>
+    <!-- PANEL UTAMA YANG AKAN DI-SHOW/HIDE OLEH APP.JS -->
+    <div class="wizard-section" id="wizardOptions">
+        <label class="wizard-select-label">Select Lock Duration:</label>
+        <div class="duration-btn-group">
+            <button type="button" class="btn-duration" data-multiplier="1" onclick="selectDuration(this)">30 Days (1x)</button>
+            <button type="button" class="btn-duration" data-multiplier="1.5" onclick="selectDuration(this)">90 Days (1.5x)</button>
+            <button type="button" class="btn-duration active" data-multiplier="2.5" onclick="selectDuration(this)">180 Days (2.5x)</button>
+        </div>
+    </div>
 
-                <div class="score-preview">
-                    <span id="scoreLabel">Base Processing Share:</span>
-                    <span class="score-value" id="liveScore">0 VZT Share</span>
-                </div>
+    <!-- Live Output Hasil -->
+    <div class="score-preview">
+        <span id="scoreLabel">Base Processing Share:</span>
+        <span class="score-value" id="liveScore">0 VZT Share</span>
+    </div>
 
-                <div class="reward-info-badge">
-                    <span class="badge-accent-line">Reward: Real USDC (7-Day Epoch)</span>
-                    <span id="accumulationLabel" class="badge-sub-info" style="display: none;">
-                        Estimated Accumulation: +0.00 USDC
-                    </span>
-                </div>
+    <div class="reward-info-badge">
+        <span class="badge-accent-line">Reward: Real USDC (7-Day Epoch)</span>
+        <span id="accumulationLabel" class="badge-sub-info" style="display: none;">
+            Estimated Accumulation: +0.00 USDC
+        </span>
+    </div>
 
-                <div id="rewardClaimRow" class="claim-management-row" style="display: none;">
-                    <span>Earned: <strong id="earnedUsdc">0.00 USDC</strong></span>
-                    <button onclick="claimVztReward()" class="btn-claim-vzt">Claim</button>
-                </div>
-
-                <button class="btn-action" id="lockBtn" onclick="handleLockToken()" disabled>
-                    Lock Token
-                </button>
-            </div>
+    <button class="btn-action" id="lockBtn" onclick="handleLockToken()" disabled>Lock Token</button>
+</div>
         </section>
 
         <section class="affiliate-section">
