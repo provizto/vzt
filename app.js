@@ -100,7 +100,9 @@ async function connectWallet(walletName) {
 
         if (walletBtn) {
             walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
-            walletBtn.style.background = "#22c55e";
+            walletBtn.style.background = "#22c55e"; // Hijau stabil saat connect
+            walletBtn.style.pointerEvents = "auto";
+            walletBtn.style.cursor = "pointer";
         }
         
         if (status) {
@@ -112,102 +114,108 @@ async function connectWallet(walletName) {
             refLink.value = `https://provizto.hub/${myWalletAddress}`;
         }
 
-        // Injeksi saldo dompet simulasi awal saat terkoneksi
         if (vztBalance) {
             vztBalance.innerText = "5,000.00 VZT";
         }
 
-        // Buka kunci akses semua tombol aksi dApp jika nilai input sudah valid
+        // Set state true SEBELUM memicu kalkulasi
+        isConnected = true;
+
+        // Buka kunci akses semua tombol aksi dApp secara absolut
         actionButtons.forEach(b => {
-            if (b.id === 'lockBtn') {
-                executeLiveCalculatedMetrics();
-            } else if (b.id === 'swapBtn') {
-                calculateSwapAmounts();
-            } else {
-                b.removeAttribute('disabled');
-            }
+            b.removeAttribute('disabled');
+            b.style.pointerEvents = "auto";
+            b.style.cursor = "pointer";
+            // Injeksi warna gradasi biru-hijau bawaan dApp Anda
+            b.style.background = "linear-gradient(90deg, #1f6feb 0%, #238636 100%)";
+            b.style.color = "#ffffff";
         });
         
-        if (testBtn) testBtn.removeAttribute('disabled');
+        if (testBtn) {
+            testBtn.removeAttribute('disabled');
+            testBtn.style.pointerEvents = "auto";
+            testBtn.style.cursor = "pointer";
+        }
         
-        isConnected = true;
+        // Refresh hitungan kalkulator agar mengubah status visual tombol menjadi aktif gradasi
+        if (typeof calculateSwapAmounts === "function") calculateSwapAmounts();
+        if (typeof calculateLockReward === "function") calculateLockReward();
+        
         showBanner(`Wallet successfully linked via ${walletName}!`, "success");
     } catch (err) {
         console.error(`${walletName} connection rejected:`, err);
+        showBanner("Connection rejected.", "error");
     }
 }
 
-async function disconnectWallet(walletName) {
+async function disconnectWallet() {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
     const vztBalance = document.getElementById('vztBalance');
+    const rewardClaimRow = document.getElementById('rewardClaimRow');
 
     if (!activeProvider) return;
 
     try {
-        const response = await activeProvider.connect();
-        const pubKey = response.publicKey ? response.publicKey.toString() : activeProvider.publicKey.toString();
-        myWalletAddress = pubKey;
-
+        // MEMANGGIL DISCONNECT, BUKAN CONNECT!
+        await activeProvider.disconnect();
+        
         if (walletBtn) {
-            walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
-            walletBtn.style.background = "#22c55e";
+            walletBtn.innerText = "Connect Wallet";
+            // KEMBALI KE UNGU-BIRU ORIGINAL (IMAGE_4C697B.PNG)
+            walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+            walletBtn.style.color = "#ffffff";
+            walletBtn.style.pointerEvents = "auto";
+            walletBtn.style.cursor = "pointer";
         }
         
         if (status) {
-            status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
-            status.style.color = "#22c55e";
+            status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+            status.style.color = "#94a3b8";
         }
         
         if (refLink) {
-            refLink.value = `https://provizto.hub/${myWalletAddress}`;
+            refLink.value = "https://provizto.hub";
         }
-
-        // Injeksi saldo dompet simulasi awal saat terkoneksi
-        if (vztBalance) {
-            vztBalance.innerText = "5,000.00 VZT";
-        }
-
-        // MEMAKSA STATE DAN ATRIBUT KEAKTIFAN DI-UNLOCK SECARA ABSOLUT
-        isConnected = true;
-
-        actionButtons.forEach(b => {
-            b.removeAttribute('disabled');
-        });
         
-        // Refresh hitungan kalkulator agar mengubah status visual tombol menjadi aktif gradasi
-        calculateSwapAmounts();
-        calculateLockReward();
-        
-        if (testBtn) testBtn.removeAttribute('disabled');
-        
-        showBanner(`Wallet successfully linked via ${walletName}!`, "success");
-    } catch (err) {
-        console.error(`${walletName} connection rejected:`, err);
-    }
-}
-       
         // Reset metrik saldo ke nol kembali
         if (vztBalance) vztBalance.innerText = "0.00 VZT";
         if (rewardClaimRow) rewardClaimRow.style.display = 'none';
         
-        // Kunci kembali seluruh tombol aksi utama dApp
-        actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
-        if (testBtn) testBtn.setAttribute('disabled', 'true');
+        // Reset state & clear data provider
+        isConnected = false;
+        isTokenLocked = false;
+        activeProvider = null;
+        
+        // Kunci kembali dan redupkan seluruh tombol aksi utama dApp ke abu-abu gelap
+        actionButtons.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            b.style.pointerEvents = "none";
+            b.style.cursor = "not-allowed";
+            b.style.background = "#1f2937"; 
+            b.style.color = "#94a3b8";
+            if (b.id === 'lockBtn') b.innerText = 'Lock Token';
+        });
+        
+        if (testBtn) {
+            testBtn.setAttribute('disabled', 'true');
+            testBtn.style.pointerEvents = "none";
+            testBtn.style.cursor = "not-allowed";
+        }
         
         hideBanner();
-        isConnected = false;
-        activeProvider = null;
-        isTokenLocked = false;
         showBanner("Wallet disconnected.", "warning");
         
-        // Reset skor tampilan kalkulator
-        executeLiveCalculatedMetrics();
+        // Reset hitungan live di antarmuka
+        if (typeof calculateSwapAmounts === "function") calculateSwapAmounts();
+        if (typeof calculateLockReward === "function") calculateLockReward();
+        
     } catch (err) {
         console.error("Disconnection failed:", err);
+        showBanner("Disconnection failed.", "error");
     }
 }
 
