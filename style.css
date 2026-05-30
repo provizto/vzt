@@ -1,4 +1,6 @@
-/* --- KODE CSS LAMA TETAP DIPERTAHANKAN --- */
+/* ==========================================================================
+   1. CORE & LAYOUT STYLES (ORIGINAL BASE)
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -83,7 +85,9 @@ body {
     opacity: 0.9;
 }
 
-/* --- STYLE BARU: WALLET MODAL (POP-UP) --- */
+/* ==========================================================================
+   2. WALLET MODAL POP-UP STYLES
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -163,7 +167,9 @@ body {
     font-size: 1.3rem;
 }
 
-/* --- SISA STYLE DAPP TETAP SAMA --- */
+/* ==========================================================================
+   3. PRODUCTS CONTAINER & BASE CARD GLOBAL
+   ========================================================================== */
 .dapp-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -179,6 +185,26 @@ body {
     font-size: 0.95rem;
 }
 
+.rpc-status-container {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 6px; 
+    font-size: 0.8rem; 
+    color: #64748b; 
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.rpc-status-indicator {
+    width: 8px; 
+    height: 8px; 
+    background-color: #22c55e; 
+    border-radius: 50%; 
+    display: inline-block; 
+    box-shadow: 0 0 8px #22c55e;
+}
+
 .security-banner {
     padding: 15px;
     border-radius: 8px;
@@ -191,7 +217,7 @@ body {
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 25px;
     margin-bottom: 40px;
 }
@@ -204,7 +230,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
 }
 
 .product-card:hover {
@@ -237,23 +263,370 @@ body {
 }
 
 .btn-action {
-    background-color: #1f2937; /* Warna abu-abu saat dompet belum terhubung */
+    background-color: #1f2937;
     color: #94a3b8;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     font-weight: 600;
     cursor: not-allowed;
     width: 100%;
+    font-size: 14px;
+    border: none;
     transition: all 0.3s ease-in-out;
 }
 
 .btn-action:not([disabled]) {
-    background: linear-gradient(90deg, #1f6feb 0%, #238636 100%) !important; /* Gradasi Biru-Hijau MEV Secure */
+    background: linear-gradient(90deg, #1f6feb 0%, #238636 100%) !important;
     color: white !important;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(31, 111, 235, 0.3);
 }
 
+/* ==========================================================================
+   4. NEW ADDITIONS: AMM DEX SWAP COMPONENT
+   ========================================================================== */
+.card-title-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px;
+}
+
+.swap-card {
+    max-width: 420px; 
+    margin: 0 auto;
+}
+
+.mev-secure-badge {
+    font-size: 11px; 
+    background: #1f6feb; 
+    color: #fff; 
+    padding: 3px 8px; 
+    border-radius: 12px; 
+    font-weight: bold; 
+    letter-spacing: 0.5px;
+}
+
+.swap-input-container {
+    background: #0b0f19; 
+    padding: 12px; 
+    border-radius: 12px; 
+    border: 1px solid #1f2937; 
+    text-align: left;
+}
+
+.swap-input-container label {
+    font-size: 12px; 
+    color: #94a3b8;
+}
+
+.swap-input-container .field-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 6px;
+}
+
+.swap-input-container input {
+    background: transparent; 
+    border: none; 
+    color: #fff; 
+    font-size: 20px; 
+    width: 60%; 
+    outline: none; 
+    font-weight: 600;
+}
+
+.swap-input-container select {
+    background: #1f2937; 
+    color: #fff; 
+    border: none; 
+    border-radius: 6px; 
+    padding: 6px 10px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    outline: none;
+}
+
+.swap-switch-row {
+    display: flex; 
+    justify-content: center; 
+    margin: -18px 0; 
+    position: relative; 
+    z-index: 2;
+}
+
+.btn-switch-tokens {
+    background: #1f2937; 
+    border: 2px solid #334155; 
+    color: #38bdf8; 
+    border-radius: 50%; 
+    width: 32px; 
+    height: 32px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    font-size: 14px; 
+    outline: none;
+}
+
+.static-token-label {
+    background: #1f2937; 
+    color: #fff; 
+    border-radius: 6px; 
+    padding: 6px 14px; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+}
+
+.swap-fee-details {
+    font-size: 12px; 
+    color: #94a3b8; 
+    margin-bottom: 20px; 
+    line-height: 1.6; 
+    text-align: left;
+}
+
+.swap-fee-details .detail-line {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 4px 0;
+}
+
+.fee-bold-value {
+    color: #f8fafc; 
+    font-weight: 600;
+}
+
+.swap-fee-details .total-divider {
+    border-top: 1px dashed #1f2937;
+}
+
+.status-active-text {
+    color: #22c55e; 
+    font-weight: 600;
+}
+
+.tx-log-box {
+    margin-top: 12px; 
+    font-size: 11px; 
+    text-align: center; 
+    color: #94a3b8; 
+    font-style: italic;
+}
+
+/* ==========================================================================
+   5. NEW ADDITIONS: YIELD OPTIMIZER PANEL
+   ========================================================================== */
+.yield-calc-embed {
+    padding: 15px; 
+    background: #0b0f19; 
+    color: #fff; 
+    border-radius: 8px; 
+    border: 1px solid #1f2937; 
+    margin-bottom: 20px; 
+    text-align: left; 
+    font-size: 0.9rem;
+}
+
+.yield-calc-embed h4 {
+    margin-bottom: 10px; 
+    color: #3b82f6;
+}
+
+.yield-calc-embed label {
+    font-size: 0.8rem; 
+    color: #94a3b8;
+}
+
+.yield-calc-embed input {
+    width: 100%; 
+    padding: 8px; 
+    margin: 8px 0 12px 0; 
+    border-radius: 6px; 
+    background: #111827; 
+    border: 1px solid #374151; 
+    color: #fff; 
+    font-weight: 600;
+    outline: none;
+}
+
+.projection-metrics-list {
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+    font-size: 0.85rem; 
+    color: #cbd5e1;
+}
+
+.profit-green-value {
+    color: #22c55e;
+}
+
+/* ==========================================================================
+   6. NEW ADDITIONS: VZT STAKING DUAL INTERFACE WIDGET
+   ========================================================================== */
+.calc-tabs {
+    display: flex;
+    background-color: #0b0f19;
+    padding: 4px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #1f2937;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #64748b;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+.pool-meta-row {
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 0.8rem; 
+    color: #94a3b8; 
+    margin-bottom: 12px; 
+    border-bottom: 1px dashed #1f2937; 
+    padding-bottom: 8px;
+}
+
+.lock-input-group {
+    margin-bottom: 15px; 
+    text-align: left;
+}
+
+.lock-input-group label {
+    font-size: 12px; 
+    color: #94a3b8; 
+    display: block; 
+    margin-bottom: 6px;
+}
+
+.lock-input-group input {
+    width: 100%; 
+    padding: 12px; 
+    background: #0b0f19; 
+    border: 1px solid #374151; 
+    border-radius: 8px; 
+    color: #fff; 
+    font-size: 16px; 
+    outline: none; 
+    font-weight: 600;
+}
+
+.wizard-section {
+    display: none;
+    margin-bottom: 15px;
+    background: rgba(59, 130, 246, 0.03);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.wizard-section.active {
+    display: block;
+}
+
+.wizard-select-label {
+    font-size: 11px;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.wizard-section select {
+    width: 100%;
+    background-color: #0b0f19;
+    border: 1px solid #374151;
+    padding: 8px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.score-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(34, 197, 94, 0.03);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+}
+
+.score-value {
+    font-family: 'Orbitron', sans-serif;
+    color: #22c55e;
+    font-weight: 700;
+}
+
+.reward-info-badge {
+    background: rgba(31, 111, 235, 0.1); 
+    border: 1px solid rgba(56, 139, 253, 0.2); 
+    border-radius: 8px; 
+    padding: 12px; 
+    text-align: center; 
+    margin-bottom: 15px;
+}
+
+.badge-accent-line {
+    color: #38bdf8; 
+    font-size: 13px; 
+    font-weight: 600; 
+    display: block;
+}
+
+.badge-sub-info {
+    font-size: 11px; 
+    color: #94a3b8; 
+    display: block; 
+    margin-top: 4px;
+}
+
+.claim-management-row {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+    background: #020617; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    border: 1px solid #1f2937;
+}
+
+.btn-claim-vzt {
+    background: #1f2937; 
+    color: #38bdf8; 
+    border: 1px solid #334155; 
+    padding: 4px 10px; 
+    border-radius: 4px; 
+    font-size: 0.75rem; 
+    font-weight: bold; 
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   7. AFFILIATE PERFORMANCE & TARGET TABLES
+   ========================================================================== */
 .affiliate-section {
     background-color: #111827;
     border: 1px solid #1f2937;
@@ -302,6 +675,7 @@ body {
     border-radius: 8px;
     color: #64748b;
     font-size: 0.9rem;
+    outline: none;
 }
 
 .btn-copy {
@@ -342,6 +716,7 @@ body {
     padding: 10px;
     border-radius: 6px;
     color: #fff;
+    outline: none;
 }
 
 .btn-test {
@@ -360,18 +735,56 @@ body {
     cursor: not-allowed;
 }
 
-.tier-stats {
-    display: flex;
-    gap: 40px;
-    font-size: 0.9rem;
-    color: #94a3b8;
+.tier-table-wrapper {
+    margin-bottom: 25px; 
+    border-top: 1px solid #1f2937; 
+    padding-top: 20px;
 }
 
-.tier-stats span {
-    color: #14b8a6;
+.tier-headline {
+    font-size: 0.85rem; 
+    color: #cbd5e1; 
+    margin-bottom: 12px; 
     font-weight: 600;
 }
 
+.responsive-table-overflow {
+    overflow-x: auto; 
+    border-radius: 8px; 
+    border: 1px solid #1f2937;
+}
+
+.tier-data-table {
+    width: 100%; 
+    border-collapse: collapse; 
+    text-align: left; 
+    background-color: #0b0f19; 
+    font-size: 0.85rem;
+}
+
+.tier-data-table th {
+    background-color: #1f2937; 
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.row-bordered {
+    border-bottom: 1px solid #1f2937;
+}
+
+.row-bordered td, .tier-data-table tbody tr td {
+    padding: 10px 15px;
+}
+
+.tier-bronze { font-weight: 600; color: #14b8a6; }
+.tier-silver { font-weight: 600; color: #3b82f6; }
+.tier-gold { font-weight: 600; color: #a855f7; }
+.target-grey { color: #94a3b8; }
+.rate-white { font-weight: 700; color: #fff; }
+
+/* ==========================================================================
+   8. FOOTER & RESPONSIVE MEDIA BREAKPOINTS
+   ========================================================================== */
 .dapp-footer {
     background-color: #111827;
     border-top: 1px solid #1f2937;
@@ -380,6 +793,23 @@ body {
     color: #64748b;
     font-size: 0.85rem;
     margin-top: auto;
+}
+
+.footer-links-row {
+    margin-top: 8px; 
+    display: flex; 
+    justify-content: center; 
+    gap: 20px;
+}
+
+.footer-links-row a {
+    color: #64748b; 
+    text-decoration: none; 
+    transition: color 0.2s;
+}
+
+.footer-links-row a:hover {
+    color: #fff;
 }
 
 @media (max-width: 768px) {
@@ -398,7 +828,7 @@ body {
     }
 }
 
-/* --- ADD THIS TO THE VERY BOTTOM OF YOUR style.css --- */
+/* --- THE VERY BOTTOM BLOCK --- */
 .tier-stats {
     display: flex;
     gap: 40px;
@@ -413,5 +843,5 @@ body {
 
 .tier-item span {
     font-weight: 700;
-    transition: color 0.3s ease-in-out; /* Memberikan efek animasi smooth saat warna teks tier berubah */
+    transition: color 0.3s ease-in-out;
 }
