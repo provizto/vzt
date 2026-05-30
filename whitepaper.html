@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROVIZTO ($VZT) WHITEPAPER - Secure Unified DeFi Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --bg-card: #131622;
+            --primary: #00ffcc; /* Solana Cyan */
+            --secondary: #8a2be2; /* Neon Purple */
+            --accent: #00e676; /* Emerald Green */
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #232a42;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Glow Effects */
+        .glow-bg {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            right: -100px;
+            z-index: -1;
+        }
+        .glow-bg-2 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,255,204,0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: 20%;
+            left: -200px;
+            z-index: -1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header / Hero Section */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .badge {
+            background: linear-gradient(90deg, rgba(0,255,204,0.1) 0%, rgba(138,43,226,0.1) 100%);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        .solana-tag {
+            color: #9945FF;
+            font-weight: 600;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ffffff;
+        }
+
+        .section-title span {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Card Layout for Features */
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2x2 { grid-template-columns: 1fr; }
+            h1 { font-size: 2rem; }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Revenue Model / Table Styling */
+        .revenue-box {
+            background: linear-gradient(145deg, #131622 0%, #1a1e30 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+
+        .formula {
+            background: #0a0b10;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #ffffff;
+            display: inline-block;
+        }
+
+        .fee-split-list {
+            list-style: none;
+        }
+
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fee-item:last-child { border-bottom: none; }
+
+        .fee-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .fee-percentage {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(0, 230, 118, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        /* Tokenomics Spec Grid */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .spec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .spec-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Multiplier Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(138, 43, 226, 0.1);
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr { border-bottom: 1px solid var(--border-color); }
+        tr:last-child { border-bottom: none; }
+
+        .multiplier-badge {
+            color: var(--primary);
+            font-weight: 700;
+            background: rgba(0, 255, 204, 0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+        }
+
+        .alert-box {
+            background: rgba(239, 68, 68, 0.07);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .alert-box i { color: #ef4444; font-size: 1.2rem; margin-top: 3px; }
+
+        /* Roadmap Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--border-color);
+            top: 0;
+            bottom: 0;
+            left: 30px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 23px;
+            background-color: var(--bg-dark);
+            border: 4px solid var(--primary);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background: var(--bg-card);
+            position: relative;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-phase {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-bg"></div>
+    <div class="glow-bg-2"></div>
+
+    <div class="container">
+        <header>
+            <div class="badge">Official Whitepaper</div>
+            <h1>PROVIZTO ($VZT)</h1>
+            <p class="subtitle">Secure Unified DeFi Hub on the <span class="solana-tag"><i class="fab fa-solana"></i> Solana</span> Blockchain</p>
+        </header>
+
+        <section id="introduction">
+            <h2 class="section-title"><span>01 /</span> INTRODUCTION & EXECUTIVE SUMMARY</h2>
+            <p style="margin-bottom: 20px;">Ekosistem Keuangan Terdesentralisasi (DeFi) pada jaringan Solana mengalami pertumbuhan eksponensial, didorong oleh kecepatan transaksi ultra-cepat dan biaya gas yang minimal. Namun, pelaku pasar seringkali menghadapi dua vektor friksi kritis: manipulasi bot predator (MEV) pada bursa terdesentralisasi dan tokenomik hadiah hiper-inflasi yang tidak berkelanjutan.</p>
+            <p><strong>Provizto</strong> menghadirkan ekosistem DeFi terpadu yang aman yang dirancang untuk menetralisir inefisiensi tersebut. Dengan mengintegrasikan AMM DEX yang dilindungi MEV, Automated Yield Optimizer, dan mekanisme pembagian pendapatan "Real Yield" yang berkelanjutan secara mulus, Provizto membangun lanskap investasi yang adil, tangguh, dan sangat menguntungkan bagi pemegang token $VZT.</p>
+        </section>
+
+        <section id="architecture">
+            <h2 class="section-title"><span>02 /</span> CORE ARCHITECTURE & PLATFORM FEATURES</h2>
+            <div class="grid-2x2">
+                <div class="card">
+                    <h3><i class="fas fa-shield-alt"></i> MEV-Protected Swap Engine</h3>
+                    <p>Protokol perdagangan mandiri yang melindungi pengguna dari serangan sandwich dan bot front-running, diperkuat secara ketat oleh mekanisme Anti-Wash Trading.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> Auto-Compounding Yield Optimizer</h3>
+                    <p>Brankas algoritmik pintar yang terus menginvestasikan kembali hasil (yield) pengguna secara otomatis, memaksimalkan efisiensi modal untuk mencapai APY hingga 49.1%.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-lock"></i> Real Yield Lock System</h3>
+                    <p>Modul staking khusus yang memungkinkan pengguna mengunci token $VZT untuk mengklaim langsung pendapatan platform yang dibayarkan secara eksklusif dalam stablecoin USDC.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-network-wired"></i> Anti-Sybil Affiliate Protocol</h3>
+                    <p>Infrastruktur rujukan (referral) on-chain yang dirancang dengan cooldown transaksi 10 detik yang ketat untuk mencegah eksploitasi bot-net dan manipulasi volume buatan.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="revenue">
+            <h2 class="section-title"><span>03 /</span> REVENUE MODEL & DISTRIBUTION ARCHITECTURE</h2>
+            <p>Provizto mengenakan biaya protokol standar sebesar 0,3% pada semua pertukaran aset (swap) yang diproses melalui AMM DEX-nya. Biaya yang dihasilkan ini dikumpulkan secara otomatis dan dibagi oleh smart contract menggunakan alokasi transparan berikut:</p>
+            
+            <div class="revenue-box">
+                <div class="formula">
+                    Total Fee Swapped = 0.3% × Transaction Volume
+                </div>
+                <ul class="fee-split-list">
+                    <li class="fee-item">
+                        <span class="fee-label"><i class="fas fa-coins" style="color:var(--primary)"></i> 50% dari Fee (0.15% dari Volume)</span>
+                        <span class="fee-percentage">→ VZT Lockers Pool (Real Yield)</span>
+                    </li>
+                    <li class="fee-item">
+                        <span class="fee-label"><i class="fas fa-hand-holding-usd" style="color:var(--primary)"></i> 30% dari Fee (0.09% dari Volume)</span>
+                        <span class="fee-percentage">→ Liquidity Providers (LP) Rewards</span>
+                    </li>
+                    <li class="fee-item">
+                        <span class="fee-label"><i class="fas fa-vault" style="color:var(--primary)"></i> 15% dari Fee (0.045% dari Volume)</span>
+                        <span class="fee-percentage">→ Platform Treasury & Development</span>
+                    </li>
+                    <li class="fee-item">
+                        <span class="fee-label"><i class="fas fa-users" style="color:var(--primary)"></i> 5% dari Fee (0.015% dari Volume)</span>
+                        <span class="fee-percentage">→ On-Chain Affiliate System</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="tokenomics">
+            <h2 class="section-title"><span>04 /</span> $VZT TOKENOMICS & SPECIFICATIONS</h2>
+            
+            <div class="spec-grid">
+                <div class="spec-card"><div class="spec-label">Token Name</div><div class="spec-value" style="color: var(--primary);">Provizto</div></div>
+                <div class="spec-card"><div class="spec-label">Token Symbol</div><div class="spec-value">$VZT</div></div>
+                <div class="spec-card"><div class="spec-label">Blockchain</div><div class="spec-value">Solana SPL</div></div>
+                <div class="spec-card"><div class="spec-label">Total Supply</div><div class="spec-value">100,000,000</div></div>
+            </div>
+
+            <div class="card" style="margin-bottom: 40px; border-left: 4px solid var(--accent);">
+                <h3 style="color: #ffffff;"><i class="fas fa-user-shield" style="color: var(--accent);"></i> Security Architecture</h3>
+                <p style="margin-top: 5px;">Otoritas <strong>Mint dan Freeze</strong> secara permanen dicabut (revoked) pada saat genesis untuk memastikan kekebalan mutlak dari skema rug-pull.</p>
+            </div>
+
+            <h3 style="font-family:'Orbitron', sans-serif; font-size:1.2rem; margin-bottom:10px;">Time-Weighted Lock Multiplier</h3>
+            <p>Untuk memitigasi tekanan jual pasar dan menyelaraskan insentif jangka panjang, alokasi USDC Real Yield menggunakan pengganda (multiplier) berbasis durasi:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Durasi Kunci (Lock Duration)</th>
+                        <th>Pengganda Hasil (Yield Multiplier)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>30-Day Lock</td>
+                        <td><span class="multiplier-badge">1× Multiplier</span></td>
+                    </tr>
+                    <tr>
+                        <td>90-Day Lock</td>
+                        <td><span class="multiplier-badge">1.5× Multiplier</span></td>
+                    </tr>
+                    <tr>
+                        <td>180-Day Lock</td>
+                        <td><span class="multiplier-badge">2.5× Multiplier</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Emergency Clause:</strong> Pembukaan kunci sebelum waktunya (premature unlocking) akan dikenakan penalti tetap sebesar 20%. Token yang terkena penalti akan segera dibakar (burned) secara permanen dari total pasokan yang beredar.
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" style="border-bottom: none;">
+            <h2 class="section-title"><span>05 /</span> PLATFORM ROADMAP</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Phase 1</div>
+                        <div class="timeline-title">Foundation & Audit</div>
+                        <p class="text-muted">Penyebaran (deployment) token melalui Solana Token Labs, sinkronisasi dApp pada sisi frontend, dan verifikasi kode smart contract Rust/Anchor secara internal.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Phase 2</div>
+                        <div class="timeline-title">Liquidity Genesis</div>
+                        <p class="text-muted">Peluncuran pool awal VZT/USDC di Raydium/Meteora, penyiapan pelacakan data di Dexscreener, dan pengajuan aplikasi untuk masuk ke Jupiter Strict List.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Phase 3</div>
+                        <div class="timeline-title">DeFi Hub Activation</div>
+                        <p class="text-muted">Penyebaran Mainnet untuk portal penguncian USDC & Hasil (Yield), serta aktivasi penuh pada fungsionalitas Auto-Compound Vaults.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Phase 4</div>
+                        <div class="timeline-title">Ecosystem Expansion</div>
+                        <p class="text-muted">Transisi menuju struktur tata kelola terdesentralisasi (DAO) dan pelaksanaan integrasi lintas protokol di seluruh ekosistem Solana yang lebih luas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Provizto Ecosystem. All Rights Reserved. Powered by Solana Network.</p>
+    </footer>
+
+</body>
+</html>
