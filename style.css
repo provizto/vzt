@@ -237,21 +237,21 @@ body {
 }
 
 .btn-action {
-    background-color: #1f2937;
+    background-color: #1f2937; /* Warna abu-abu saat dompet belum terhubung */
     color: #94a3b8;
-    border: 1px solid #374151;
     padding: 12px;
     border-radius: 8px;
     font-weight: 600;
     cursor: not-allowed;
     width: 100%;
+    transition: all 0.3s ease-in-out;
 }
 
 .btn-action:not([disabled]) {
-    background: #3b82f6;
-    color: white;
-    border: none;
+    background: linear-gradient(90deg, #1f6feb 0%, #238636 100%) !important; /* Gradasi Biru-Hijau MEV Secure */
+    color: white !important;
     cursor: pointer;
+    box-shadow: 0 4px 14px rgba(31, 111, 235, 0.3);
 }
 
 .affiliate-section {
