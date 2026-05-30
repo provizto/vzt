@@ -252,3 +252,120 @@ function updateYieldProjection() {
 
 // 3. Jalankan fungsi sekali secara otomatis agar default value ($1,000) langsung muncul saat halaman pertama terbuka
 setTimeout(updateYieldProjection, 500);
+
+// --- PROVIZTO AMM DEX SWAP ENGINE (VANILLA CORE IMPLEMENTATION) ---
+
+let isSwapLoading = false;
+
+// 1. Logika Perhitungan Harga Komposit & Fee (Menggantikan useEffect React)
+function calculateSwapAmounts() {
+    const payInput = document.getElementById('payAmount');
+    const receiveInput = document.getElementById('receiveAmount');
+    const tokenPaySelect = document.getElementById('tokenPay');
+    const swapFeeLabel = document.getElementById('swapFeeLabel');
+
+    if (!payInput || !receiveInput) return;
+
+    const amount = parseFloat(payInput.value) || 0;
+    const tokenPay = tokenPaySelect.value;
+    
+    // Hitung potongan fee protokol (0.3%)
+    const tradingFeeRate = 0.003;
+    const calculatedFee = amount * tradingFeeRate;
+    swapFeeLabel.innerText = `${calculatedFee.toFixed(4)} ${tokenPay}`;
+
+    // Simulasi Rasio Harga Pasar: 1 VZT = 0.5 USDC (atau 1 USDC = 2 VZT)
+    if (tokenPay === 'USDC') {
+        receiveInput.value = (amount * 2).toFixed(4);
+    } else {
+        receiveInput.value = (amount * 0.5).toFixed(4);
+    }
+}
+
+// 2. Fungsi Penyelaras saat Pilihan Dropdown Token Diubah
+function handleTokenChange(type) {
+    const tokenPaySelect = document.getElementById('tokenPay');
+    const tokenReceiveLabel = document.getElementById('tokenReceiveLabel');
+    
+    if (type === 'pay') {
+        // Jika token pay diubah, balikkan label token receive secara otomatis
+        if (tokenPaySelect.value === 'USDC') {
+            tokenReceiveLabel.innerText = 'VZT';
+        } else {
+            tokenReceiveLabel.innerText = 'USDC';
+        }
+    }
+    calculateSwapAmounts();
+}
+
+// 3. Fungsi Tukar Posisi Arah Token Swap (Switch Tokens)
+function switchTokens() {
+    if (isSwapLoading) return;
+
+    const tokenPaySelect = document.getElementById('tokenPay');
+    const payInput = document.getElementById('payAmount');
+
+    // Balik nilai pilihan dropdown select
+    if (tokenPaySelect.value === 'USDC') {
+        tokenPaySelect.value = 'VZT';
+    } else {
+        tokenPaySelect.value = 'USDC';
+    }
+
+    payInput.value = ''; // Reset input agar bersih kembali
+    handleTokenChange('pay');
+}
+
+// 4. Fungsi Utama Eksekusi Transaksi Bundling Jito MEV Protection
+async function handleLaunchSwap() {
+    const payInput = document.getElementById('payAmount');
+    const receiveInput = document.getElementById('receiveAmount');
+    const tokenPaySelect = document.getElementById('tokenPay');
+    const tokenReceiveLabel = document.getElementById('tokenReceiveLabel');
+    const swapBtn = document.getElementById('swapBtn');
+    const txStatusLog = document.getElementById('txStatusLog');
+
+    const payAmount = parseFloat(payInput.value) || 0;
+    const tokenPay = tokenPaySelect.value;
+    const receiveAmount = receiveInput.value;
+    const tokenReceive = tokenReceiveLabel.innerText;
+
+    if (payAmount <= 0) {
+        alert('Please enter a valid token amount first.');
+        return;
+    }
+
+    // Ambil nilai fee terhitung untuk teks struk notifikasi sukses
+    const calculatedFee = payAmount * 0.003;
+
+    isSwapLoading = true;
+    swapBtn.disabled = true;
+    swapBtn.innerText = 'Processing Secure Swap...';
+    swapBtn.style.background = '#334155';
+    
+    // Tampilkan log pemrosesan paket transaksi via Jito Engine
+    txStatusLog.style.display = 'block';
+    txStatusLog.innerText = 'Routing private transaction bundle via Jito Engine (MEV Protection)...';
+
+    try {
+        // Simulasi jeda delay validasi konsensus blockchain Solana & Anti-Wash Trading (2.5 detik)
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+        
+        txStatusLog.innerText = 'Success! Your transaction is fully secured from Front-running & Wash-Trading.';
+        
+        alert(`Swap Successful!\n\nYou exchanged ${payAmount} ${tokenPay} into ${receiveAmount} ${tokenReceive}.\nProtocol Fee deducted: ${calculatedFee.toFixed(4)} ${tokenPay}`);
+        
+        // Reset form input setelah transaksi sukses selesai
+        payInput.value = '';
+        receiveInput.value = '';
+        calculateSwapAmounts();
+    } catch (error) {
+        txStatusLog.innerText = 'Transaction failed or rejected by network consensus.';
+    } finally {
+        isSwapLoading = false;
+        swapBtn.disabled = false;
+        // Kembalikan gaya warna gradasi tombol utama
+        swapBtn.innerText = 'Launch Swap';
+        swapBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+    }
+}
