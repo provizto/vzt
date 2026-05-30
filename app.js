@@ -290,34 +290,52 @@ function verifyReferralOnChain() {
    5. PROVIZTO YIELD CALCULATOR ENGINE
    ========================================================================== */
 
-function calculateProviztoYield(amount) {
-    const dailyRate = 0.0011; // ~49.1% APY auto-compound derivative
-    const dailyProfit = amount * dailyRate;
-    const monthlyProfit = amount * ((Math.pow(1 + dailyRate, 30)) - 1);
-    const annualProfit = amount * ((Math.pow(1 + dailyRate, 365)) - 1);
-
-    return {
-        dailyRatePercent: "0.11%",
-        estimatedDailyProfit: dailyProfit.toFixed(2),
-        estimatedMonthlyProfit: monthlyProfit.toFixed(2),
-        estimatedAnnualProfit: annualProfit.toFixed(2)
-    };
-}
-
-function updateYieldProjection() {
+// --- FUNGSIONAL EKSEKUSI DEPOSIT VAULT DENGAN VALIDASI PROTEKSI ---
+async function handleDepositVault() {
     const inputAmount = document.getElementById('calcAmount');
-    const profitDay = document.getElementById('profitDay');
-    const profitMonth = document.getElementById('profitMonth');
-    const profitYear = document.getElementById('profitYear');
+    const yieldBtn = document.getElementById('yieldBtn');
 
-    if (!inputAmount || !profitDay || !profitMonth || !profitYear) return; 
+    if (!inputAmount || !yieldBtn) return;
 
     const amountValue = parseFloat(inputAmount.value) || 0;
-    const projection = calculateProviztoYield(amountValue);
 
-    profitDay.innerText = `${Number(projection.estimatedDailyProfit).toLocaleString('en-US')} USDC`;
-    profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
-    profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
+    // 1. VALIDASI: Menolak jika nominal 0, minus, atau kosong
+    if (amountValue <= 0) {
+        showBanner("⚠️ [Validation Error]: Deposit amount must be greater than 0 USDC!", "error");
+        return;
+    }
+
+    // 2. PROTEKSI ANTI-SYBIL: Gunakan logika cooldown 10 detik yang sudah ada
+    const currentTime = Date.now();
+    if (currentTime - lastTransactionTime < 10000) {
+        showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.`, "error");
+        return;
+    }
+
+    // 3. EFEK VISUAL LOADING SIMULASI BLOCKCHAIN
+    yieldBtn.disabled = true;
+    yieldBtn.innerText = "Processing Deposit...";
+    yieldBtn.style.background = "#334155";
+    inputAmount.disabled = true;
+
+    try {
+        // Simulasi jeda konfirmasi jaringan selama 1.5 detik
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        
+        // Perbarui stempel waktu transaksi terakhir jika sukses
+        lastTransactionTime = Date.now(); 
+        
+        showBanner(`✅ Success: Deposited ${amountValue.toLocaleString('en-US')} USDC into the Auto-Compounding Vault!`, "success");
+        
+    } catch (error) {
+        showBanner("⚠️ Transaction rejected by network consensus.", "error");
+    } finally {
+        // Kembalikan status tombol ke normal setelah selesai
+        yieldBtn.disabled = false;
+        yieldBtn.innerText = "Open Vaults";
+        yieldBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+        inputAmount.disabled = false;
+    }
 }
 
 /* ==========================================================================
