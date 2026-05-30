@@ -420,7 +420,8 @@ function calculateSwapAmounts() {
         receiveInput.value = (amount * 0.5).toFixed(4);
     }
 
-    if (isConnected && amount > 0) {
+    // PERBAIKAN: Tombol langsung aktif jika wallet CONNECTED (tidak peduli input kosong atau tidak)
+    if (isConnected) {
         swapBtn.removeAttribute('disabled');
     } else {
         swapBtn.setAttribute('disabled', 'true');
@@ -565,14 +566,14 @@ function calculateLockReward() {
     if (!lockInput) return;
     const amount = parseFloat(lockInput.value) || 0;
 
-    // 1. Validasi status aktif tombol kunci aksi dApp
-    if (isConnected && amount > 0) {
+    // PERBAIKAN: Tombol langsung aktif jika wallet CONNECTED (tidak peduli input kosong atau tidak)
+    if (isConnected) {
         processLockActionButton.removeAttribute('disabled');
     } else {
         processLockActionButton.setAttribute('disabled', 'true');
     }
 
-    // 2. Eksekusi kalkulasi berdasarkan mode tab aktif
+    // 2. Eksekusi Logika Matematika Berdasarkan Mode Aktif
     if (lockCalculationMode === 'manual') {
         if (liveCalculatedScoreValue) {
             liveCalculatedScoreValue.innerText = `${amount.toLocaleString('en-US')} VZT Share`;
@@ -589,7 +590,6 @@ function calculateLockReward() {
         }
     } 
     else {
-        // Menggunakan chosenMultiplier terintegrasi dari tombol grup horizontal
         const totalWeightedScoreSum = amount * chosenMultiplier;
         
         if (liveCalculatedScoreValue) {
