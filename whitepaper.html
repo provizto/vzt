@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROVIZTO ($VZT) WHITEPAPER - Secure Unified DeFi Hub</title>
+    <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -99,11 +100,32 @@
             max-width: 700px;
             margin: 0 auto;
             font-weight: 400;
+            margin-bottom: 25px;
         }
 
         .solana-tag {
             color: #9945FF;
             font-weight: 600;
+        }
+
+        /* CTA Button to trigger Pop-up */
+        .btn-launch {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 255, 204, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(138, 43, 226, 0.5);
         }
 
         /* Section Styling */
@@ -354,6 +376,118 @@
             color: #ffffff;
         }
 
+        /* POP-UP / MODAL CSS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 10, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
+            position: relative;
+            transform: scale(0.85);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modal-overlay.active .modal-wrapper {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #ef4444;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* App Simulation Form Inside Popup */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .result-box {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px dashed var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -369,44 +503,79 @@
     <div class="glow-bg"></div>
     <div class="glow-bg-2"></div>
 
+    <!-- THE POP-UP (MODAL) -->
+    <div class="modal-overlay" id="calculatorModal">
+        <div class="modal-wrapper">
+            <button class="close-modal" id="closeBtn">&times;</button>
+            <div class="modal-title">
+                <i class="fas fa-calculator" style="color: var(--primary);"></i> Real Yield Calculator
+            </div>
+            
+            <div class="form-group">
+                <label>Lock Amount ($VZT)</label>
+                <input type="number" id="vztInput" value="1000" min="1">
+            </div>
+
+            <div class="form-group">
+                <label>Lock Duration</label>
+                <select id="durationSelect">
+                    <option value="1">30 Days (1× Multiplier)</option>
+                    <option value="1.5">90 Days (1.5× Multiplier)</option>
+                    <option value="2.5" selected>180 Days (2.5× Multiplier)</option>
+                </select>
+            </div>
+
+            <div class="result-box">
+                <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Estimated Yield Share Score</label>
+                <div class="result-value" id="weightResult">2,500 VZT Share</div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+        <!-- HERO HEADER -->
         <header>
             <div class="badge">Official Whitepaper</div>
             <h1>PROVIZTO ($VZT)</h1>
             <p class="subtitle">Secure Unified DeFi Hub on the <span class="solana-tag"><i class="fab fa-solana"></i> Solana</span> Blockchain</p>
+            <!-- Pop-up Trigger Button -->
+            <button class="btn-launch" id="openBtn"><i class="fas fa-rocket"></i> Launch Yield Calc</button>
         </header>
 
+        <!-- 1. INTRODUCTION -->
         <section id="introduction">
             <h2 class="section-title"><span>01 /</span> INTRODUCTION & EXECUTIVE SUMMARY</h2>
-            <p style="margin-bottom: 20px;">Ekosistem Keuangan Terdesentralisasi (DeFi) pada jaringan Solana mengalami pertumbuhan eksponensial, didorong oleh kecepatan transaksi ultra-cepat dan biaya gas yang minimal. Namun, pelaku pasar seringkali menghadapi dua vektor friksi kritis: manipulasi bot predator (MEV) pada bursa terdesentralisasi dan tokenomik hadiah hiper-inflasi yang tidak berkelanjutan.</p>
-            <p><strong>Provizto</strong> menghadirkan ekosistem DeFi terpadu yang aman yang dirancang untuk menetralisir inefisiensi tersebut. Dengan mengintegrasikan AMM DEX yang dilindungi MEV, Automated Yield Optimizer, dan mekanisme pembagian pendapatan "Real Yield" yang berkelanjutan secara mulus, Provizto membangun lanskap investasi yang adil, tangguh, dan sangat menguntungkan bagi pemegang token $VZT.</p>
+            <p style="margin-bottom: 20px;">The Decentralized Finance (DeFi) ecosystem on the Solana network is experiencing exponential growth, driven by ultra-fast transaction speeds and minimal gas fees. However, market participants frequently face two critical vectors of friction: predatory bot manipulation (MEV) on decentralized exchanges and unsustainable, hyper-inflationary reward tokenomics.</p>
+            <p><strong>Provizto</strong> introduces a secure, unified DeFi ecosystem designed to neutralize these inefficiencies. By seamlessly integrating an MEV-protected AMM DEX, an Automated Yield Optimizer, and a sustainable "Real Yield" revenue-sharing mechanism, Provizto establishes a fair, resilient, and highly lucrative investment landscape for $VZT token holders.</p>
         </section>
 
+        <!-- 2. CORE ARCHITECTURE -->
         <section id="architecture">
             <h2 class="section-title"><span>02 /</span> CORE ARCHITECTURE & PLATFORM FEATURES</h2>
             <div class="grid-2x2">
                 <div class="card">
                     <h3><i class="fas fa-shield-alt"></i> MEV-Protected Swap Engine</h3>
-                    <p>Protokol perdagangan mandiri yang melindungi pengguna dari serangan sandwich dan bot front-running, diperkuat secara ketat oleh mekanisme Anti-Wash Trading.</p>
+                    <p>A proprietary trading protocol that shields users from sandwich attacks and front-running bots, heavily reinforced by Anti-Wash Trading mechanisms.</p>
                 </div>
                 <div class="card">
                     <h3><i class="fas fa-chart-line"></i> Auto-Compounding Yield Optimizer</h3>
-                    <p>Brankas algoritmik pintar yang terus menginvestasikan kembali hasil (yield) pengguna secara otomatis, memaksimalkan efisiensi modal untuk mencapai APY hingga 49.1%.</p>
+                    <p>Smart algorithmic vaults that continuously reinvest user yields, maximizing capital efficiency to achieve up to 49.1% APY.</p>
                 </div>
                 <div class="card">
                     <h3><i class="fas fa-lock"></i> Real Yield Lock System</h3>
-                    <p>Modul staking khusus yang memungkinkan pengguna mengunci token $VZT untuk mengklaim langsung pendapatan platform yang dibayarkan secara eksklusif dalam stablecoin USDC.</p>
+                    <p>A dedicated staking module allowing users to lock $VZT tokens to directly claim platform revenue paid exclusively in USDC stablecoins.</p>
                 </div>
                 <div class="card">
                     <h3><i class="fas fa-network-wired"></i> Anti-Sybil Affiliate Protocol</h3>
-                    <p>Infrastruktur rujukan (referral) on-chain yang dirancang dengan cooldown transaksi 10 detik yang ketat untuk mencegah eksploitasi bot-net dan manipulasi volume buatan.</p>
+                    <p>An on-chain referral infrastructure engineered with a strict 10-second transaction cooldown to prevent bot-net exploitation and artificial volume loops.</p>
                 </div>
             </div>
         </section>
 
+        <!-- 3. REVENUE MODEL -->
         <section id="revenue">
             <h2 class="section-title"><span>03 /</span> REVENUE MODEL & DISTRIBUTION ARCHITECTURE</h2>
-            <p>Provizto mengenakan biaya protokol standar sebesar 0,3% pada semua pertukaran aset (swap) yang diproses melalui AMM DEX-nya. Biaya yang dihasilkan ini dikumpulkan secara otomatis dan dibagi oleh smart contract menggunakan alokasi transparan berikut:</p>
+            <p>Provizto charges a standard 0.3% protocol fee on all asset swaps processed through its AMM DEX. These generated fees are automatically aggregated and split by smart contracts using the following transparent allocation:</p>
             
             <div class="revenue-box">
                 <div class="formula">
@@ -414,25 +583,26 @@
                 </div>
                 <ul class="fee-split-list">
                     <li class="fee-item">
-                        <span class="fee-label"><i class="fas fa-coins" style="color:var(--primary)"></i> 50% dari Fee (0.15% dari Volume)</span>
+                        <span class="fee-label"><i class="fas fa-coins" style="color:var(--primary)"></i> 50% of Fees (0.15% of Volume)</span>
                         <span class="fee-percentage">→ VZT Lockers Pool (Real Yield)</span>
                     </li>
                     <li class="fee-item">
-                        <span class="fee-label"><i class="fas fa-hand-holding-usd" style="color:var(--primary)"></i> 30% dari Fee (0.09% dari Volume)</span>
+                        <span class="fee-label"><i class="fas fa-hand-holding-usd" style="color:var(--primary)"></i> 30% of Fees (0.09% of Volume)</span>
                         <span class="fee-percentage">→ Liquidity Providers (LP) Rewards</span>
                     </li>
                     <li class="fee-item">
-                        <span class="fee-label"><i class="fas fa-vault" style="color:var(--primary)"></i> 15% dari Fee (0.045% dari Volume)</span>
+                        <span class="fee-label"><i class="fas fa-vault" style="color:var(--primary)"></i> 15% of Fees (0.045% of Volume)</span>
                         <span class="fee-percentage">→ Platform Treasury & Development</span>
                     </li>
                     <li class="fee-item">
-                        <span class="fee-label"><i class="fas fa-users" style="color:var(--primary)"></i> 5% dari Fee (0.015% dari Volume)</span>
+                        <span class="fee-label"><i class="fas fa-users" style="color:var(--primary)"></i> 5% of Fees (0.015% of Volume)</span>
                         <span class="fee-percentage">→ On-Chain Affiliate System</span>
                     </li>
                 </ul>
             </div>
         </section>
 
+        <!-- 4. TOKENOMICS -->
         <section id="tokenomics">
             <h2 class="section-title"><span>04 /</span> $VZT TOKENOMICS & SPECIFICATIONS</h2>
             
@@ -445,17 +615,17 @@
 
             <div class="card" style="margin-bottom: 40px; border-left: 4px solid var(--accent);">
                 <h3 style="color: #ffffff;"><i class="fas fa-user-shield" style="color: var(--accent);"></i> Security Architecture</h3>
-                <p style="margin-top: 5px;">Otoritas <strong>Mint dan Freeze</strong> secara permanen dicabut (revoked) pada saat genesis untuk memastikan kekebalan mutlak dari skema rug-pull.</p>
+                <p style="margin-top: 5px;">Mint and Freeze authorities are permanently revoked at genesis to ensure absolute rug-pull immunity.</p>
             </div>
 
             <h3 style="font-family:'Orbitron', sans-serif; font-size:1.2rem; margin-bottom:10px;">Time-Weighted Lock Multiplier</h3>
-            <p>Untuk memitigasi tekanan jual pasar dan menyelaraskan insentif jangka panjang, alokasi USDC Real Yield menggunakan pengganda (multiplier) berbasis durasi:</p>
+            <p>To mitigate market sell pressure and align long-term incentives, the USDC Real Yield allocation utilizes a duration-based multiplier:</p>
 
             <table>
                 <thead>
                     <tr>
-                        <th>Durasi Kunci (Lock Duration)</th>
-                        <th>Pengganda Hasil (Yield Multiplier)</th>
+                        <th>Lock Duration</th>
+                        <th>Yield Multiplier</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -477,11 +647,12 @@
             <div class="alert-box">
                 <i class="fas fa-exclamation-triangle"></i>
                 <div>
-                    <strong>Emergency Clause:</strong> Pembukaan kunci sebelum waktunya (premature unlocking) akan dikenakan penalti tetap sebesar 20%. Token yang terkena penalti akan segera dibakar (burned) secara permanen dari total pasokan yang beredar.
+                    <strong>Emergency Clause:</strong> Premature unlocking incurs a fixed 20% penalty. Penalized tokens are immediately burned from the total circulating supply.
                 </div>
             </div>
         </section>
 
+        <!-- 5. ROADMAP -->
         <section id="roadmap" style="border-bottom: none;">
             <h2 class="section-title"><span>05 /</span> PLATFORM ROADMAP</h2>
             
@@ -490,37 +661,76 @@
                     <div class="timeline-content">
                         <div class="timeline-phase">Phase 1</div>
                         <div class="timeline-title">Foundation & Audit</div>
-                        <p class="text-muted">Penyebaran (deployment) token melalui Solana Token Labs, sinkronisasi dApp pada sisi frontend, dan verifikasi kode smart contract Rust/Anchor secara internal.</p>
+                        <p class="text-muted">Token deployment via Solana Token Labs, frontend dApp synchronization, and internal Rust/Anchor smart contract code verification.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-phase">Phase 2</div>
                         <div class="timeline-title">Liquidity Genesis</div>
-                        <p class="text-muted">Peluncuran pool awal VZT/USDC di Raydium/Meteora, penyiapan pelacakan data di Dexscreener, dan pengajuan aplikasi untuk masuk ke Jupiter Strict List.</p>
+                        <p class="text-muted">Launching the initial VZT/USDC pool on Raydium/Meteora, tracking setups on Dexscreener, and submitting the application for the Jupiter Strict List.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-phase">Phase 3</div>
                         <div class="timeline-title">DeFi Hub Activation</div>
-                        <p class="text-muted">Penyebaran Mainnet untuk portal penguncian USDC & Hasil (Yield), serta aktivasi penuh pada fungsionalitas Auto-Compound Vaults.</p>
+                        <p class="text-muted">Mainnet deployment of the USDC Lock & Yield portal and the deployment of the Auto-Compound Vaults.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-phase">Phase 4</div>
                         <div class="timeline-title">Ecosystem Expansion</div>
-                        <p class="text-muted">Transisi menuju struktur tata kelola terdesentralisasi (DAO) dan pelaksanaan integrasi lintas protokol di seluruh ekosistem Solana yang lebih luas.</p>
+                        <p class="text-muted">Transitioning into a decentralized governance structure (DAO) and executing cross-protocol integrations across the wider Solana network.</p>
                     </div>
                 </div>
             </div>
         </section>
     </div>
 
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 Provizto Ecosystem. All Rights Reserved. Powered by Solana Network.</p>
     </footer>
 
+    <!-- JAVASCRIPT FOR POPUP INTERACTION -->
+    <script>
+        const modal = document.getElementById('calculatorModal');
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        
+        const vztInput = document.getElementById('vztInput');
+        const durationSelect = document.getElementById('durationSelect');
+        const weightResult = document.getElementById('weightResult');
+
+        // Open Modal
+        openBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        // Close Modal via Button
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Close Modal via Outside Overlay Click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Interactive Math Logic for the Modal (Based on Section 4)
+        function calculateYield() {
+            const tokens = parseFloat(vztInput.value) || 0;
+            const multiplier = parseFloat(durationSelect.value);
+            const score = tokens * multiplier;
+            weightResult.textContent = `${score.toLocaleString('en-US')} VZT Share`;
+        }
+
+        vztInput.addEventListener('input', calculateYield);
+        durationSelect.addEventListener('change', calculateYield);
+    </script>
 </body>
 </html>
