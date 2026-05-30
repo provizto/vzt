@@ -42,27 +42,41 @@ function closeWalletModal() {
     if (modal) modal.style.display = 'none';
 }
 
+// ANTI GAGAL BUKA WALLET DI HP
 function selectWallet(walletType) {
     closeWalletModal();
+    
+    // 1. Deteksi apakah pengguna membuka dApp lewat HP (Mobile)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const dAppUrl = window.location.href; // Mengambil URL dApp saat ini secara otomatis
+
     if (walletType === 'phantom') {
         if (window.solana && window.solana.isPhantom) {
             activeProvider = window.solana;
             connectWallet("Phantom");
+        } else if (isMobile) {
+            // Jika di HP dan tidak terdeteksi ekstensi, alihkan langsung ke aplikasi Phantom
+            const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(dAppUrl)}`;
+            window.open(phantomDeepLink, '_blank');
         } else {
             alert("Phantom Wallet not found! Please install the Phantom extension.");
             window.open("https://phantom.app/", "_blank");
         }
-    } 
-    else if (walletType === 'solflare') {
+    } else if (walletType === 'solflare') {
         if (window.solflare && window.solflare.isSolflare) {
             activeProvider = window.solflare;
             connectWallet("Solflare");
+        } else if (isMobile) {
+            // Jika di HP dan tidak terdeteksi ekstensi, alihkan langsung ke aplikasi Solflare
+            const solflareDeepLink = `https://solflare.com/ul/v1/browse?url=${encodeURIComponent(dAppUrl)}`;
+            window.open(solflareDeepLink, '_blank');
         } else {
             alert("Solflare Wallet not found! Please install the Solflare extension.");
             window.open("https://solflare.com/", "_blank");
         }
     }
 }
+// AKHIR ANTI GAGAL WALLET DI HP
 
 async function connectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
