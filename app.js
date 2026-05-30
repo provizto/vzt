@@ -22,9 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         copyrightYear.innerText = new Date().getFullYear();
     }
     
-    // 2. Jalankan kalkulator yield default ($1,000) saat pertama kali dibuka
+    // 2. Langsung jalankan proyeksi yield (akan otomatis membaca nilai 0 dari HTML)
     if (typeof updateYieldProjection === "function") {
-        setTimeout(updateYieldProjection, 500);
+        updateYieldProjection(); 
     }
 
     // 3. Set nilai awal ke 0 mengikuti tab Instant Lock yang aktif duluan
