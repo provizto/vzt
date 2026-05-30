@@ -137,31 +137,59 @@ async function connectWallet(walletName) {
     }
 }
 
-async function disconnectWallet() {
+async function disconnectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
     const vztBalance = document.getElementById('vztBalance');
-    const rewardClaimRow = document.getElementById('rewardClaimRow');
 
     if (!activeProvider) return;
 
     try {
-        await activeProvider.disconnect();
+        const response = await activeProvider.connect();
+        const pubKey = response.publicKey ? response.publicKey.toString() : activeProvider.publicKey.toString();
+        myWalletAddress = pubKey;
+
         if (walletBtn) {
-            walletBtn.innerText = "Connect Wallet";
-            walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
-        }
-        if (status) {
-            status.innerText = "Wallet Status: Disconnected (Network: Solana)";
-            status.style.color = "#94a3b8";
-        }
-        if (refLink) {
-            refLink.value = "https://provizto.hub";
+            walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
+            walletBtn.style.background = "#22c55e";
         }
         
+        if (status) {
+            status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
+            status.style.color = "#22c55e";
+        }
+        
+        if (refLink) {
+            refLink.value = `https://provizto.hub/${myWalletAddress}`;
+        }
+
+        // Injeksi saldo dompet simulasi awal saat terkoneksi
+        if (vztBalance) {
+            vztBalance.innerText = "5,000.00 VZT";
+        }
+
+        // MEMAKSA STATE DAN ATRIBUT KEAKTIFAN DI-UNLOCK SECARA ABSOLUT
+        isConnected = true;
+
+        actionButtons.forEach(b => {
+            b.removeAttribute('disabled');
+        });
+        
+        // Refresh hitungan kalkulator agar mengubah status visual tombol menjadi aktif gradasi
+        calculateSwapAmounts();
+        calculateLockReward();
+        
+        if (testBtn) testBtn.removeAttribute('disabled');
+        
+        showBanner(`Wallet successfully linked via ${walletName}!`, "success");
+    } catch (err) {
+        console.error(`${walletName} connection rejected:`, err);
+    }
+}
+       
         // Reset metrik saldo ke nol kembali
         if (vztBalance) vztBalance.innerText = "0.00 VZT";
         if (rewardClaimRow) rewardClaimRow.style.display = 'none';
