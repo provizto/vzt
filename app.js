@@ -27,8 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(updateYieldProjection, 500);
     }
 
-    // 3. Inisialisasi Event Listener untuk Sistem Tab Kalkulator Staking VZT
+    // 3. Set nilai awal ke 0 mengikuti tab Instant Lock yang aktif duluan
+    const lockInput = document.getElementById('lockAmount');
+    if (lockInput) {
+        lockInput.value = "0";
+    }
+
+    // 4. Inisialisasi event tab
     initStakingTabs();
+    if (typeof calculateLockReward === "function") calculateLockReward();
 });
 
 /* ==========================================================================
@@ -553,7 +560,7 @@ function initStakingTabs() {
 }
 
 function switchLockCalculationView(selectedMode) {
-    if (isTokenLocked) return; // Mengunci tab jika aset sudah sukses dilock
+    if (isTokenLocked) return; // Kunci tab jika transaksi sukses
     
     lockCalculationMode = selectedMode;
     const tabManualBtn = document.getElementById('tabManual');
@@ -561,20 +568,44 @@ function switchLockCalculationView(selectedMode) {
     const wizardOptionsPanel = document.getElementById('wizardOptions');
     const lockInputFieldLabel = document.getElementById('inputLabel');
     const scorePreviewLabel = document.getElementById('scoreLabel');
+    const lockInput = document.getElementById('lockAmount'); // Elemen input nilai token
 
     if (selectedMode === 'manual') {
         tabManualBtn.classList.add('active');
         tabWizardBtn.classList.remove('active');
         if (wizardOptionsPanel) wizardOptionsPanel.classList.remove('active');
+        
         if (lockInputFieldLabel) lockInputFieldLabel.innerText = "Amount of $VZT to Lock:";
         if (scorePreviewLabel) scorePreviewLabel.innerText = "Base Processing Share:";
+        
+        // Aturan Jelas: Instant Lock otomatis diset ke 0
+        if (lockInput) lockInput.value = "0"; 
     } else {
         tabManualBtn.classList.remove('active');
         tabWizardBtn.classList.add('active');
         if (wizardOptionsPanel) wizardOptionsPanel.classList.add('active');
+        
         if (lockInputFieldLabel) lockInputFieldLabel.innerText = "Enter Capital For Prediction:";
         if (scorePreviewLabel) scorePreviewLabel.innerText = "Boosted Yield Score:";
+        
+        // Aturan Jelas: Boosted Lock otomatis diset ke 1000 untuk simulasi
+        if (lockInput) lockInput.value = "1000"; 
+        
+        // Reset multiplier ke 1 agar pas dengan tombol 30 Days (1x) yang menyala di HTML Anda
+        chosenMultiplier = 1; 
+
+        // Sinkronisasi visual: pastikan tombol 30 Days mendapat kelas active kembali
+        const durationButtons = document.querySelectorAll('.btn-duration');
+        durationButtons.forEach(btn => {
+            if (btn.getAttribute('data-multiplier') === "1") {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
     }
+    
+    // Jalankan kalkulasi ulang berdasarkan nilai default baru
     calculateLockReward();
 }
 
