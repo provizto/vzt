@@ -529,8 +529,9 @@ body {
     font-weight: 600;
 }
 
+/* Pastikan ini ada di style.css agar panel bisa muncul saat diklik */
 .wizard-section {
-    display: none;
+    display: none; /* Default tersembunyi */
     margin-bottom: 15px;
     background: rgba(59, 130, 246, 0.03);
     padding: 12px;
@@ -538,27 +539,41 @@ body {
     border: 1px solid rgba(59, 130, 246, 0.15);
 }
 
+/* Class ini akan ditambahkan oleh JavaScript secara otomatis */
 .wizard-section.active {
-    display: block;
+    display: block !important; /* Memaksa panel untuk tampil */
 }
 
-.wizard-select-label {
-    font-size: 11px;
-    color: #94a3b8;
-    display: block;
-    margin-bottom: 6px;
-    text-transform: uppercase;
+/* Desain tombol pilihan durasi horizontal */
+.duration-btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
 }
 
-.wizard-section select {
-    width: 100%;
+.btn-duration {
+    flex: 1;
     background-color: #0b0f19;
     border: 1px solid #374151;
-    padding: 8px;
+    color: #94a3b8;
+    padding: 10px 5px;
     border-radius: 6px;
-    color: #ffffff;
-    font-size: 0.85rem;
-    outline: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-duration:hover {
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.btn-duration.active {
+    background-color: rgba(31, 111, 235, 0.15);
+    border-color: #3b82f6;
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
 }
 
 .score-preview {
