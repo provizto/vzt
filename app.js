@@ -10,15 +10,15 @@ let isSwapLoading = false;
 let isLockLoading = false;
 let isTokenLocked = false;
 
-// Inisialisasi awal saat halaman web dimuat
+// Inisialisasi awal saat halaman web dimuat oleh browser
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Set tahun hak cipta secara otomatis
+    // 1. Set tahun hak cipta secara otomatis di footer
     const copyrightYear = document.getElementById('copyrightYear');
     if (copyrightYear) {
         copyrightYear.innerText = new Date().getFullYear();
     }
     
-    // 2. Jalankan kalkulator yield default ($1,000)
+    // 2. Jalankan kalkulator yield default ($1,000) saat pertama kali dibuka
     if (typeof updateYieldProjection === "function") {
         setTimeout(updateYieldProjection, 500);
     }
@@ -70,6 +70,7 @@ async function connectWallet(walletName) {
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
+    const vztBalance = document.getElementById('vztBalance');
 
     if (!activeProvider) return;
 
@@ -92,7 +93,12 @@ async function connectWallet(walletName) {
             refLink.value = `https://provizto.hub/${myWalletAddress}`;
         }
 
-        // Buka kunci semua tombol aksi utama dApp
+        // Injeksi saldo dompet simulasi awal saat terkoneksi
+        if (vztBalance) {
+            vztBalance.innerText = "5,000.00 VZT";
+        }
+
+        // Buka kunci akses semua tombol aksi dApp
         actionButtons.forEach(b => b.removeAttribute('disabled'));
         if (testBtn) testBtn.removeAttribute('disabled');
         
@@ -109,6 +115,8 @@ async function disconnectWallet() {
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
+    const vztBalance = document.getElementById('vztBalance');
+    const rewardClaimRow = document.getElementById('rewardClaimRow');
 
     if (!activeProvider) return;
 
@@ -126,13 +134,18 @@ async function disconnectWallet() {
             refLink.value = "https://provizto.hub";
         }
         
-        // Kunci kembali semua tombol aksi utama dApp
+        // Reset metrik saldo ke nol kembali
+        if (vztBalance) vztBalance.innerText = "0.00 VZT";
+        if (rewardClaimRow) rewardClaimRow.style.display = 'none';
+        
+        // Kunci kembali seluruh tombol aksi utama dApp
         actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
         if (testBtn) testBtn.setAttribute('disabled', 'true');
         
         hideBanner();
         isConnected = false;
         activeProvider = null;
+        isTokenLocked = false;
         showBanner("Wallet disconnected.", "warning");
     } catch (err) {
         console.error("Disconnection failed:", err);
@@ -146,7 +159,7 @@ async function disconnectWallet() {
 function showBanner(message, type = "success") {
     let banner = document.getElementById('securityBanner');
     
-    // Jika elemen banner belum ada di HTML, buat secara dinamis di bagian paling atas body
+    // Jika elemen spanduk belum ada di HTML, bangun secara dinamis di level root body
     if (!banner) {
         banner = document.createElement('div');
         banner.id = 'securityBanner';
@@ -169,22 +182,22 @@ function showBanner(message, type = "success") {
     banner.innerText = message;
     banner.style.display = 'block';
 
-    // Styling berdasarkan tipe notifikasi
+    // Pengkondisian gaya visual notifikasi banner
     if (type === "success") {
-        banner.style.background = "#22c55e"; // Hijau sukses
+        banner.style.background = "#22c55e"; // Hijau Sukses
         banner.style.color = "#ffffff";
         banner.style.border = "1px solid #16a34a";
     } else if (type === "error") {
-        banner.style.background = "#ef4444"; // Merah error
+        banner.style.background = "#ef4444"; // Merah Gagal
         banner.style.color = "#ffffff";
         banner.style.border = "1px solid #dc2626";
     } else {
-        banner.style.background = "#eab308"; // Kuning warning
+        banner.style.background = "#eab308"; // Kuning Peringatan
         banner.style.color = "#1e293b";
         banner.style.border = "1px solid #ca8a04";
     }
 
-    // Otomatis hilangkan banner setelah 4 detik
+    // Otomatis bersihkan banner dalam waktu 4 detik durasi tayang
     setTimeout(hideBanner, 4000);
 }
 
@@ -194,20 +207,46 @@ function hideBanner() {
 }
 
 /* ==========================================================================
-   3. ANTI-SYBIL COOLDOWN LOGIC (FOR COMPLIANCE TESTING)
+   3. ANTI-SYBIL COOLDOWN AND VAULT DEPOSIT VALIDATOR
    ========================================================================== */
 
-function executeSecureTx(txName) {
+async function handleDepositVault() {
+    const inputAmount = document.getElementById('calcAmount');
+    const yieldBtn = document.getElementById('yieldBtn');
+
+    if (!inputAmount || !yieldBtn) return;
+    const amountValue = parseFloat(inputAmount.value) || 0;
+
+    // 1. VALIDASI: Tolak jika nominal 0, kosong, atau minus
+    if (amountValue <= 0) {
+        showBanner("⚠️ [Validation Error]: Deposit amount must be greater than 0 USDC!", "error");
+        return;
+    }
+
+    // 2. TIMELOCK: Jalankan pengkondisian batas aman inter-interval 10 detik
     const currentTime = Date.now();
-    
-    // Validasi jeda proteksi rate-limiting 10 detik per aksi
     if (currentTime - lastTransactionTime < 10000) {
         showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.`, "error");
         return;
     }
 
-    lastTransactionTime = currentTime;
-    showBanner(`✅ Transaction [${txName}] executed successfully on the Solana network.`, "success");
+    yieldBtn.disabled = true;
+    yieldBtn.innerText = "Processing Deposit...";
+    yieldBtn.style.background = "#334155";
+    inputAmount.disabled = true;
+
+    try {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        lastTransactionTime = Date.now(); // Perbarui log transaksi terakhir
+        showBanner(`✅ Success: Deposited ${amountValue.toLocaleString('en-US')} USDC into the Auto-Compounding Vault!`, "success");
+    } catch (error) {
+        showBanner("⚠️ Transaction rejected by network consensus.", "error");
+    } finally {
+        yieldBtn.disabled = false;
+        yieldBtn.innerText = "Open Vaults";
+        yieldBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+        inputAmount.disabled = false;
+    }
 }
 
 /* ==========================================================================
@@ -222,13 +261,11 @@ function copyLink() {
     refLinkInput.select();
     refLinkInput.setSelectionRange(0, 99999);
 
-    // Eksekusi penyalinan tangguh universal (Offline/Online file:// kompatibel)
     try {
         const successful = document.execCommand('copy');
         if (successful) {
             showBanner("📋 Referral link successfully copied to your clipboard!", "success");
         } else {
-            // Jika execCommand diblokir, coba pakai clipboard API modern
             fallbackModernCopy(refLinkInput.value);
         }
     } catch (err) {
@@ -265,7 +302,6 @@ function verifyReferralOnChain() {
         return;
     }
 
-    // Simulasi pembuatan volume rujukan on-chain acak untuk demo proposal
     const simulatedVolume = Math.floor(Math.random() * 145000) + 5000; 
     volLabel.innerText = `$${simulatedVolume.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
 
@@ -290,56 +326,38 @@ function verifyReferralOnChain() {
    5. PROVIZTO YIELD CALCULATOR ENGINE
    ========================================================================== */
 
-// --- FUNGSIONAL EKSEKUSI DEPOSIT VAULT DENGAN VALIDASI PROTEKSI ---
-async function handleDepositVault() {
-    const inputAmount = document.getElementById('calcAmount');
-    const yieldBtn = document.getElementById('yieldBtn');
+function calculateProviztoYield(amount) {
+    const dailyRate = 0.0011; // 49.1% APY Auto-compound derivative
+    const dailyProfit = amount * dailyRate;
+    const monthlyProfit = amount * ((Math.pow(1 + dailyRate, 30)) - 1);
+    const annualProfit = amount * ((Math.pow(1 + dailyRate, 365)) - 1);
 
-    if (!inputAmount || !yieldBtn) return;
+    return {
+        dailyRatePercent: "0.11%",
+        estimatedDailyProfit: dailyProfit.toFixed(2),
+        estimatedMonthlyProfit: monthlyProfit.toFixed(2),
+        estimatedAnnualProfit: annualProfit.toFixed(2)
+    };
+}
+
+function updateYieldProjection() {
+    const inputAmount = document.getElementById('calcAmount');
+    const profitDay = document.getElementById('profitDay');
+    const profitMonth = document.getElementById('profitMonth');
+    const profitYear = document.getElementById('profitYear');
+
+    if (!inputAmount || !profitDay || !profitMonth || !profitYear) return; 
 
     const amountValue = parseFloat(inputAmount.value) || 0;
+    const projection = calculateProviztoYield(amountValue);
 
-    // 1. VALIDASI: Menolak jika nominal 0, minus, atau kosong
-    if (amountValue <= 0) {
-        showBanner("⚠️ [Validation Error]: Deposit amount must be greater than 0 USDC!", "error");
-        return;
-    }
-
-    // 2. PROTEKSI ANTI-SYBIL: Gunakan logika cooldown 10 detik yang sudah ada
-    const currentTime = Date.now();
-    if (currentTime - lastTransactionTime < 10000) {
-        showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.`, "error");
-        return;
-    }
-
-    // 3. EFEK VISUAL LOADING SIMULASI BLOCKCHAIN
-    yieldBtn.disabled = true;
-    yieldBtn.innerText = "Processing Deposit...";
-    yieldBtn.style.background = "#334155";
-    inputAmount.disabled = true;
-
-    try {
-        // Simulasi jeda konfirmasi jaringan selama 1.5 detik
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        
-        // Perbarui stempel waktu transaksi terakhir jika sukses
-        lastTransactionTime = Date.now(); 
-        
-        showBanner(`✅ Success: Deposited ${amountValue.toLocaleString('en-US')} USDC into the Auto-Compounding Vault!`, "success");
-        
-    } catch (error) {
-        showBanner("⚠️ Transaction rejected by network consensus.", "error");
-    } finally {
-        // Kembalikan status tombol ke normal setelah selesai
-        yieldBtn.disabled = false;
-        yieldBtn.innerText = "Open Vaults";
-        yieldBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
-        inputAmount.disabled = false;
-    }
+    profitDay.innerText = `${Number(projection.estimatedDailyProfit).toLocaleString('en-US')} USDC`;
+    profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
+    profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
 }
 
 /* ==========================================================================
-   6. AMM DEX SWAP MATH & LOGIC
+   6. AMM DEX SWAP CORE LOGIC
    ========================================================================== */
 
 function calculateSwapAmounts() {
@@ -357,9 +375,9 @@ function calculateSwapAmounts() {
     swapFeeLabel.innerText = `${calculatedFee.toFixed(4)} ${tokenPay}`;
 
     if (tokenPay === 'USDC') {
-        receiveInput.value = (amount * 2).toFixed(4); // 1 USDC = 2 VZT
+        receiveInput.value = (amount * 2).toFixed(4);
     } else {
-        receiveInput.value = (amount * 0.5).toFixed(4); // 1 VZT = 0.5 USDC
+        receiveInput.value = (amount * 0.5).toFixed(4);
     }
 }
 
@@ -434,7 +452,7 @@ async function handleLaunchSwap() {
 }
 
 /* ==========================================================================
-   7. VZT LOCK & YIELD REAL REWARD SYSTEM
+   7. VZT LOCK & YIELD ECOSYSTEM METRICS
    ========================================================================== */
 
 function calculateLockReward() {
@@ -457,6 +475,9 @@ function calculateLockReward() {
 async function handleLockToken() {
     const lockInput = document.getElementById('lockAmount');
     const lockBtn = document.getElementById('lockBtn');
+    const rewardClaimRow = document.getElementById('rewardClaimRow');
+    const earnedUsdc = document.getElementById('earnedUsdc');
+    const vztBalance = document.getElementById('vztBalance');
 
     if (!lockInput || !lockBtn) return;
     const amount = parseFloat(lockInput.value) || 0;
@@ -475,10 +496,20 @@ async function handleLockToken() {
     try {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         alert(`Successfully locked ${amount} $VZT!\n\nYou are now eligible to claim periodic Real Yield rewards in stable USDC.`);
+        
         isTokenLocked = true;
         lockBtn.innerText = '✓ Token Locked';
         lockBtn.style.background = '#22c55e';
         lockBtn.style.cursor = 'not-allowed';
+        
+        // Kalkulasi pengurangan saldo dompet secara responsif di antarmuka
+        if (vztBalance) vztBalance.innerText = (5000 - amount).toLocaleString('en-US', {minimumFractionDigits: 2}) + " VZT";
+        
+        // Munculkan baris opsi penarikan imbalan Real Yield
+        if (rewardClaimRow && earnedUsdc) {
+            rewardClaimRow.style.display = 'flex';
+            earnedUsdc.innerText = (amount * 0.05).toFixed(2) + " USDC";
+        }
     } catch (error) {
         alert('Transaction failed.');
         isLockLoading = false;
@@ -486,4 +517,17 @@ async function handleLockToken() {
         lockBtn.innerText = 'Lock Token';
         lockInput.disabled = false;
     }
+}
+
+function claimVztReward() {
+    const earnedUsdc = document.getElementById('earnedUsdc');
+    const rewardClaimRow = document.getElementById('rewardClaimRow');
+    
+    if (!earnedUsdc) return;
+    const earned = earnedUsdc.innerText;
+    
+    alert(`Claim Successful!\n\n${earned} has been transferred directly back to your secure Solana wallet account.`);
+    
+    earnedUsdc.innerText = "0.00 USDC";
+    if (rewardClaimRow) rewardClaimRow.style.display = 'none';
 }
