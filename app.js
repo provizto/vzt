@@ -35,13 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
    1. WALLET CONNECTION ENGINE (PHANTOM & SOLFLARE MODAL)
    ========================================================================== */
 
+// SEKARANG JAUH LEBIH SIMPLE: Hanya bertugas membuka modal pilihan wallet
 function openWalletModal() {
-    if (isConnected) {
-        disconnectWallet();
-    } else {
-        const modal = document.getElementById('walletModal');
-        if (modal) modal.style.display = 'flex';
-    }
+    const modal = document.getElementById('walletModal');
+    if (modal) modal.style.display = 'flex';
 }
 
 function closeWalletModal() {
