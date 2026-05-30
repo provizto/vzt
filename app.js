@@ -115,27 +115,51 @@ async function disconnectWallet() {
 }
 
 // --- LOGIKA SIMULASI RUST / SMART CONTRACT TETAP SAMA ---
+// --- REPLACE THE OLD verifyReferralOnChain FUNCTION IN YOUR app.js WITH THIS ---
 function verifyReferralOnChain() {
     const inputVal = document.getElementById('testReferrer').value.trim();
+    const tierLabel = document.getElementById('tierLabel');
+    const volLabel = document.getElementById('volLabel');
+
+    // 1. Validasi jika user mencoba memasukkan alamat dompetnya sendiri (Anti-Self-Referral)
     if (inputVal === myWalletAddress) {
         showBanner("⚠️ [Smart Contract Error]: You cannot refer yourself! (SelfReferralNotAllowed)", "error");
-    } else if (inputVal === "") {
+        return;
+    } 
+    
+    // 2. Validasi jika input kosong
+    if (inputVal === "") {
         showBanner("Please enter a wallet address for simulation testing.", "warning");
-    } else {
-        showBanner("✅ [Smart Contract Success]: Referrer address is valid and recorded securely on-chain.", "success");
-    }
-}
-
-function executeSecureTx(actionName) {
-    const now = Math.floor(Date.now() / 1000);
-    if (now - lastTransactionTime < 10) {
-        showBanner("⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.", "error");
         return;
     }
-    lastTransactionTime = now;
-    showBanner(`✅ Transaction [${actionName}] executed successfully on the Solana network.`, "success");
-}
 
+    // 3. SIMULASI GENERATE VOLUME ACAK (Untuk Keperluan Demo & Pengajuan Grants)
+    // Menghasilkan angka acak antara $5,000 sampai $150,000 secara otomatis
+    const simulatedVolume = Math.floor(Math.random() * 145000) + 5000; 
+    
+    // Cetak volume ke layar dApp dengan format mata uang USD yang rapi
+    volLabel.innerText = `$${simulatedVolume.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+    // 4. LOGIKA EVALUASI TIER SECARA ON-CHAIN BERDASARKAN VOLUME
+    if (simulatedVolume <= 10000) {
+        // Jika volume rujukan di bawah $10,000 -> Set ke Bronze Tier
+        tierLabel.innerText = "Bronze (10%)";
+        tierLabel.style.color = "#14b8a6"; // Mengubah warna teks menjadi Teal khas Bronze
+        showBanner(`✅ [Success]: Active Regular User verified. Allocated to Bronze Tier (10% Commission).`, "success");
+    } 
+    else if (simulatedVolume > 10000 && simulatedVolume <= 100000) {
+        // Jika volume rujukan antara $10,001 - $100,000 -> Upgrade ke Silver Tier
+        tierLabel.innerText = "Silver (18%)";
+        tierLabel.style.color = "#3b82f6"; // Mengubah warna teks menjadi Biru cerah
+        showBanner(`🔥 [Success]: High-Volume Creator verified! Upgraded to Silver Tier (18% Commission).`, "success");
+    } 
+    else {
+        // Jika volume rujukan di atas $100,000 -> Upgrade ke Gold VIP Tier
+        tierLabel.innerText = "Gold (25%)";
+        tierLabel.style.color = "#a855f7"; // Mengubah warna teks menjadi Ungu premium
+        showBanner(`👑 [Success]: Top-Tier VIP KOL verified! Upgraded to Premium Gold Tier (25% Commission).`, "success");
+    }
+}
 function showBanner(text, type) {
     const banner = document.getElementById('securityBanner');
     banner.innerText = text;
@@ -161,22 +185,4 @@ function copyLink() {
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
     alert("Referral Link copied successfully!");
-}
-
-/* --- ADD THIS TO THE VERY BOTTOM OF YOUR style.css --- */
-.tier-stats {
-    display: flex;
-    gap: 40px;
-    font-size: 0.95rem;
-    color: #94a3b8;
-    background-color: #0b0f19;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #1f2937;
-    margin-top: 15px;
-}
-
-.tier-item span {
-    font-weight: 700;
-    transition: color 0.3s ease-in-out; /* Memberikan efek animasi smooth saat warna teks tier berubah */
 }
