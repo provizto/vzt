@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provizto dApp Hub - Secure Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,175 +39,155 @@
 
     <main class="dapp-container">
         <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; margin-top: 5px;">
-            <span style="width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #22c55e;"></span>
+        
+        <div class="rpc-status-container">
+            <span class="rpc-status-indicator"></span>
             <span>RPC Node Status: Operational (Mainnet-Beta)</span>
         </div>
+        
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
-            <div class="product-card" style="max-width: 420px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0;">AMM DEX Swap</h3>
-                    <span id="mevBadge" style="font-size: 11px; background: #1f6feb; color: #fff; padding: 3px 8px; border-radius: 12px; font-weight: bold; letter-spacing: 0.5px;">
-                        🛡️ MEV SECURE
-                    </span>
+            
+            <div class="product-card swap-card">
+                <div class="card-title-row">
+                    <h3>AMM DEX Swap</h3>
+                    <span id="mevBadge" class="mev-secure-badge">🛡️ MEV SECURE</span>
                 </div>
                 <p class="desc">Instant asset swapping with MEV protection and daily Anti-Wash Trading features.</p>
 
-                <div style="background: #0b0f19; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #1f2937; text-align: left;">
-                    <label style="font-size: 12px; color: #94a3b8;">You Pay</label>
-                    <div style="display: flex; justify-content: space-between; align-items: center; marginTop: 6px;">
+                <div class="swap-input-container">
+                    <label>You Pay</label>
+                    <div class="field-row">
                         <input 
                             type="number" 
                             id="payAmount" 
                             placeholder="0.0" 
                             oninput="calculateSwapAmounts()"
-                            style="background: transparent; border: none; color: #fff; font-size: 20px; width: 60%; outline: none; font-weight: 600;"
                         />
-                        <select 
-                            id="tokenPay" 
-                            onchange="handleTokenChange('pay')"
-                            style="background: #1f2937; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; font-weight: bold; cursor: pointer; outline: none;"
-                        >
+                        <select id="tokenPay" onchange="handleTokenChange('pay')">
                             <option value="USDC">USDC</option>
                             <option value="VZT">VZT</option>
                         </select>
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: center; margin: -18px 0; position: relative; z-index: 2;">
-                    <button 
-                        onclick="switchTokens()"
-                        style="background: #1f2937; border: 2px solid #334155; color: #38bdf8; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; outline: none;"
-                    >
-                        ⇅
-                    </button>
+                <div class="swap-switch-row">
+                    <button onclick="switchTokens()" class="btn-switch-tokens">⇅</button>
                 </div>
 
-                <div style="background: #0b0f19; padding: 12px; border-radius: 12px; margin-top: 8px; margin-bottom: 16px; border: 1px solid #1f2937; text-align: left;">
-                    <label style="font-size: 12px; color: #94a3b8;">You Receive (Estimated)</label>
-                    <div style="display: flex; justify-content: space-between; align-items: center; marginTop: 6px;">
+                <div class="swap-input-container">
+                    <label>You Receive (Estimated)</label>
+                    <div class="field-row">
                         <input 
                             type="text" 
                             id="receiveAmount" 
                             placeholder="0.0" 
                             readonly 
-                            style="background: transparent; border: none; color: #38bdf8; font-size: 20px; width: 60%; outline: none; font-weight: 600;"
                         />
-                        <span id="tokenReceiveLabel" style="background: #1f2937; color: #fff; border-radius: 6px; padding: 6px 14px; font-weight: bold; font-size: 0.9rem;">
-                            VZT
-                        </span>
+                        <span id="tokenReceiveLabel" class="static-token-label">VZT</span>
                     </div>
                 </div>
 
-                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 20px; line-height: 1.6; text-align: left;">
-                    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                <div class="swap-fee-details">
+                    <div class="detail-line">
                         <span>Trading Fee (0.3%):</span>
-                        <span id="swapFeeLabel" style="color: #f8fafc; font-weight: 600;">0.0000 USDC</span>
+                        <span id="swapFeeLabel" class="fee-bold-value">0.0000 USDC</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px dashed #1f2937;">
+                    <div class="detail-line total-divider">
                         <span>Anti-Wash Trading Check:</span>
-                        <span style="color: #22c55e; font-weight: 600;">Active (Daily)</span>
+                        <span class="status-active-text">Active (Daily)</span>
                     </div>
                 </div>
 
-                <button 
-                    class="btn-action" 
-                    id="swapBtn"
-                    onclick="handleLaunchSwap()" 
-                    disabled
-                    style="width: 100%; padding: 14px; font-weight: bold; border-radius: 8px; font-size: 15px; border: none;"
-                    >
+                <button class="btn-action" id="swapBtn" onclick="handleLaunchSwap()" disabled>
                     Launch Swap
                 </button>
 
-                <div id="txStatusLog" style="margin-top: 12px; font-size: 11px; text-align: center; color: #94a3b8; font-style: italic; display: none;"></div>
+                <div id="txStatusLog" class="tx-log-box" style="display: none;"></div>
             </div>
 
-            <!-- YIELD OPTIMIZER CARD WITH INTEGRATED CALCULATOR -->
             <div class="product-card">
                 <h3>Yield Optimizer</h3>
                 <p class="desc">Deposit once, the system automatically executes periodic auto-compounding optimization.</p>
                 <div class="stat-box">Boosted APY: Up to 49.1%</div>
                 
-                <!-- START OF YIELD CALCULATOR UI -->
-                <div style="padding: 15px; background: #0b0f19; color: #fff; border-radius: 8px; border: 1px solid #1f2937; margin-bottom: 20px; text-align: left; font-size: 0.9rem;">
-                    <h4 style="margin-bottom: 10px; color: #3b82f6;">Provizto Yield Calculator</h4>
-                    <label style="font-size: 0.8rem; color: #94a3b8;">Deposit Amount (USDC):</label>
-                    <!-- PERBARUI BAGIAN INPUT DI SOLANA-APP.HTML MENJADI SEPERTI INI -->
+                <div class="yield-calc-embed">
+                    <h4>Provizto Yield Calculator</h4>
+                    <label>Deposit Amount (USDC):</label>
                     <input 
                         type="number" 
                         id="calcAmount" 
                         value="1000"
                         oninput="updateYieldProjection()" 
-                        style="width: 100%; padding: 8px; margin: 8px 0 12px 0; border-radius: 6px; background: #111827; border: 1px solid #374151; color: #fff; font-weight: 600;"
                     />
-                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #cbd5e1;">
+                    <div class="projection-metrics-list">
                         <p>Daily Rate: <strong id="dailyRate">0.11%</strong></p>
-                        <p>Est. Profit / Day: <strong id="profitDay" style="color: #22c55e;">0.00 USDC</strong></p>
-                        <p>Est. Profit / Month: <strong id="profitMonth" style="color: #22c55e;">0.00 USDC</strong></p>
-                        <p>Est. Profit / Year: <strong id="profitYear" style="color: #22c55e;">0.00 USDC</strong></p>
+                        <p>Est. Profit / Day: <strong id="profitDay" class="profit-green-value">0.00 USDC</strong></p>
+                        <p>Est. Profit / Month: <strong id="profitMonth" class="profit-green-value">0.00 USDC</strong></p>
+                        <p>Est. Profit / Year: <strong id="profitYear" class="profit-green-value">0.00 USDC</strong></p>
                     </div>
                 </div>
-                <!-- END OF YIELD CALCULATOR UI -->
 
                 <button class="btn-action" id="yieldBtn" onclick="handleDepositVault()" disabled>Open Vaults</button>
             </div>
 
             <div class="product-card">
-                <div>
-                    <h3>VZT Lock & Yield</h3>
-                    <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
+                <h3>VZT Lock & Yield</h3>
+                <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px; border-bottom: 1px dashed #1f2937; padding-bottom: 8px;">
-                        <span>Protocol TVL: <strong style="color: #fff;" id="poolTvl">$1,248,500</strong></span>
-                        <span>Your Balance: <strong style="color: #fff;" id="vztBalance">0.00 VZT</strong></span>
-                    </div>
-
-                    <div style="margin-bottom: 15px; text-align: left;">
-                        <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px;">
-                            Amount of $VZT to Lock:
-                        </label>
-                        <input 
-                            type="number" 
-                            id="lockAmount" 
-                            placeholder="0.0" 
-                            oninput="calculateLockReward()"
-                            style="width: 100%; padding: 12px; background: #0b0f19; border: 1px solid #374151; border-radius: 8px; color: #fff; font-size: 16px; outline: none; font-weight: 600;"
-                        />
-                    </div>
+                <div class="calc-tabs">
+                    <button class="tab-btn active" id="tabManual">dApp Interface</button>
+                    <button class="tab-btn" id="tabWizard">Whitepaper Multiplier</button>
                 </div>
 
-                <div>
-                    <div style="background: rgba(31, 111, 235, 0.1); border: 1px solid rgba(56, 139, 253, 0.2); border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 15px;">
-                        <span style="color: #38bdf8; font-size: 13px; font-weight: 600; display: block;">
-                            Reward: Real USDC (7-Day Epoch)
-                        </span>
-                        <span id="accumulationLabel" style="font-size: 11px; color: #94a3b8; display: none; margin-top: 4px;">
-                            Estimated Accumulation: +0.00 USDC
-                        </span>
-                    </div>
-
-                    <div id="rewardClaimRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #020617; padding: 8px 12px; border-radius: 6px; border: 1px solid #1f2937;">
-                        <span style="font-size: 0.8rem; color: #94a3b8;">Earned: <strong style="color: #22c55e;" id="earnedUsdc">0.00 USDC</strong></span>
-                        <button onclick="claimVztReward()" style="background: #1f2937; color: #38bdf8; border: 1px solid #334155; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer;">Claim</button>
-                    </div>
-
-                    <button 
-                        class="btn-action" 
-                        id="lockBtn"
-                        onclick="handleLockToken()" 
-                        disabled
-                        style="width: 100%; padding: 14px; font-weight: bold; border-radius: 8px; font-size: 14px; border: none;"
-                    >
-                        Lock Token
-                    </button>
+                <div class="pool-meta-row">
+                    <span>Protocol TVL: <strong id="poolTvl">$1,248,500</strong></span>
+                    <span>Your Balance: <strong id="vztBalance">0.00 VZT</strong></span>
                 </div>
+
+                <div class="lock-input-group">
+                    <label id="inputLabel">Amount of $VZT to Lock:</label>
+                    <input 
+                        type="number" 
+                        id="lockAmount" 
+                        placeholder="0.0" 
+                        oninput="calculateLockReward()"
+                    />
+                </div>
+
+                <div class="wizard-section" id="wizardOptions">
+                    <label class="wizard-select-label">Select Lock Duration Incentive:</label>
+                    <select id="multiplierSelect" onchange="calculateLockReward()">
+                        <option value="1">30 Days (1× Yield Multiplier)</option>
+                        <option value="1.5">90 Days (1.5× Yield Multiplier)</option>
+                        <option value="2.5">180 Days (2.5× Yield Multiplier)</option>
+                    </select>
+                </div>
+
+                <div class="score-preview">
+                    <span id="scoreLabel">Base Processing Share:</span>
+                    <span class="score-value" id="liveScore">0 VZT Share</span>
+                </div>
+
+                <div class="reward-info-badge">
+                    <span class="badge-accent-line">Reward: Real USDC (7-Day Epoch)</span>
+                    <span id="accumulationLabel" class="badge-sub-info" style="display: none;">
+                        Estimated Accumulation: +0.00 USDC
+                    </span>
+                </div>
+
+                <div id="rewardClaimRow" class="claim-management-row" style="display: none;">
+                    <span>Earned: <strong id="earnedUsdc">0.00 USDC</strong></span>
+                    <button onclick="claimVztReward()" class="btn-claim-vzt">Claim</button>
+                </div>
+
+                <button class="btn-action" id="lockBtn" onclick="handleLockToken()" disabled>
+                    Lock Token
+                </button>
             </div>
         </section>
 
-        <!-- START OF AFFILIATE SECTION -->
         <section class="affiliate-section">
             <div class="section-title-container">
                 <h3>Secure On-Chain Affiliate</h3>
@@ -218,7 +200,6 @@
                 <button class="btn-copy" id="copyBtn" onclick="copyLink()">Copy Link</button>
             </div>
 
-            <!-- PANEL UJI COBA SIMULASI VERIFIKASI -->
             <div class="test-panel">
                 <label for="testReferrer">Simulated Referrer Input (Rust Code Verification Mockup):</label>
                 <div class="input-group">
@@ -227,57 +208,52 @@
                 </div>
             </div>
 
-            <!-- ↓↓↓ SISIPKAN STRUKTUR TABEL TIER BARU INI TEPAT DI SINI ↓↓↓ -->
-            <div style="margin-bottom: 25px; border-top: 1px solid #1f2937; padding-top: 20px;">
-                <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">Ecosystem Tier Structures:</p>
-                <div style="overflow-x: auto; border-radius: 8px; border: 1px solid #1f2937;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; background-color: #0b0f19; font-size: 0.85rem;">
+            <div class="tier-table-wrapper">
+                <p class="tier-headline">Ecosystem Tier Structures:</p>
+                <div class="responsive-table-overflow">
+                    <table class="tier-data-table">
                         <thead>
-                            <tr style="background-color: #1f2937; color: #fff;">
-                                <th style="padding: 10px 15px;">Tier Level</th>
-                                <th style="padding: 10px 15px;">Volume Target</th>
-                                <th style="padding: 10px 15px;">USDC Reward</th>
+                            <tr>
+                                <th>Tier Level</th>
+                                <th>Volume Target</th>
+                                <th>USDC Reward</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="border-bottom: 1px solid #1f2937;">
-                                <td style="padding: 10px 15px; font-weight: 600; color: #14b8a6;">Bronze Tier</td>
-                                <td style="padding: 10px 15px; color: #94a3b8;">$0 - $10,000</td>
-                                <td style="padding: 10px 15px; font-weight: 700; color: #fff;">10%</td>
+                            <tr class="row-bordered">
+                                <td class="tier-bronze">Bronze Tier</td>
+                                <td class="target-grey">$0 - $10,000</td>
+                                <td class="rate-white">10%</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid #1f2937;">
-                                <td style="padding: 10px 15px; font-weight: 600; color: #3b82f6;">Silver Tier</td>
-                                <td style="padding: 10px 15px; color: #94a3b8;">$10,001 - $100,000</td>
-                                <td style="padding: 10px 15px; font-weight: 700; color: #fff;">18%</td>
+                            <tr class="row-bordered">
+                                <td class="tier-silver">Silver Tier</td>
+                                <td class="target-grey">$10,001 - $100,000</td>
+                                <td class="rate-white">18%</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px 15px; font-weight: 600; color: #a855f7;">Gold Tier</td>
-                                <td style="padding: 10px 15px; color: #94a3b8;">&gt; $100,000</td>
-                                <td style="padding: 10px 15px; font-weight: 700; color: #fff;">25%</td>
+                                <td class="tier-gold">Gold Tier</td>
+                                <td class="target-grey">&gt; $100,000</td>
+                                <td class="rate-white">25%</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <!-- ↑↑↑ BATAS AKHIR SISIPAN TABEL TIER BARU ↑↑↑ -->
 
-            <!-- INDIKATOR STATISTIK DINAMIS YANG AKAN DIUPDATE OLEH JS -->
             <div class="tier-stats">
                 <div class="tier-item">Current Tier: <span id="tierLabel">Bronze (10%)</span></div>
                 <div class="tier-item">Total Referral Volume: <span id="volLabel">$0.00</span></div>
             </div>
         </section>
-        <!-- END OF AFFILIATE SECTION -->
     </main>
 
-    <!-- COPIPASTE STRUKTUR FOOTER INI DI BAGIAN PALING BAWAH SOLANA-APP.HTML -->
-<footer style="margin-top: 60px; text-align: center; font-size: 0.8rem; color: #475569; border-top: 1px solid #1f2937; padding-top: 20px; padding-bottom: 20px;">
-    <p>© <span id="copyrightYear">2026</span> Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
-    <div style="margin-top: 8px; display: flex; justify-content: center; gap: 20px;">
-        <a href="index.html" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Documentation</a>
-        <a href="#" onclick="alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Security Audit 🛡️</a>
-    </div>
-</footer>
+    <footer class="dapp-footer">
+        <p>© <span id="copyrightYear">2026</span> Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
+        <div class="footer-links-row">
+            <a href="index.html">Documentation</a>
+            <a href="#" onclick="alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')">Security Audit 🛡️</a>
+        </div>
+    </footer>
     
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://terminal.jup.ag/main-v3.js"></script>
