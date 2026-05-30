@@ -1,29 +1,49 @@
-/* --- PROVIZTO DAPP LOGIC (MULTI-WALLET SUPPORT) --- */
+/* ==========================================================================
+   PROVIZTO DAPP HUB - MASTER CORE JAVASCRIPT (PRODUCTION READY)
+   ========================================================================== */
+
 let isConnected = false;
 let myWalletAddress = ""; 
+let activeProvider = null;
 let lastTransactionTime = 0;
-let activeProvider = null; // Menyimpan dompet yang sedang aktif digunakan
+let isSwapLoading = false;
+let isLockLoading = false;
+let isTokenLocked = false;
 
-document.getElementById('copyrightYear').innerText = new Date().getFullYear();
+// Inisialisasi awal saat halaman web dimuat
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Set tahun hak cipta secara otomatis
+    const copyrightYear = document.getElementById('copyrightYear');
+    if (copyrightYear) {
+        copyrightYear.innerText = new Date().getFullYear();
+    }
+    
+    // 2. Jalankan kalkulator yield default ($1,000)
+    if (typeof updateYieldProjection === "function") {
+        setTimeout(updateYieldProjection, 500);
+    }
+});
 
-// --- LOGIKA CONTROL UTAMA POP-UP MODAL ---
+/* ==========================================================================
+   1. WALLET CONNECTION ENGINE (PHANTOM & SOLFLARE MODAL)
+   ========================================================================== */
+
 function openWalletModal() {
-    // Jika wallet sudah terkoneksi, klik tombol akan langsung memutuskan koneksi (Disconnect)
     if (isConnected) {
         disconnectWallet();
     } else {
-        document.getElementById('walletModal').style.display = 'flex';
+        const modal = document.getElementById('walletModal');
+        if (modal) modal.style.display = 'flex';
     }
 }
 
 function closeWalletModal() {
-    document.getElementById('walletModal').style.display = 'none';
+    const modal = document.getElementById('walletModal');
+    if (modal) modal.style.display = 'none';
 }
 
-// --- PEMILIHAN PROVIDER DOMPET ---
 function selectWallet(walletType) {
     closeWalletModal();
-    
     if (walletType === 'phantom') {
         if (window.solana && window.solana.isPhantom) {
             activeProvider = window.solana;
@@ -44,7 +64,6 @@ function selectWallet(walletType) {
     }
 }
 
-// --- PROSES HUBUNGKAN DOMPET ---
 async function connectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
@@ -55,33 +74,35 @@ async function connectWallet(walletName) {
     if (!activeProvider) return;
 
     try {
-        // Melakukan request on-chain koneksi ke dompet terpilih
         const response = await activeProvider.connect();
-        
-        // Kompatibilitas alamat: Solflare dan Phantom mengembalikan struktur data pubkey yang sedikit berbeda pada vanilla JS
         const pubKey = response.publicKey ? response.publicKey.toString() : activeProvider.publicKey.toString();
         myWalletAddress = pubKey;
 
-        // Ubah UI menjadi status Terhubung
-        walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
-        walletBtn.style.background = "#22c55e";
+        if (walletBtn) {
+            walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
+            walletBtn.style.background = "#22c55e";
+        }
         
-        status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
-        status.style.color = "#22c55e";
+        if (status) {
+            status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
+            status.style.color = "#22c55e";
+        }
         
-        refLink.value = `https://provizto.hub/${myWalletAddress}`;
-        
-        // Aktifkan interaksi dApp
+        if (refLink) {
+            refLink.value = `https://provizto.hub/${myWalletAddress}`;
+        }
+
+        // Buka kunci semua tombol aksi utama dApp
         actionButtons.forEach(b => b.removeAttribute('disabled'));
-        testBtn.removeAttribute('disabled');
+        if (testBtn) testBtn.removeAttribute('disabled');
         
         isConnected = true;
+        showBanner(`Wallet successfully linked via ${walletName}!`, "success");
     } catch (err) {
         console.error(`${walletName} connection rejected:`, err);
     }
 }
 
-// --- PROSES PUTUSKAN DOMPET ---
 async function disconnectWallet() {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
@@ -93,166 +114,184 @@ async function disconnectWallet() {
 
     try {
         await activeProvider.disconnect();
+        if (walletBtn) {
+            walletBtn.innerText = "Connect Wallet";
+            walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+        }
+        if (status) {
+            status.innerText = "Wallet Status: Disconnected (Network: Solana)";
+            status.style.color = "#94a3b8";
+        }
+        if (refLink) {
+            refLink.value = "https://provizto.hub";
+        }
         
-        // Reset UI ke kondisi awal terputus
-        walletBtn.innerText = "Connect Wallet";
-        walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
-        
-        status.innerText = "Wallet Status: Disconnected (Network: Solana)";
-        status.style.color = "#94a3b8";
-        
-        refLink.value = "https://provizto.hub";
-        
+        // Kunci kembali semua tombol aksi utama dApp
         actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
-        testBtn.setAttribute('disabled', 'true');
+        if (testBtn) testBtn.setAttribute('disabled', 'true');
         
         hideBanner();
         isConnected = false;
-        activeProvider = null; // hapus provider aktif
+        activeProvider = null;
+        showBanner("Wallet disconnected.", "warning");
     } catch (err) {
         console.error("Disconnection failed:", err);
     }
 }
 
-// --- LOGIKA SIMULASI RUST / SMART CONTRACT TETAP SAMA ---
-// --- REPLACE THE OLD verifyReferralOnChain FUNCTION IN YOUR app.js WITH THIS ---
+/* ==========================================================================
+   2. SECURITY NOTIFICATION BANNER SYSTEM
+   ========================================================================== */
+
+function showBanner(message, type = "success") {
+    let banner = document.getElementById('securityBanner');
+    
+    // Jika elemen banner belum ada di HTML, buat secara dinamis di bagian paling atas body
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'securityBanner';
+        banner.style.position = 'fixed';
+        banner.style.top = '20px';
+        banner.style.left = '50%';
+        banner.style.transform = 'translateX(-50%)';
+        banner.style.padding = '14px 24px';
+        banner.style.borderRadius = '8px';
+        banner.style.fontWeight = '600';
+        banner.style.fontSize = '0.95rem';
+        banner.style.zIndex = '9999';
+        banner.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+        banner.style.transition = 'all 0.3s ease';
+        banner.style.textAlign = 'center';
+        banner.style.minWidth = '300px';
+        document.body.appendChild(banner);
+    }
+
+    banner.innerText = message;
+    banner.style.display = 'block';
+
+    // Styling berdasarkan tipe notifikasi
+    if (type === "success") {
+        banner.style.background = "#22c55e"; // Hijau sukses
+        banner.style.color = "#ffffff";
+        banner.style.border = "1px solid #16a34a";
+    } else if (type === "error") {
+        banner.style.background = "#ef4444"; // Merah error
+        banner.style.color = "#ffffff";
+        banner.style.border = "1px solid #dc2626";
+    } else {
+        banner.style.background = "#eab308"; // Kuning warning
+        banner.style.color = "#1e293b";
+        banner.style.border = "1px solid #ca8a04";
+    }
+
+    // Otomatis hilangkan banner setelah 4 detik
+    setTimeout(hideBanner, 4000);
+}
+
+function hideBanner() {
+    const banner = document.getElementById('securityBanner');
+    if (banner) banner.style.display = 'none';
+}
+
+/* ==========================================================================
+   3. ANTI-SYBIL COOLDOWN LOGIC (FOR COMPLIANCE TESTING)
+   ========================================================================== */
+
+function executeSecureTx(txName) {
+    const currentTime = Date.now();
+    
+    // Validasi jeda proteksi rate-limiting 10 detik per aksi
+    if (currentTime - lastTransactionTime < 10000) {
+        showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.`, "error");
+        return;
+    }
+
+    lastTransactionTime = currentTime;
+    showBanner(`✅ Transaction [${txName}] executed successfully on the Solana network.`, "success");
+}
+
+/* ==========================================================================
+   4. ANTI-SYBIL AFFILIATE CORE & COPY LINK LOGIC
+   ========================================================================== */
+
+function copyLink() {
+    const refLinkInput = document.getElementById('refLink');
+    if (!refLinkInput) return;
+
+    refLinkInput.focus();
+    refLinkInput.select();
+    refLinkInput.setSelectionRange(0, 99999);
+
+    // Eksekusi penyalinan tangguh universal (Offline/Online file:// kompatibel)
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showBanner("📋 Referral link successfully copied to your clipboard!", "success");
+        } else {
+            // Jika execCommand diblokir, coba pakai clipboard API modern
+            fallbackModernCopy(refLinkInput.value);
+        }
+    } catch (err) {
+        fallbackModernCopy(refLinkInput.value);
+    }
+}
+
+function fallbackModernCopy(textValue) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textValue)
+            .then(() => {
+                showBanner("📋 Referral link successfully copied to your clipboard!", "success");
+            })
+            .catch(() => {
+                alert("Please select the text box and copy manually: " + textValue);
+            });
+    } else {
+        alert("Please select the text box and copy manually: " + textValue);
+    }
+}
+
 function verifyReferralOnChain() {
     const inputVal = document.getElementById('testReferrer').value.trim();
     const tierLabel = document.getElementById('tierLabel');
     const volLabel = document.getElementById('volLabel');
 
-    // 1. Validasi jika user mencoba memasukkan alamat dompetnya sendiri (Anti-Self-Referral)
     if (inputVal === myWalletAddress) {
         showBanner("⚠️ [Smart Contract Error]: You cannot refer yourself! (SelfReferralNotAllowed)", "error");
         return;
     } 
     
-    // 2. Validasi jika input kosong
     if (inputVal === "") {
         showBanner("Please enter a wallet address for simulation testing.", "warning");
         return;
     }
 
-    // --- LOGIKA SIMULASI RUST / SMART CONTRACT TETAP SAMA ---
-function verifyReferralOnChain() {
-    const inputVal = document.getElementById('testReferrer').value.trim();
-    if (inputVal === myWalletAddress) {
-        showBanner("⚠️ [Smart Contract Error]: You cannot refer yourself! (SelfReferralNotAllowed)", "error");
-    } else if (inputVal === "") {
-        showBanner("Please enter a wallet address for simulation testing.", "warning");
-    } else {
-        showBanner("✅ [Smart Contract Success]: Referrer address is valid and recorded securely on-chain.", "success");
-    }
-}
-
-function executeSecureTx(actionName) {
-    const now = Math.floor(Date.now() / 1000);
-    if (now - lastTransactionTime < 10) {
-        showBanner("⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.", "error");
-        return;
-    }
-    lastTransactionTime = now;
-    showBanner(`✅ Transaction [${actionName}] executed successfully on the Solana network.`, "success");
-}
-
-function showBanner(text, type) {
-    const banner = document.getElementById('securityBanner');
-    banner.innerText = text;
-    banner.style.display = "block";
-    if (type === "error") {
-        banner.style.background = "#ef4444";
-        banner.style.borderColor = "#b91c1c";
-    } else if (type === "success") {
-        banner.style.background = "#22c55e";
-        banner.style.borderColor = "#15803d";
-    } else {
-        banner.style.background = "#eab308";
-        banner.style.borderColor = "#a16207";
-    }
-}
-
-function hideBanner() {
-    document.getElementById('securityBanner').style.display = "none";
-}
-
-// --- FIX ANTI-GAGAL: SALIN TAUTAN COCOK UNTUK OFFLINE & ONLINE ---
-function copyLink() {
-    const refLinkInput = document.getElementById('refLink');
-    if (!refLinkInput) return;
-
-    // 1. Fokus dan seleksi teks di dalam kotak input
-    refLinkInput.focus();
-    refLinkInput.select();
-    refLinkInput.setSelectionRange(0, 99999); /* Optimasi untuk pengguna HP */
-
-    let success = false;
-
-    // 2. Coba Metode Standar Modern (Hanya jalan di HTTPS / Localhost)
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(refLinkInput.value)
-            .then(() => {
-                showBanner("📋 Referral link successfully copied to your clipboard!", "success");
-            })
-            .catch(() => {
-                // Jika metode modern gagal, lempar ke metode cadangan di bawah
-                executeFallbackCopy(refLinkInput);
-            });
-    } else {
-        // 3. Jalankan Metode Cadangan Klasik (Pasti jalan di file:/// offline lokal)
-        executeFallbackCopy(refLinkInput);
-    }
-}
-
-// Fungsi cadangan klasik menggunakan document.execCommand
-function executeFallbackCopy(inputElement) {
-    try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showBanner("📋 Referral link successfully copied to your clipboard! (Local Mode)", "success");
-        } else {
-            alert("Failed to copy link. Please select the text and copy manually.");
-        }
-    } catch (err) {
-        console.error("Fallback copy execution error: ", err);
-        alert("Failed to copy link. Please copy manually.");
-    }
-}
-    
-    // 3. SIMULASI GENERATE VOLUME ACAK (Untuk Keperluan Demo & Pengajuan Grants)
-    // Menghasilkan angka acak antara $5,000 sampai $150,000 secara otomatis
+    // Simulasi pembuatan volume rujukan on-chain acak untuk demo proposal
     const simulatedVolume = Math.floor(Math.random() * 145000) + 5000; 
-    
-    // Cetak volume ke layar dApp dengan format mata uang USD yang rapi
     volLabel.innerText = `$${simulatedVolume.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
 
-    // 4. LOGIKA EVALUASI TIER SECARA ON-CHAIN BERDASARKAN VOLUME
     if (simulatedVolume <= 10000) {
-        // Jika volume rujukan di bawah $10,000 -> Set ke Bronze Tier
         tierLabel.innerText = "Bronze (10%)";
-        tierLabel.style.color = "#14b8a6"; // Mengubah warna teks menjadi Teal khas Bronze
+        tierLabel.style.color = "#14b8a6";
         showBanner(`✅ [Success]: Active Regular User verified. Allocated to Bronze Tier (10% Commission).`, "success");
     } 
     else if (simulatedVolume > 10000 && simulatedVolume <= 100000) {
-        // Jika volume rujukan antara $10,001 - $100,000 -> Upgrade ke Silver Tier
         tierLabel.innerText = "Silver (18%)";
-        tierLabel.style.color = "#3b82f6"; // Mengubah warna teks menjadi Biru cerah
+        tierLabel.style.color = "#3b82f6";
         showBanner(`🔥 [Success]: High-Volume Creator verified! Upgraded to Silver Tier (18% Commission).`, "success");
     } 
     else {
-        // Jika volume rujukan di atas $100,000 -> Upgrade ke Gold VIP Tier
         tierLabel.innerText = "Gold (25%)";
-        tierLabel.style.color = "#a855f7"; // Mengubah warna teks menjadi Ungu premium
+        tierLabel.style.color = "#a855f7";
         showBanner(`👑 [Success]: Top-Tier VIP KOL verified! Upgraded to Premium Gold Tier (25% Commission).`, "success");
     }
 }
 
-// --- FIXED PROVIZTO YIELD CALCULATOR ENGINE ---
+/* ==========================================================================
+   5. PROVIZTO YIELD CALCULATOR ENGINE
+   ========================================================================== */
 
-// 1. Fungsi Kalkulasi Matematika Utama
 function calculateProviztoYield(amount) {
-    // Formula APY ~49.1% (Daily rate compound ≈ 0.11% per hari)
-    const dailyRate = 0.0011; 
-    
+    const dailyRate = 0.0011; // ~49.1% APY auto-compound derivative
     const dailyProfit = amount * dailyRate;
     const monthlyProfit = amount * ((Math.pow(1 + dailyRate, 30)) - 1);
     const annualProfit = amount * ((Math.pow(1 + dailyRate, 365)) - 1);
@@ -265,35 +304,26 @@ function calculateProviztoYield(amount) {
     };
 }
 
-// 2. Fungsi Utama Pengendali Tampilan UI (Dipanggil langsung oleh HTML oninput)
 function updateYieldProjection() {
     const inputAmount = document.getElementById('calcAmount');
     const profitDay = document.getElementById('profitDay');
     const profitMonth = document.getElementById('profitMonth');
     const profitYear = document.getElementById('profitYear');
 
-    // Validasi pencegahan eror jika elemen HTML tidak ditemukan
     if (!inputAmount || !profitDay || !profitMonth || !profitYear) return; 
 
     const amountValue = parseFloat(inputAmount.value) || 0;
-    
-    // Jalankan formula kalkulasi yield
     const projection = calculateProviztoYield(amountValue);
 
-    // Suntikkan hasil kalkulasi langsung ke layar DOM HTML secara real-time
     profitDay.innerText = `${Number(projection.estimatedDailyProfit).toLocaleString('en-US')} USDC`;
     profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
     profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
 }
 
-// 3. Jalankan fungsi sekali secara otomatis agar default value ($1,000) langsung muncul saat halaman pertama terbuka
-setTimeout(updateYieldProjection, 500);
+/* ==========================================================================
+   6. AMM DEX SWAP MATH & LOGIC
+   ========================================================================== */
 
-// --- PROVIZTO AMM DEX SWAP ENGINE (VANILLA CORE IMPLEMENTATION) ---
-
-let isSwapLoading = false;
-
-// 1. Logika Perhitungan Harga Komposit & Fee (Menggantikan useEffect React)
 function calculateSwapAmounts() {
     const payInput = document.getElementById('payAmount');
     const receiveInput = document.getElementById('receiveAmount');
@@ -305,54 +335,38 @@ function calculateSwapAmounts() {
     const amount = parseFloat(payInput.value) || 0;
     const tokenPay = tokenPaySelect.value;
     
-    // Hitung potongan fee protokol (0.3%)
-    const tradingFeeRate = 0.003;
-    const calculatedFee = amount * tradingFeeRate;
+    const calculatedFee = amount * 0.003;
     swapFeeLabel.innerText = `${calculatedFee.toFixed(4)} ${tokenPay}`;
 
-    // Simulasi Rasio Harga Pasar: 1 VZT = 0.5 USDC (atau 1 USDC = 2 VZT)
     if (tokenPay === 'USDC') {
-        receiveInput.value = (amount * 2).toFixed(4);
+        receiveInput.value = (amount * 2).toFixed(4); // 1 USDC = 2 VZT
     } else {
-        receiveInput.value = (amount * 0.5).toFixed(4);
+        receiveInput.value = (amount * 0.5).toFixed(4); // 1 VZT = 0.5 USDC
     }
 }
 
-// 2. Fungsi Penyelaras saat Pilihan Dropdown Token Diubah
 function handleTokenChange(type) {
     const tokenPaySelect = document.getElementById('tokenPay');
     const tokenReceiveLabel = document.getElementById('tokenReceiveLabel');
     
-    if (type === 'pay') {
-        // Jika token pay diubah, balikkan label token receive secara otomatis
-        if (tokenPaySelect.value === 'USDC') {
-            tokenReceiveLabel.innerText = 'VZT';
-        } else {
-            tokenReceiveLabel.innerText = 'USDC';
-        }
+    if (type === 'pay' && tokenPaySelect && tokenReceiveLabel) {
+        tokenReceiveLabel.innerText = (tokenPaySelect.value === 'USDC') ? 'VZT' : 'USDC';
     }
     calculateSwapAmounts();
 }
 
-// 3. Fungsi Tukar Posisi Arah Token Swap (Switch Tokens)
 function switchTokens() {
     if (isSwapLoading) return;
-
     const tokenPaySelect = document.getElementById('tokenPay');
     const payInput = document.getElementById('payAmount');
 
-    // Balik nilai pilihan dropdown select
-    if (tokenPaySelect.value === 'USDC') {
-        tokenPaySelect.value = 'VZT';
-    } else {
-        tokenPaySelect.value = 'USDC';
+    if (tokenPaySelect && payInput) {
+        tokenPaySelect.value = (tokenPaySelect.value === 'USDC') ? 'VZT' : 'USDC';
+        payInput.value = '';
+        handleTokenChange('pay');
     }
-
-    payInput.value = ''; // Reset input agar bersih kembali
-    handleTokenChange('pay');
 }
 
-// 4. Fungsi Utama Eksekusi Transaksi Bundling Jito MEV Protection
 async function handleLaunchSwap() {
     const payInput = document.getElementById('payAmount');
     const receiveInput = document.getElementById('receiveAmount');
@@ -361,17 +375,17 @@ async function handleLaunchSwap() {
     const swapBtn = document.getElementById('swapBtn');
     const txStatusLog = document.getElementById('txStatusLog');
 
+    if (!payInput || !swapBtn) return;
     const payAmount = parseFloat(payInput.value) || 0;
-    const tokenPay = tokenPaySelect.value;
-    const receiveAmount = receiveInput.value;
-    const tokenReceive = tokenReceiveLabel.innerText;
 
     if (payAmount <= 0) {
         alert('Please enter a valid token amount first.');
         return;
     }
 
-    // Ambil nilai fee terhitung untuk teks struk notifikasi sukses
+    const tokenPay = tokenPaySelect ? tokenPaySelect.value : 'USDC';
+    const receiveAmount = receiveInput ? receiveInput.value : '0.0';
+    const tokenReceive = tokenReceiveLabel ? tokenReceiveLabel.innerText : 'VZT';
     const calculatedFee = payAmount * 0.003;
 
     isSwapLoading = true;
@@ -379,51 +393,41 @@ async function handleLaunchSwap() {
     swapBtn.innerText = 'Processing Secure Swap...';
     swapBtn.style.background = '#334155';
     
-    // Tampilkan log pemrosesan paket transaksi via Jito Engine
-    txStatusLog.style.display = 'block';
-    txStatusLog.innerText = 'Routing private transaction bundle via Jito Engine (MEV Protection)...';
+    if (txStatusLog) {
+        txStatusLog.style.display = 'block';
+        txStatusLog.innerText = 'Routing private transaction bundle via Jito Engine (MEV Protection)...';
+    }
 
     try {
-        // Simulasi jeda delay validasi konsensus blockchain Solana & Anti-Wash Trading (2.5 detik)
         await new Promise((resolve) => setTimeout(resolve, 2500));
-        
-        txStatusLog.innerText = 'Success! Your transaction is fully secured from Front-running & Wash-Trading.';
-        
+        if (txStatusLog) txStatusLog.innerText = 'Success! Your transaction is fully secured.';
         alert(`Swap Successful!\n\nYou exchanged ${payAmount} ${tokenPay} into ${receiveAmount} ${tokenReceive}.\nProtocol Fee deducted: ${calculatedFee.toFixed(4)} ${tokenPay}`);
-        
-        // Reset form input setelah transaksi sukses selesai
         payInput.value = '';
-        receiveInput.value = '';
+        if (receiveInput) receiveInput.value = '';
         calculateSwapAmounts();
     } catch (error) {
-        txStatusLog.innerText = 'Transaction failed or rejected by network consensus.';
+        if (txStatusLog) txStatusLog.innerText = 'Transaction failed.';
     } finally {
         isSwapLoading = false;
         swapBtn.disabled = false;
-        // Kembalikan gaya warna gradasi tombol utama
         swapBtn.innerText = 'Launch Swap';
         swapBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
     }
 }
 
-// --- PROVIZTO VZT LOCK & YIELD ENGINE (VANILLA CORE IMPLEMENTATION) ---
+/* ==========================================================================
+   7. VZT LOCK & YIELD REAL REWARD SYSTEM
+   ========================================================================== */
 
-let isLockLoading = false;
-let isTokenLocked = false;
-
-// 1. Logika Perhitungan Estimasi Real Yield Real-Time (Menggantikan kalkulasi state React)
 function calculateLockReward() {
     if (isTokenLocked) return;
-
     const lockInput = document.getElementById('lockAmount');
     const accumulationLabel = document.getElementById('accumulationLabel');
 
     if (!lockInput || !accumulationLabel) return;
-
     const amount = parseFloat(lockInput.value) || 0;
 
     if (amount > 0) {
-        // Formula matematika: 1 VZT = 0.05 USDC dari pool fee swap
         const estimatedUsdcReward = amount * 0.05;
         accumulationLabel.style.display = 'block';
         accumulationLabel.innerText = `Estimated Accumulation: +${estimatedUsdcReward.toFixed(2)} USDC`;
@@ -432,12 +436,11 @@ function calculateLockReward() {
     }
 }
 
-// 2. Fungsi Utama Eksekusi Penguncian Aset ke Anchor Smart Contract
 async function handleLockToken() {
     const lockInput = document.getElementById('lockAmount');
     const lockBtn = document.getElementById('lockBtn');
-    const accumulationLabel = document.getElementById('accumulationLabel');
 
+    if (!lockInput || !lockBtn) return;
     const amount = parseFloat(lockInput.value) || 0;
 
     if (amount <= 0) {
@@ -448,27 +451,21 @@ async function handleLockToken() {
     isLockLoading = true;
     lockBtn.disabled = true;
     lockBtn.innerText = 'Processing Lock...';
-    lockBtn.style.background = '#334155'; // Indikator loading abu-abu gelap
+    lockBtn.style.background = '#334155';
     lockInput.disabled = true;
 
     try {
-        // Simulasi pengiriman instruksi ke Anchor Program selama 2 detik
         await new Promise((resolve) => setTimeout(resolve, 2000));
-
         alert(`Successfully locked ${amount} $VZT!\n\nYou are now eligible to claim periodic Real Yield rewards in stable USDC.`);
-        
-        // Kunci status form secara permanen (Sukses)
         isTokenLocked = true;
         lockBtn.innerText = '✓ Token Locked';
-        lockBtn.style.background = '#22c55e'; // Warna hijau sukses permanen
+        lockBtn.style.background = '#22c55e';
         lockBtn.style.cursor = 'not-allowed';
     } catch (error) {
-        alert('Transaction failed to send to the blockchain.');
-        // Kembalikan tombol jika gagal
+        alert('Transaction failed.');
         isLockLoading = false;
         lockBtn.disabled = false;
         lockBtn.innerText = 'Lock Token';
-        lockBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
         lockInput.disabled = false;
     }
 }
