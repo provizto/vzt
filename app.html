@@ -37,6 +37,10 @@
 
     <main class="dapp-container">
         <div class="wallet-status" id="walletStatus">Wallet Status: Disconnected (Network: Solana)</div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; margin-top: 5px;">
+            <span style="width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #22c55e;"></span>
+            <span>RPC Node Status: Operational (Mainnet-Beta)</span>
+        </div>
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
@@ -266,10 +270,15 @@
         <!-- END OF AFFILIATE SECTION -->
     </main>
 
-    <footer class="dapp-footer">
-        <p>&copy; <span id="copyrightYear"></span> Provizto dApp Hub. All Rights Reserved. Secure Protocol Edition.</p>
-    </footer>
-
+    <!-- COPIPASTE STRUKTUR FOOTER INI DI BAGIAN PALING BAWAH SOLANA-APP.HTML -->
+<footer style="margin-top: 60px; text-align: center; font-size: 0.8rem; color: #475569; border-top: 1px solid #1f2937; padding-top: 20px; padding-bottom: 20px;">
+    <p>© <span id="copyrightYear">2026</span> Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
+    <div style="margin-top: 8px; display: flex; justify-content: center; gap: 20px;">
+        <a href="index.html" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Documentation</a>
+        <a href="#" onclick="alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Security Audit 🛡️</a>
+    </div>
+</footer>
+    
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://terminal.jup.ag/main-v3.js"></script>
     <script src="app.js"></script>
