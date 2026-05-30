@@ -48,8 +48,6 @@ function closeWalletModal() {
     if (modal) modal.style.display = 'none';
 } 
 
-
-
 // ANTI GAGAL BUKA WALLET DI HP
 function selectWallet(walletType) {
     closeWalletModal();
