@@ -138,49 +138,56 @@ async function connectWallet(walletName) {
     }
 }
 
-async function disconnectWallet() {
+async function connectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
     const status = document.getElementById('walletStatus');
     const actionButtons = document.querySelectorAll('.btn-action');
     const testBtn = document.getElementById('testBtn');
     const refLink = document.getElementById('refLink');
     const vztBalance = document.getElementById('vztBalance');
-    const rewardClaimRow = document.getElementById('rewardClaimRow');
 
     if (!activeProvider) return;
 
     try {
-        await activeProvider.disconnect();
+        const response = await activeProvider.connect();
+        const pubKey = response.publicKey ? response.publicKey.toString() : activeProvider.publicKey.toString();
+        myWalletAddress = pubKey;
+
         if (walletBtn) {
-            walletBtn.innerText = "Connect Wallet";
-            walletBtn.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+            walletBtn.innerText = `Connected (${walletName}): ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}`;
+            walletBtn.style.background = "#22c55e";
         }
+        
         if (status) {
-            status.innerText = "Wallet Status: Disconnected (Network: Solana)";
-            status.style.color = "#94a3b8";
+            status.innerText = `Wallet Status: Connected to Solana Mainnet via ${walletName}`;
+            status.style.color = "#22c55e";
         }
+        
         if (refLink) {
-            refLink.value = "https://provizto.hub";
+            refLink.value = `https://provizto.hub/${myWalletAddress}`;
         }
+
+        // Injeksi saldo dompet simulasi awal saat terkoneksi
+        if (vztBalance) {
+            vztBalance.innerText = "5,000.00 VZT";
+        }
+
+        // MEMAKSA STATE DAN ATRIBUT KEAKTIFAN DI-UNLOCK SECARA ABSOLUT
+        isConnected = true;
+
+        actionButtons.forEach(b => {
+            b.removeAttribute('disabled');
+        });
         
-        // Reset metrik saldo ke nol kembali
-        if (vztBalance) vztBalance.innerText = "0.00 VZT";
-        if (rewardClaimRow) rewardClaimRow.style.display = 'none';
+        // Refresh hitungan kalkulator agar mengubah status visual tombol menjadi aktif gradasi
+        calculateSwapAmounts();
+        calculateLockReward();
         
-        // Kunci kembali seluruh tombol aksi utama dApp
-        actionButtons.forEach(b => b.setAttribute('disabled', 'true'));
-        if (testBtn) testBtn.setAttribute('disabled', 'true');
+        if (testBtn) testBtn.removeAttribute('disabled');
         
-        hideBanner();
-        isConnected = false;
-        activeProvider = null;
-        isTokenLocked = false;
-        showBanner("Wallet disconnected.", "warning");
-        
-        // Reset skor tampilan kalkulator
-        executeLiveCalculatedMetrics();
+        showBanner(`Wallet successfully linked via ${walletName}!`, "success");
     } catch (err) {
-        console.error("Disconnection failed:", err);
+        console.error(`${walletName} connection rejected:`, err);
     }
 }
 
@@ -406,7 +413,7 @@ function calculateSwapAmounts() {
     const swapFeeLabel = document.getElementById('swapFeeLabel');
     const swapBtn = document.getElementById('swapBtn');
 
-    if (!payInput || !receiveInput) return;
+    if (!payInput || !receiveInput || !swapBtn) return;
 
     const amount = parseFloat(payInput.value) || 0;
     const tokenPay = tokenPaySelect.value;
@@ -420,7 +427,7 @@ function calculateSwapAmounts() {
         receiveInput.value = (amount * 0.5).toFixed(4);
     }
 
-    // PERBAIKAN: Tombol langsung aktif jika wallet CONNECTED (tidak peduli input kosong atau tidak)
+    // VALIDASI AKTIF SECARA TOTAL JIKA WALLET TERKONEKSI
     if (isConnected) {
         swapBtn.removeAttribute('disabled');
     } else {
@@ -563,17 +570,17 @@ function calculateLockReward() {
     const liveCalculatedScoreValue = document.getElementById('liveScore');
     const processLockActionButton = document.getElementById('lockBtn');
 
-    if (!lockInput) return;
-    const amount = parseFloat(lockInput.value) || 0;
+    if (!processLockActionButton) return;
+    const amount = lockInput ? (parseFloat(lockInput.value) || 0) : 0;
 
-    // PERBAIKAN: Tombol langsung aktif jika wallet CONNECTED (tidak peduli input kosong atau tidak)
+    // VALIDASI AKTIF SECARA TOTAL JIKA WALLET TERKONEKSI
     if (isConnected) {
         processLockActionButton.removeAttribute('disabled');
     } else {
         processLockActionButton.setAttribute('disabled', 'true');
     }
 
-    // 2. Eksekusi Logika Matematika Berdasarkan Mode Aktif
+    // Eksekusi Logika Matematika Berdasarkan Mode Aktif
     if (lockCalculationMode === 'manual') {
         if (liveCalculatedScoreValue) {
             liveCalculatedScoreValue.innerText = `${amount.toLocaleString('en-US')} VZT Share`;
@@ -590,6 +597,7 @@ function calculateLockReward() {
         }
     } 
     else {
+        // Menggunakan chosenMultiplier terintegrasi dari tombol grup horizontal
         const totalWeightedScoreSum = amount * chosenMultiplier;
         
         if (liveCalculatedScoreValue) {
