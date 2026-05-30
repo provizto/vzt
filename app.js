@@ -541,7 +541,7 @@ function switchLockCalculationView(selectedMode) {
         tabWizardBtn.classList.add('active');
         if (wizardOptionsPanel) wizardOptionsPanel.classList.add('active');
         if (lockInputFieldLabel) lockInputFieldLabel.innerText = "Enter Capital For Prediction:";
-        if (scorePreviewLabel) scorePreviewLabel.innerText = "Weighted Yield Score:";
+        if (scorePreviewLabel) scorePreviewLabel.innerText = "Boosted Yield Score:";
     }
     calculateLockReward();
 }
