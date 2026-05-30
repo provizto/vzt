@@ -160,29 +160,3 @@ function verifyReferralOnChain() {
         showBanner(`👑 [Success]: Top-Tier VIP KOL verified! Upgraded to Premium Gold Tier (25% Commission).`, "success");
     }
 }
-function showBanner(text, type) {
-    const banner = document.getElementById('securityBanner');
-    banner.innerText = text;
-    banner.style.display = "block";
-    if (type === "error") {
-        banner.style.background = "#ef4444";
-        banner.style.borderColor = "#b91c1c";
-    } else if (type === "success") {
-        banner.style.background = "#22c55e";
-        banner.style.borderColor = "#15803d";
-    } else {
-        banner.style.background = "#eab308";
-        banner.style.borderColor = "#a16207";
-    }
-}
-
-function hideBanner() {
-    document.getElementById('securityBanner').style.display = "none";
-}
-
-function copyLink() {
-    const copyText = document.getElementById("refLink");
-    copyText.select();
-    navigator.clipboard.writeText(copyText.value);
-    alert("Referral Link copied successfully!");
-}
