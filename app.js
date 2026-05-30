@@ -284,19 +284,23 @@ async function handleDepositVault() {
     if (!inputAmount || !yieldBtn) return;
     const amountValue = parseFloat(inputAmount.value) || 0;
 
-    // 1. VALIDASI: Tolak jika nominal 0, kosong, atau minus
+    // ==========================================================================
+    // PERBAIKAN: Validasi Cek Nilai Input Valid (Mencegah Angka 0, Kosong, & Minus)
+    // ==========================================================================
     if (amountValue <= 0) {
-        showBanner("⚠️ [Validation Error]: Deposit amount must be greater than 0 USDC!", "error");
-        return;
+        // Memunculkan pop-up spanduk peringatan bawaan dApp berwarna kuning/merah
+        showBanner("⚠️ [Validation Error]: Please enter a valid deposit amount greater than 0 USDC!", "warning");
+        return; // Menghentikan eksekusi kode agar tidak memproses transaksi kosong
     }
 
-    // 2. TIMELOCK: Jalankan pengkondisian batas aman inter-interval 10 detik
+    // 2. TIMELOCK: Jalankan pengkondisian batas aman inter-interval 10 detik (Anti-Sybil)
     const currentTime = Date.now();
     if (currentTime - lastTransactionTime < 10000) {
-        showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.`, "error");
+        showBanner(`⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Please wait 10 seconds.`, "error");
         return;
     }
 
+    // Jika lolos validasi, jalankan proses deposit dApp normal
     yieldBtn.disabled = true;
     yieldBtn.innerText = "Processing Deposit...";
     yieldBtn.style.background = "#334155";
@@ -311,7 +315,7 @@ async function handleDepositVault() {
     } finally {
         yieldBtn.disabled = false;
         yieldBtn.innerText = "Open Vaults";
-        yieldBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+        yieldBtn.style.background = ''; // Mengembalikan ke properti gaya background gradasi asli CSS
         inputAmount.disabled = false;
     }
 }
