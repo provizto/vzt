@@ -40,11 +40,83 @@
         <div class="security-banner" id="securityBanner" style="display: none;"></div>
 
         <section class="products-grid">
-            <div class="product-card">
-                <h3>AMM DEX Swap</h3>
+            <div class="product-card" style="max-width: 420px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">AMM DEX Swap</h3>
+                    <span id="mevBadge" style="font-size: 11px; background: #1f6feb; color: #fff; padding: 3px 8px; border-radius: 12px; font-weight: bold; letter-spacing: 0.5px;">
+                        🛡️ MEV SECURE
+                    </span>
+                </div>
                 <p class="desc">Instant asset swapping with MEV protection and daily Anti-Wash Trading features.</p>
-                <div class="stat-box">Trading Fee: 0.3%</div>
-                <button class="btn-action" onclick="executeSecureTx('Swap')" disabled>Launch Swap</button>
+
+                <div style="background: #0b0f19; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #1f2937; text-align: left;">
+                    <label style="font-size: 12px; color: #94a3b8;">You Pay</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; marginTop: 6px;">
+                        <input 
+                            type="number" 
+                            id="payAmount" 
+                            placeholder="0.0" 
+                            oninput="calculateSwapAmounts()"
+                            style="background: transparent; border: none; color: #fff; font-size: 20px; width: 60%; outline: none; font-weight: 600;"
+                        />
+                        <select 
+                            id="tokenPay" 
+                            onchange="handleTokenChange('pay')"
+                            style="background: #1f2937; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; font-weight: bold; cursor: pointer; outline: none;"
+                        >
+                            <option value="USDC">USDC</option>
+                            <option value="VZT">VZT</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; margin: -18px 0; position: relative; z-index: 2;">
+                    <button 
+                        onclick="switchTokens()"
+                        style="background: #1f2937; border: 2px solid #334155; color: #38bdf8; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; outline: none;"
+                    >
+                        ⇅
+                    </button>
+                </div>
+
+                <div style="background: #0b0f19; padding: 12px; border-radius: 12px; margin-top: 8px; margin-bottom: 16px; border: 1px solid #1f2937; text-align: left;">
+                    <label style="font-size: 12px; color: #94a3b8;">You Receive (Estimated)</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; marginTop: 6px;">
+                        <input 
+                            type="text" 
+                            id="receiveAmount" 
+                            placeholder="0.0" 
+                            readonly 
+                            style="background: transparent; border: none; color: #38bdf8; font-size: 20px; width: 60%; outline: none; font-weight: 600;"
+                        />
+                        <span id="tokenReceiveLabel" style="background: #1f2937; color: #fff; border-radius: 6px; padding: 6px 14px; font-weight: bold; font-size: 0.9rem;">
+                            VZT
+                        </span>
+                    </div>
+                </div>
+
+                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 20px; line-height: 1.6; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                        <span>Trading Fee (0.3%):</span>
+                        <span id="swapFeeLabel" style="color: #f8fafc; font-weight: 600;">0.0000 USDC</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px dashed #1f2937;">
+                        <span>Anti-Wash Trading Check:</span>
+                        <span style="color: #22c55e; font-weight: 600;">Active (Daily)</span>
+                    </div>
+                </div>
+
+                <button 
+                    class="btn-action" 
+                    id="swapBtn"
+                    onclick="handleLaunchSwap()" 
+                    disabled
+                    style="width: 100%; padding: 14px; background: #1f2937; color: #94a3b8; font-weight: bold; border-radius: 8px; font-size: 15px;"
+                >
+                    Launch Swap
+                </button>
+
+                <div id="txStatusLog" style="margin-top: 12px; font-size: 11px; text-align: center; color: #94a3b8; font-style: italic; display: none;"></div>
             </div>
 
             <!-- YIELD OPTIMIZER CARD WITH INTEGRATED CALCULATOR -->
