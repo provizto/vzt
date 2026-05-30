@@ -150,10 +150,44 @@
             </div>
 
             <div class="product-card">
-                <h3>VZT Lock & Yield</h3>
-                <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
-                <div class="stat-box">Reward: Real USDC</div>
-                <button class="btn-action" onclick="executeSecureTx('Token Locking')" disabled>Lock Token</button>
+                <div>
+                    <h3>VZT Lock & Yield</h3>
+                    <p class="desc">Lock your $VZT tokens to claim Real Yield paid out in stable USDC.</p>
+
+                    <div style="margin-bottom: 20px; text-align: left;">
+                        <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px;">
+                            Amount of $VZT to Lock:
+                        </label>
+                        <input 
+                            type="number" 
+                            id="lockAmount" 
+                            placeholder="0.0" 
+                            oninput="calculateLockReward()"
+                            style="width: 100%; padding: 12px; background: #0b0f19; border: 1px solid #374151; border-radius: 8px; color: #fff; fontSize: 16px; outline: none; font-weight: 600;"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <div style="background: rgba(31, 111, 235, 0.1); border: 1px solid rgba(56, 139, 253, 0.2); border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 24px;">
+                        <span style="color: #38bdf8; font-size: 13px; font-weight: 600; display: block;">
+                            Reward: Real USDC
+                        </span>
+                        <span id="accumulationLabel" style="font-size: 11px; color: #94a3b8; display: none; margin-top: 4px;">
+                            Estimated Accumulation: +0.00 USDC
+                        </span>
+                    </div>
+
+                    <button 
+                        class="btn-action" 
+                        id="lockBtn"
+                        onclick="handleLockToken()" 
+                        disabled
+                        style="width: 100%; padding: 14px; font-weight: bold; border-radius: 8px; font-size: 14px; border: none;"
+                    >
+                        Lock Token
+                    </button>
+                </div>
             </div>
         </section>
 
