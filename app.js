@@ -12,6 +12,7 @@ let isTokenLocked = false;
 
 // System Staking Calculation Mode Tracker
 let lockCalculationMode = 'manual';
+let chosenMultiplier = 2.5; // Default multiplier untuk opsi 180 hari aktif awal
 
 // Inisialisasi awal saat halaman web dimuat oleh browser
 document.addEventListener("DOMContentLoaded", () => {
@@ -120,7 +121,6 @@ async function connectWallet(walletName) {
         // Buka kunci akses semua tombol aksi dApp jika nilai input sudah valid
         actionButtons.forEach(b => {
             if (b.id === 'lockBtn') {
-                // Biarkan dihandle oleh executeLiveCalculatedMetrics()
                 executeLiveCalculatedMetrics();
             } else if (b.id === 'swapBtn') {
                 calculateSwapAmounts();
@@ -388,7 +388,6 @@ function updateYieldProjection() {
     profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
     profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
 
-    // Validasi tombol deposit berdasarkan koneksi dompet
     if (isConnected && amountValue > 0) {
         yieldBtn.removeAttribute('disabled');
     } else {
@@ -421,7 +420,6 @@ function calculateSwapAmounts() {
         receiveInput.value = (amount * 0.5).toFixed(4);
     }
 
-    // Kontrol tombol swap berdasarkan status koneksi dompet
     if (isConnected && amount > 0) {
         swapBtn.removeAttribute('disabled');
     } else {
@@ -429,6 +427,7 @@ function calculateSwapAmounts() {
     }
 }
 
+// Handler perubahan mata uang token swap
 function handleTokenChange(type) {
     const tokenPaySelect = document.getElementById('tokenPay');
     const tokenReceiveLabel = document.getElementById('tokenReceiveLabel');
@@ -495,7 +494,7 @@ async function handleLaunchSwap() {
         isSwapLoading = false;
         swapBtn.disabled = false;
         swapBtn.innerText = 'Launch Swap';
-        swapBtn.style.background = ''; // Kembali ke CSS gradient rules
+        swapBtn.style.background = '';
     }
 }
 
@@ -503,11 +502,9 @@ async function handleLaunchSwap() {
    7. VZT LOCK & YIELD ECOSYSTEM METRICS & CALCULATION STRATEGIES
    ========================================================================== */
 
-// Event Listeners Mappings binding untuk Tab Interaktif
 function initStakingTabs() {
     const tabManualBtn = document.getElementById('tabManual');
     const tabWizardBtn = document.getElementById('tabWizard');
-    const multiplierSelectField = document.getElementById('multiplierSelect');
 
     if (tabManualBtn && tabWizardBtn) {
         tabManualBtn.addEventListener('click', () => switchLockCalculationView('manual'));
@@ -516,7 +513,7 @@ function initStakingTabs() {
 }
 
 function switchLockCalculationView(selectedMode) {
-    if (isTokenLocked) return; // Kunci tab jika transaksi deposit sukses
+    if (isTokenLocked) return; // Mengunci tab jika aset sudah sukses dilock
     
     lockCalculationMode = selectedMode;
     const tabManualBtn = document.getElementById('tabManual');
@@ -541,6 +538,22 @@ function switchLockCalculationView(selectedMode) {
     calculateLockReward();
 }
 
+// FUNGSI BARU: Mengubah multiplier global saat pengguna mengklik tombol grup opsi durasi horizontal
+function selectDuration(element) {
+    if (isTokenLocked) return;
+    
+    // Hapus kelas aktif visual dari semua tombol durasi dalam grup card
+    const buttons = document.querySelectorAll('.btn-duration');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Aktifkan elemen tombol klik baru dan salin nilai multiplier dari data-attribute HTML
+    element.classList.add('active');
+    chosenMultiplier = parseFloat(element.getAttribute('data-multiplier')) || 1;
+    
+    // Trigger penghitungan live score kalkulator
+    calculateLockReward();
+}
+
 function calculateLockReward() {
     if (isTokenLocked) return;
     
@@ -548,25 +561,23 @@ function calculateLockReward() {
     const accumulationLabel = document.getElementById('accumulationLabel');
     const liveCalculatedScoreValue = document.getElementById('liveScore');
     const processLockActionButton = document.getElementById('lockBtn');
-    const multiplierSelectField = document.getElementById('multiplierSelect');
 
     if (!lockInput) return;
     const amount = parseFloat(lockInput.value) || 0;
 
-    // 1. Validasi State Tombol Lock Aksi Tergantung Status Koneksi Wallet
+    // 1. Validasi status aktif tombol kunci aksi dApp
     if (isConnected && amount > 0) {
         processLockActionButton.removeAttribute('disabled');
     } else {
         processLockActionButton.setAttribute('disabled', 'true');
     }
 
-    // 2. Eksekusi Logika Matematika Berdasarkan Mode Aktif (Manual vs Whitepaper Wizard)
+    // 2. Eksekusi kalkulasi berdasarkan mode tab aktif
     if (lockCalculationMode === 'manual') {
         if (liveCalculatedScoreValue) {
             liveCalculatedScoreValue.innerText = `${amount.toLocaleString('en-US')} VZT Share`;
         }
         
-        // Perhitungan Akumulasi Imbalan USDC Bawaan
         if (amount > 0) {
             const estimatedUsdcReward = amount * 0.05;
             if (accumulationLabel) {
@@ -578,17 +589,15 @@ function calculateLockReward() {
         }
     } 
     else {
-        // Mode Whitepaper Wizard dengan Multiplier
-        const timeWeightedMultiplierValue = multiplierSelectField ? parseFloat(multiplierSelectField.value) : 1;
-        const totalWeightedScoreSum = amount * timeWeightedMultiplierValue;
+        // Menggunakan chosenMultiplier terintegrasi dari tombol grup horizontal
+        const totalWeightedScoreSum = amount * chosenMultiplier;
         
         if (liveCalculatedScoreValue) {
             liveCalculatedScoreValue.innerText = `${totalWeightedScoreSum.toLocaleString('en-US')} VZT Share`;
         }
 
-        // Penyesuaian imbalan akumulasi berdasarkan pengganda insentif durasi kunci
         if (amount > 0) {
-            const estimatedUsdcReward = (amount * 0.05) * timeWeightedMultiplierValue;
+            const estimatedUsdcReward = (amount * 0.05) * chosenMultiplier;
             if (accumulationLabel) {
                 accumulationLabel.style.display = 'block';
                 accumulationLabel.innerText = `Estimated Accumulation (Incentivized): +${estimatedUsdcReward.toFixed(2)} USDC`;
@@ -605,7 +614,6 @@ async function handleLockToken() {
     const rewardClaimRow = document.getElementById('rewardClaimRow');
     const earnedUsdc = document.getElementById('earnedUsdc');
     const vztBalance = document.getElementById('vztBalance');
-    const multiplierSelectField = document.getElementById('multiplierSelect');
 
     if (!lockInput || !lockBtn) return;
     const amount = parseFloat(lockInput.value) || 0;
@@ -630,16 +638,15 @@ async function handleLockToken() {
         lockBtn.style.background = '#22c55e';
         lockBtn.style.cursor = 'not-allowed';
         
-        // Kalkulasi nilai insentif pengali akhir
-        const multiplier = (lockCalculationMode === 'wizard' && multiplierSelectField) ? parseFloat(multiplierSelectField.value) : 1;
+        const finalMultiplier = (lockCalculationMode === 'wizard') ? chosenMultiplier : 1;
         
-        // Kalkulasi pengurangan saldo dompet secara responsif di antarmuka (Bawaan awal 5,000 VZT)
+        // Pengurangan saldo wallet pengguna secara dinamis di antarmuka
         if (vztBalance) vztBalance.innerText = (5000 - amount).toLocaleString('en-US', {minimumFractionDigits: 2}) + " VZT";
         
-        // Munculkan baris opsi penarikan imbalan Real Yield
+        // Tampilkan data modul claim rewards di antarmuka pengguna
         if (rewardClaimRow && earnedUsdc) {
             rewardClaimRow.style.display = 'flex';
-            earnedUsdc.innerText = ((amount * 0.05) * multiplier).toFixed(2) + " USDC";
+            earnedUsdc.innerText = ((amount * 0.05) * finalMultiplier).toFixed(2) + " USDC";
         }
     } catch (error) {
         alert('Transaction failed.');
