@@ -10,6 +10,9 @@ let isSwapLoading = false;
 let isLockLoading = false;
 let isTokenLocked = false;
 
+// System Staking Calculation Mode Tracker
+let lockCalculationMode = 'manual';
+
 // Inisialisasi awal saat halaman web dimuat oleh browser
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Set tahun hak cipta secara otomatis di footer
@@ -22,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof updateYieldProjection === "function") {
         setTimeout(updateYieldProjection, 500);
     }
+
+    // 3. Inisialisasi Event Listener untuk Sistem Tab Kalkulator Staking VZT
+    initStakingTabs();
 });
 
 /* ==========================================================================
@@ -46,7 +52,7 @@ function closeWalletModal() {
 function selectWallet(walletType) {
     closeWalletModal();
     
-    // 1. Deteksi apakah pengguna membuka dApp lewat HP (Mobile)
+    // Deteksi apakah pengguna membuka dApp lewat HP (Mobile)
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const dAppUrl = window.location.href; // Mengambil URL dApp saat ini secara otomatis
 
@@ -76,7 +82,6 @@ function selectWallet(walletType) {
         }
     }
 }
-// AKHIR ANTI GAGAL WALLET DI HP
 
 async function connectWallet(walletName) {
     const walletBtn = document.getElementById('walletBtn');
@@ -112,8 +117,18 @@ async function connectWallet(walletName) {
             vztBalance.innerText = "5,000.00 VZT";
         }
 
-        // Buka kunci akses semua tombol aksi dApp
-        actionButtons.forEach(b => b.removeAttribute('disabled'));
+        // Buka kunci akses semua tombol aksi dApp jika nilai input sudah valid
+        actionButtons.forEach(b => {
+            if (b.id === 'lockBtn') {
+                // Biarkan dihandle oleh executeLiveCalculatedMetrics()
+                executeLiveCalculatedMetrics();
+            } else if (b.id === 'swapBtn') {
+                calculateSwapAmounts();
+            } else {
+                b.removeAttribute('disabled');
+            }
+        });
+        
         if (testBtn) testBtn.removeAttribute('disabled');
         
         isConnected = true;
@@ -161,6 +176,9 @@ async function disconnectWallet() {
         activeProvider = null;
         isTokenLocked = false;
         showBanner("Wallet disconnected.", "warning");
+        
+        // Reset skor tampilan kalkulator
+        executeLiveCalculatedMetrics();
     } catch (err) {
         console.error("Disconnection failed:", err);
     }
@@ -359,6 +377,7 @@ function updateYieldProjection() {
     const profitDay = document.getElementById('profitDay');
     const profitMonth = document.getElementById('profitMonth');
     const profitYear = document.getElementById('profitYear');
+    const yieldBtn = document.getElementById('yieldBtn');
 
     if (!inputAmount || !profitDay || !profitMonth || !profitYear) return; 
 
@@ -368,6 +387,13 @@ function updateYieldProjection() {
     profitDay.innerText = `${Number(projection.estimatedDailyProfit).toLocaleString('en-US')} USDC`;
     profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
     profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
+
+    // Validasi tombol deposit berdasarkan koneksi dompet
+    if (isConnected && amountValue > 0) {
+        yieldBtn.removeAttribute('disabled');
+    } else {
+        yieldBtn.setAttribute('disabled', 'true');
+    }
 }
 
 /* ==========================================================================
@@ -379,6 +405,7 @@ function calculateSwapAmounts() {
     const receiveInput = document.getElementById('receiveAmount');
     const tokenPaySelect = document.getElementById('tokenPay');
     const swapFeeLabel = document.getElementById('swapFeeLabel');
+    const swapBtn = document.getElementById('swapBtn');
 
     if (!payInput || !receiveInput) return;
 
@@ -392,6 +419,13 @@ function calculateSwapAmounts() {
         receiveInput.value = (amount * 2).toFixed(4);
     } else {
         receiveInput.value = (amount * 0.5).toFixed(4);
+    }
+
+    // Kontrol tombol swap berdasarkan status koneksi dompet
+    if (isConnected && amount > 0) {
+        swapBtn.removeAttribute('disabled');
+    } else {
+        swapBtn.setAttribute('disabled', 'true');
     }
 }
 
@@ -461,28 +495,107 @@ async function handleLaunchSwap() {
         isSwapLoading = false;
         swapBtn.disabled = false;
         swapBtn.innerText = 'Launch Swap';
-        swapBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+        swapBtn.style.background = ''; // Kembali ke CSS gradient rules
     }
 }
 
 /* ==========================================================================
-   7. VZT LOCK & YIELD ECOSYSTEM METRICS
+   7. VZT LOCK & YIELD ECOSYSTEM METRICS & CALCULATION STRATEGIES
    ========================================================================== */
+
+// Event Listeners Mappings binding untuk Tab Interaktif
+function initStakingTabs() {
+    const tabManualBtn = document.getElementById('tabManual');
+    const tabWizardBtn = document.getElementById('tabWizard');
+    const multiplierSelectField = document.getElementById('multiplierSelect');
+
+    if (tabManualBtn && tabWizardBtn) {
+        tabManualBtn.addEventListener('click', () => switchLockCalculationView('manual'));
+        tabWizardBtn.addEventListener('click', () => switchLockCalculationView('wizard'));
+    }
+}
+
+function switchLockCalculationView(selectedMode) {
+    if (isTokenLocked) return; // Kunci tab jika transaksi deposit sukses
+    
+    lockCalculationMode = selectedMode;
+    const tabManualBtn = document.getElementById('tabManual');
+    const tabWizardBtn = document.getElementById('tabWizard');
+    const wizardOptionsPanel = document.getElementById('wizardOptions');
+    const lockInputFieldLabel = document.getElementById('inputLabel');
+    const scorePreviewLabel = document.getElementById('scoreLabel');
+
+    if (selectedMode === 'manual') {
+        tabManualBtn.classList.add('active');
+        tabWizardBtn.classList.remove('active');
+        if (wizardOptionsPanel) wizardOptionsPanel.classList.remove('active');
+        if (lockInputFieldLabel) lockInputFieldLabel.innerText = "Amount of $VZT to Lock:";
+        if (scorePreviewLabel) scorePreviewLabel.innerText = "Base Processing Share:";
+    } else {
+        tabManualBtn.classList.remove('active');
+        tabWizardBtn.classList.add('active');
+        if (wizardOptionsPanel) wizardOptionsPanel.classList.add('active');
+        if (lockInputFieldLabel) lockInputFieldLabel.innerText = "Enter Capital For Prediction:";
+        if (scorePreviewLabel) scorePreviewLabel.innerText = "Weighted Yield Score:";
+    }
+    calculateLockReward();
+}
 
 function calculateLockReward() {
     if (isTokenLocked) return;
+    
     const lockInput = document.getElementById('lockAmount');
     const accumulationLabel = document.getElementById('accumulationLabel');
+    const liveCalculatedScoreValue = document.getElementById('liveScore');
+    const processLockActionButton = document.getElementById('lockBtn');
+    const multiplierSelectField = document.getElementById('multiplierSelect');
 
-    if (!lockInput || !accumulationLabel) return;
+    if (!lockInput) return;
     const amount = parseFloat(lockInput.value) || 0;
 
-    if (amount > 0) {
-        const estimatedUsdcReward = amount * 0.05;
-        accumulationLabel.style.display = 'block';
-        accumulationLabel.innerText = `Estimated Accumulation: +${estimatedUsdcReward.toFixed(2)} USDC`;
+    // 1. Validasi State Tombol Lock Aksi Tergantung Status Koneksi Wallet
+    if (isConnected && amount > 0) {
+        processLockActionButton.removeAttribute('disabled');
     } else {
-        accumulationLabel.style.display = 'none';
+        processLockActionButton.setAttribute('disabled', 'true');
+    }
+
+    // 2. Eksekusi Logika Matematika Berdasarkan Mode Aktif (Manual vs Whitepaper Wizard)
+    if (lockCalculationMode === 'manual') {
+        if (liveCalculatedScoreValue) {
+            liveCalculatedScoreValue.innerText = `${amount.toLocaleString('en-US')} VZT Share`;
+        }
+        
+        // Perhitungan Akumulasi Imbalan USDC Bawaan
+        if (amount > 0) {
+            const estimatedUsdcReward = amount * 0.05;
+            if (accumulationLabel) {
+                accumulationLabel.style.display = 'block';
+                accumulationLabel.innerText = `Estimated Accumulation: +${estimatedUsdcReward.toFixed(2)} USDC`;
+            }
+        } else {
+            if (accumulationLabel) accumulationLabel.style.display = 'none';
+        }
+    } 
+    else {
+        // Mode Whitepaper Wizard dengan Multiplier
+        const timeWeightedMultiplierValue = multiplierSelectField ? parseFloat(multiplierSelectField.value) : 1;
+        const totalWeightedScoreSum = amount * timeWeightedMultiplierValue;
+        
+        if (liveCalculatedScoreValue) {
+            liveCalculatedScoreValue.innerText = `${totalWeightedScoreSum.toLocaleString('en-US')} VZT Share`;
+        }
+
+        // Penyesuaian imbalan akumulasi berdasarkan pengganda insentif durasi kunci
+        if (amount > 0) {
+            const estimatedUsdcReward = (amount * 0.05) * timeWeightedMultiplierValue;
+            if (accumulationLabel) {
+                accumulationLabel.style.display = 'block';
+                accumulationLabel.innerText = `Estimated Accumulation (Incentivized): +${estimatedUsdcReward.toFixed(2)} USDC`;
+            }
+        } else {
+            if (accumulationLabel) accumulationLabel.style.display = 'none';
+        }
     }
 }
 
@@ -492,6 +605,7 @@ async function handleLockToken() {
     const rewardClaimRow = document.getElementById('rewardClaimRow');
     const earnedUsdc = document.getElementById('earnedUsdc');
     const vztBalance = document.getElementById('vztBalance');
+    const multiplierSelectField = document.getElementById('multiplierSelect');
 
     if (!lockInput || !lockBtn) return;
     const amount = parseFloat(lockInput.value) || 0;
@@ -516,13 +630,16 @@ async function handleLockToken() {
         lockBtn.style.background = '#22c55e';
         lockBtn.style.cursor = 'not-allowed';
         
-        // Kalkulasi pengurangan saldo dompet secara responsif di antarmuka
+        // Kalkulasi nilai insentif pengali akhir
+        const multiplier = (lockCalculationMode === 'wizard' && multiplierSelectField) ? parseFloat(multiplierSelectField.value) : 1;
+        
+        // Kalkulasi pengurangan saldo dompet secara responsif di antarmuka (Bawaan awal 5,000 VZT)
         if (vztBalance) vztBalance.innerText = (5000 - amount).toLocaleString('en-US', {minimumFractionDigits: 2}) + " VZT";
         
         // Munculkan baris opsi penarikan imbalan Real Yield
         if (rewardClaimRow && earnedUsdc) {
             rewardClaimRow.style.display = 'flex';
-            earnedUsdc.innerText = (amount * 0.05).toFixed(2) + " USDC";
+            earnedUsdc.innerText = ((amount * 0.05) * multiplier).toFixed(2) + " USDC";
         }
     } catch (error) {
         alert('Transaction failed.');
@@ -545,3 +662,6 @@ function claimVztReward() {
     earnedUsdc.innerText = "0.00 USDC";
     if (rewardClaimRow) rewardClaimRow.style.display = 'none';
 }
+
+// Global interface execution metrics listener mapper
+executeLiveCalculatedMetrics = calculateLockReward;
