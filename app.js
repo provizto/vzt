@@ -175,11 +175,28 @@ function hideBanner() {
     document.getElementById('securityBanner').style.display = "none";
 }
 
+// --- REPLACE THE OLD copyLink FUNCTION IN YOUR app.js WITH THIS ---
 function copyLink() {
-    const copyText = document.getElementById("refLink");
-    copyText.select();
-    navigator.clipboard.writeText(copyText.value);
-    alert("Referral Link copied successfully!");
+    const refLinkInput = document.getElementById('refLink');
+    
+    if (!refLinkInput) return;
+
+    // 1. Pilih teks di dalam input box
+    refLinkInput.select();
+    refLinkInput.setSelectionRange(0, 99999); /* Untuk perangkat mobile */
+
+    try {
+        // 2. Eksekusi perintah salin ke clipboard sistem perangkat
+        navigator.clipboard.writeText(refLinkInput.value);
+        
+        // 3. TAMPILKAN BANNER INFORMASI SUKSES (Warna Hijau)
+        showBanner("📋 Referral link successfully copied to your clipboard!", "success");
+        
+    } catch (err) {
+        // Fallback jika browser versi lama tidak mendukung navigator.clipboard
+        document.execCommand('copy');
+        showBanner("📋 Referral link successfully copied to your clipboard!", "success");
+    }
 }
     
     // 3. SIMULASI GENERATE VOLUME ACAK (Untuk Keperluan Demo & Pengajuan Grants)
