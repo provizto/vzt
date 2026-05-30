@@ -210,12 +210,11 @@ function copyLink() {
     }
 }
 
-// --- PROVIZTO YIELD CALCULATOR ENGINE (VANILLA CORE IMPLEMENTATION) ---
+// --- FIXED PROVIZTO YIELD CALCULATOR ENGINE ---
 
-// 1. Fungsi Matematika Utama (Menggantikan YieldCalculator.ts)
+// 1. Fungsi Kalkulasi Matematika Utama
 function calculateProviztoYield(amount) {
-    // Menghitung daily rate compound dari target APY ~49.1%
-    // Formula dasar: (1 + r)^365 = 1.491 -> r ≈ 0.0011 (0.11% per hari)
+    // Formula APY ~49.1% (Daily rate compound ≈ 0.11% per hari)
     const dailyRate = 0.0011; 
     
     const dailyProfit = amount * dailyRate;
@@ -230,34 +229,26 @@ function calculateProviztoYield(amount) {
     };
 }
 
-// 2. Fungsi Pengendali UI & Event Listener (Menggantikan React useState effect)
+// 2. Fungsi Utama Pengendali Tampilan UI (Dipanggil langsung oleh HTML oninput)
 function updateYieldProjection() {
     const inputAmount = document.getElementById('calcAmount');
     const profitDay = document.getElementById('profitDay');
     const profitMonth = document.getElementById('profitMonth');
     const profitYear = document.getElementById('profitYear');
 
-    if (!inputAmount) return; // Mencegah error jika elemen belum di-render
+    // Validasi pencegahan eror jika elemen HTML tidak ditemukan
+    if (!inputAmount || !profitDay || !profitMonth || !profitYear) return; 
 
     const amountValue = parseFloat(inputAmount.value) || 0;
     
-    // Jalankan kalkulasi yield
+    // Jalankan formula kalkulasi yield
     const projection = calculateProviztoYield(amountValue);
 
-    // Render hasil kalkulasi secara real-time ke layar DOM HTML
+    // Suntikkan hasil kalkulasi langsung ke layar DOM HTML secara real-time
     profitDay.innerText = `${Number(projection.estimatedDailyProfit).toLocaleString('en-US')} USDC`;
     profitMonth.innerText = `${Number(projection.estimatedMonthlyProfit).toLocaleString('en-US')} USDC`;
     profitYear.innerText = `${Number(projection.estimatedAnnualProfit).toLocaleString('en-US')} USDC`;
 }
 
-// 3. Daftarkan Event Listener setelah DOM sepenuhnya dimuat browser
-document.addEventListener("DOMContentLoaded", () => {
-    const inputAmount = document.getElementById('calcAmount');
-    if (inputAmount) {
-        // Memicu kalkulasi otomatis setiap kali angka di dalam kolom input berubah/diketik (menggantikan onChange React)
-        inputAmount.addEventListener('input', updateYieldProjection);
-        
-        // Jalankan kalkulasi awal untuk default value ($1,000) saat dApp dibuka
-        updateYieldProjection();
-    }
-});
+// 3. Jalankan fungsi sekali secara otomatis agar default value ($1,000) langsung muncul saat halaman pertama terbuka
+setTimeout(updateYieldProjection, 500);
