@@ -175,46 +175,27 @@ function hideBanner() {
     document.getElementById('securityBanner').style.display = "none";
 }
 
-// --- FIX ANTI-GAGAL: SALIN TAUTAN COCOK UNTUK OFFLINE & ONLINE ---
+// --- REPLACE THE OLD copyLink FUNCTION IN YOUR app.js WITH THIS ---
 function copyLink() {
     const refLinkInput = document.getElementById('refLink');
+    
     if (!refLinkInput) return;
 
-    // 1. Fokus dan seleksi teks di dalam kotak input
-    refLinkInput.focus();
+    // 1. Pilih teks di dalam input box
     refLinkInput.select();
-    refLinkInput.setSelectionRange(0, 99999); /* Optimasi untuk pengguna HP */
+    refLinkInput.setSelectionRange(0, 99999); /* Untuk perangkat mobile */
 
-    let success = false;
-
-    // 2. Coba Metode Standar Modern (Hanya jalan di HTTPS / Localhost)
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(refLinkInput.value)
-            .then(() => {
-                showBanner("📋 Referral link successfully copied to your clipboard!", "success");
-            })
-            .catch(() => {
-                // Jika metode modern gagal, lempar ke metode cadangan di bawah
-                executeFallbackCopy(refLinkInput);
-            });
-    } else {
-        // 3. Jalankan Metode Cadangan Klasik (Pasti jalan di file:/// offline lokal)
-        executeFallbackCopy(refLinkInput);
-    }
-}
-
-// Fungsi cadangan klasik menggunakan document.execCommand
-function executeFallbackCopy(inputElement) {
     try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showBanner("📋 Referral link successfully copied to your clipboard! (Local Mode)", "success");
-        } else {
-            alert("Failed to copy link. Please select the text and copy manually.");
-        }
+        // 2. Eksekusi perintah salin ke clipboard sistem perangkat
+        navigator.clipboard.writeText(refLinkInput.value);
+        
+        // 3. TAMPILKAN BANNER INFORMASI SUKSES (Warna Hijau)
+        showBanner("📋 Referral link successfully copied to your clipboard!", "success");
+        
     } catch (err) {
-        console.error("Fallback copy execution error: ", err);
-        alert("Failed to copy link. Please copy manually.");
+        // Fallback jika browser versi lama tidak mendukung navigator.clipboard
+        document.execCommand('copy');
+        showBanner("📋 Referral link successfully copied to your clipboard!", "success");
     }
 }
     
