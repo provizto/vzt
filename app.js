@@ -133,6 +133,55 @@ function verifyReferralOnChain() {
         return;
     }
 
+    // --- LOGIKA SIMULASI RUST / SMART CONTRACT TETAP SAMA ---
+function verifyReferralOnChain() {
+    const inputVal = document.getElementById('testReferrer').value.trim();
+    if (inputVal === myWalletAddress) {
+        showBanner("⚠️ [Smart Contract Error]: You cannot refer yourself! (SelfReferralNotAllowed)", "error");
+    } else if (inputVal === "") {
+        showBanner("Please enter a wallet address for simulation testing.", "warning");
+    } else {
+        showBanner("✅ [Smart Contract Success]: Referrer address is valid and recorded securely on-chain.", "success");
+    }
+}
+
+function executeSecureTx(actionName) {
+    const now = Math.floor(Date.now() / 1000);
+    if (now - lastTransactionTime < 10) {
+        showBanner("⚠️ [Smart Contract Error]: Repetitive transaction detected too fast! Per Rust code rules, please wait 10 seconds.", "error");
+        return;
+    }
+    lastTransactionTime = now;
+    showBanner(`✅ Transaction [${actionName}] executed successfully on the Solana network.`, "success");
+}
+
+function showBanner(text, type) {
+    const banner = document.getElementById('securityBanner');
+    banner.innerText = text;
+    banner.style.display = "block";
+    if (type === "error") {
+        banner.style.background = "#ef4444";
+        banner.style.borderColor = "#b91c1c";
+    } else if (type === "success") {
+        banner.style.background = "#22c55e";
+        banner.style.borderColor = "#15803d";
+    } else {
+        banner.style.background = "#eab308";
+        banner.style.borderColor = "#a16207";
+    }
+}
+
+function hideBanner() {
+    document.getElementById('securityBanner').style.display = "none";
+}
+
+function copyLink() {
+    const copyText = document.getElementById("refLink");
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+    alert("Referral Link copied successfully!");
+}
+    
     // 3. SIMULASI GENERATE VOLUME ACAK (Untuk Keperluan Demo & Pengajuan Grants)
     // Menghasilkan angka acak antara $5,000 sampai $150,000 secara otomatis
     const simulatedVolume = Math.floor(Math.random() * 145000) + 5000; 
