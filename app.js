@@ -162,3 +162,21 @@ function copyLink() {
     navigator.clipboard.writeText(copyText.value);
     alert("Referral Link copied successfully!");
 }
+
+/* --- ADD THIS TO THE VERY BOTTOM OF YOUR style.css --- */
+.tier-stats {
+    display: flex;
+    gap: 40px;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    background-color: #0b0f19;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #1f2937;
+    margin-top: 15px;
+}
+
+.tier-item span {
+    font-weight: 700;
+    transition: color 0.3s ease-in-out; /* Memberikan efek animasi smooth saat warna teks tier berubah */
+}
