@@ -369,3 +369,70 @@ async function handleLaunchSwap() {
         swapBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
     }
 }
+
+// --- PROVIZTO VZT LOCK & YIELD ENGINE (VANILLA CORE IMPLEMENTATION) ---
+
+let isLockLoading = false;
+let isTokenLocked = false;
+
+// 1. Logika Perhitungan Estimasi Real Yield Real-Time (Menggantikan kalkulasi state React)
+function calculateLockReward() {
+    if (isTokenLocked) return;
+
+    const lockInput = document.getElementById('lockAmount');
+    const accumulationLabel = document.getElementById('accumulationLabel');
+
+    if (!lockInput || !accumulationLabel) return;
+
+    const amount = parseFloat(lockInput.value) || 0;
+
+    if (amount > 0) {
+        // Formula matematika: 1 VZT = 0.05 USDC dari pool fee swap
+        const estimatedUsdcReward = amount * 0.05;
+        accumulationLabel.style.display = 'block';
+        accumulationLabel.innerText = `Estimated Accumulation: +${estimatedUsdcReward.toFixed(2)} USDC`;
+    } else {
+        accumulationLabel.style.display = 'none';
+    }
+}
+
+// 2. Fungsi Utama Eksekusi Penguncian Aset ke Anchor Smart Contract
+async function handleLockToken() {
+    const lockInput = document.getElementById('lockAmount');
+    const lockBtn = document.getElementById('lockBtn');
+    const accumulationLabel = document.getElementById('accumulationLabel');
+
+    const amount = parseFloat(lockInput.value) || 0;
+
+    if (amount <= 0) {
+        alert('Please enter a valid amount of $VZT tokens to lock.');
+        return;
+    }
+
+    isLockLoading = true;
+    lockBtn.disabled = true;
+    lockBtn.innerText = 'Processing Lock...';
+    lockBtn.style.background = '#334155'; // Indikator loading abu-abu gelap
+    lockInput.disabled = true;
+
+    try {
+        // Simulasi pengiriman instruksi ke Anchor Program selama 2 detik
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        alert(`Successfully locked ${amount} $VZT!\n\nYou are now eligible to claim periodic Real Yield rewards in stable USDC.`);
+        
+        // Kunci status form secara permanen (Sukses)
+        isTokenLocked = true;
+        lockBtn.innerText = '✓ Token Locked';
+        lockBtn.style.background = '#22c55e'; // Warna hijau sukses permanen
+        lockBtn.style.cursor = 'not-allowed';
+    } catch (error) {
+        alert('Transaction failed to send to the blockchain.');
+        // Kembalikan tombol jika gagal
+        isLockLoading = false;
+        lockBtn.disabled = false;
+        lockBtn.innerText = 'Lock Token';
+        lockBtn.style.background = 'linear-gradient(90deg, #1f6feb 0%, #238636 100%)';
+        lockInput.disabled = false;
+    }
+}
