@@ -771,6 +771,7 @@ async function handleEmergencyUnlock() {
     const vztBalance = document.getElementById('vztBalance');
     const emergencyBtn = document.getElementById('emergencyUnlockBtn');
     const lockBtn = document.getElementById('lockBtn');
+    const rewardClaimRow = document.getElementById('rewardClaimRow'); // Tambahan selektor row claim
 
     const amountLocked = parseFloat(lockInput.value) || 0;
 
@@ -779,15 +780,22 @@ async function handleEmergencyUnlock() {
         return;
     }
 
-    // Konfirmasi tegas kepada pengguna sebelum melakukan pemotongan saldo asli/simulasi
-    const confirmWithdraw = confirm(
-        `EMERGENCY CLAUSE WARNING!\n\n` +
-        `Premature unlocking incurs a fixed 20% penalty.\n` +
-        `• Total Locked: ${amountLocked.toLocaleString('en-US')} VZT\n` +
-        `• 20% Penalty to BURN: ${(amountLocked * 0.2).toLocaleString('en-US')} VZT\n` +
-        `• You will receive back: ${(amountLocked * 0.8).toLocaleString('en-US')} VZT\n\n` +
-        `Are you sure you want to proceed with this penalty?`
-    );
+    // ==========================================================================
+    // PERBAIKAN: Format Susunan Teks Peringatan Kotak Confirm Kustom (Backtick ``)
+    // ==========================================================================
+    const alertMessage = `⚠️ ALERT: EMERGENCY UNLOCK SYSTEM
+--------------------------------------------------
+You are attempting to unlock your tokens before the maturity date. 
+Per contract rules, this action triggers the Emergency Clause:
+
+• Total Locked Assets   : ${amountLocked.toLocaleString('en-US', {minimumFractionDigits: 2})} VZT
+• 20% Penalty to BURN   : ${(amountLocked * 0.2).toLocaleString('en-US', {minimumFractionDigits: 2})} VZT (Permanently destroyed)
+• Net Amount Returned   : ${(amountLocked * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})} VZT
+
+Are you absolute sure you want to proceed and burn 20% of your capital?`;
+
+    // Panggil kotak konfirmasi dengan format teks baru
+    const confirmWithdraw = confirm(alertMessage);
 
     if (!confirmWithdraw) return;
 
@@ -805,8 +813,8 @@ async function handleEmergencyUnlock() {
         const penaltyAmount = amountLocked * 0.20;
         const finalAmountReturned = amountLocked - penaltyAmount;
 
-        // Ambil saldo dompet saat ini (misal default awal 5,000.00 VZT atau 0.00 VZT)
-        let currentWalletBalance = parseFloat(vztBalance.innerText.replace(/,/g, '')) || 0;
+        // Ambil saldo dompet saat ini
+        let currentWalletBalance = parseFloat(vztBalance.innerText.replace(/[^0-9.-]+/g,"")) || 0;
         
         // Kembalikan dana yang sudah dipotong penalti ke saldo dompet pengguna
         let newWalletBalance = currentWalletBalance + finalAmountReturned;
@@ -816,8 +824,7 @@ async function handleEmergencyUnlock() {
 
         // Tampilkan notifikasi keberhasilan di layar dApp
         showBanner(
-            `✅ Early Unlock Success! ${penaltyAmount.toLocaleString('en-US')} VZT permanently BURNED. ` +
-            `Returned ${finalAmountReturned.toLocaleString('en-US')} VZT to your wallet.`, 
+            `🔥 Success: ${penaltyAmount.toLocaleString('en-US')} VZT burned! Returned ${finalAmountReturned.toLocaleString('en-US')} VZT.`, 
             "success"
         );
 
@@ -825,11 +832,16 @@ async function handleEmergencyUnlock() {
         if (lockInput) lockInput.value = "0";
         isTokenLocked = false;
 
+        // Sembunyikan row reward karena status staking dicabut darurat
+        if (rewardClaimRow) rewardClaimRow.style.display = 'none';
+
         // Kunci kembali tombol emergency karena aset sudah ditarik semua
         if (emergencyBtn) {
             emergencyBtn.disabled = true;
             emergencyBtn.style.pointerEvents = "none";
             emergencyBtn.style.cursor = "not-allowed";
+            emergencyBtn.style.background = "rgba(239, 68, 68, 0.1)";
+            emergencyBtn.style.color = "#ef4444";
             emergencyBtn.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Emergency Early Unlock`;
         }
 
@@ -848,5 +860,6 @@ async function handleEmergencyUnlock() {
     } catch (error) {
         console.error("Emergency unlock failed:", error);
         showBanner("⚠️ Emergency execution rejected by network consensus.", "error");
+        if (emergencyBtn) emergencyBtn.innerText = "Emergency Early Unlock";
     }
 }
