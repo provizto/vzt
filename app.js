@@ -708,6 +708,19 @@ async function handleLockToken() {
         lockBtn.innerText = '✓ Token Locked';
         lockBtn.style.background = '#22c55e';
         lockBtn.style.cursor = 'not-allowed';
+       
+// ==========================================================================
+        // DI SINI LETAK KODE TERSEBUT BEKERJA SECARA OTOMATIS:
+        // Saat transaksi sukses, cari tombol emergency lalu nyalakan menjadi merah solid
+        // ==========================================================================
+       const emergencyBtn = document.getElementById('emergencyUnlockBtn');
+if (emergencyBtn) {
+    emergencyBtn.removeAttribute('disabled');
+    emergencyBtn.style.pointerEvents = "auto";
+    emergencyBtn.style.cursor = "pointer";
+    emergencyBtn.style.background = "#ef4444"; // Ubah menjadi warna merah solid tanda aktif
+    emergencyBtn.style.color = "#ffffff";
+}
         
         const finalMultiplier = (lockCalculationMode === 'wizard') ? chosenMultiplier : 1;
         
@@ -743,3 +756,97 @@ function claimVztReward() {
 
 // Global interface execution metrics listener mapper
 executeLiveCalculatedMetrics = calculateLockReward;
+
+// ==========================================================================
+// LOGIKA EMERGENCY CLAUSE: PENALTI 20% & TOKEN BURN
+// ==========================================================================
+async function handleEmergencyUnlock() {
+    // Pastikan wallet terhubung dan token sedang dalam status terkunci
+    if (!isConnected) {
+        showBanner("⚠️ Please connect your wallet first!", "error");
+        return;
+    }
+
+    const lockInput = document.getElementById('lockAmount');
+    const vztBalance = document.getElementById('vztBalance');
+    const emergencyBtn = document.getElementById('emergencyUnlockBtn');
+    const lockBtn = document.getElementById('lockBtn');
+
+    const amountLocked = parseFloat(lockInput.value) || 0;
+
+    if (amountLocked <= 0) {
+        showBanner("⚠️ [Error]: No locked assets detected to execute early withdrawal.", "error");
+        return;
+    }
+
+    // Konfirmasi tegas kepada pengguna sebelum melakukan pemotongan saldo asli/simulasi
+    const confirmWithdraw = confirm(
+        `EMERGENCY CLAUSE WARNING!\n\n` +
+        `Premature unlocking incurs a fixed 20% penalty.\n` +
+        `• Total Locked: ${amountLocked.toLocaleString('en-US')} VZT\n` +
+        `• 20% Penalty to BURN: ${(amountLocked * 0.2).toLocaleString('en-US')} VZT\n` +
+        `• You will receive back: ${(amountLocked * 0.8).toLocaleString('en-US')} VZT\n\n` +
+        `Are you sure you want to proceed with this penalty?`
+    );
+
+    if (!confirmWithdraw) return;
+
+    // Ubah status visual tombol saat memproses transaksi "burn" di blockchain simulasi
+    if (emergencyBtn) {
+        emergencyBtn.disabled = true;
+        emergencyBtn.innerText = "Burning & Processing...";
+    }
+
+    try {
+        // Simulasi delay jaringan RPC Solana (1.5 detik)
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        // Kalkulasi matematika penalti 20%
+        const penaltyAmount = amountLocked * 0.20;
+        const finalAmountReturned = amountLocked - penaltyAmount;
+
+        // Ambil saldo dompet saat ini (misal default awal 5,000.00 VZT atau 0.00 VZT)
+        let currentWalletBalance = parseFloat(vztBalance.innerText.replace(/,/g, '')) || 0;
+        
+        // Kembalikan dana yang sudah dipotong penalti ke saldo dompet pengguna
+        let newWalletBalance = currentWalletBalance + finalAmountReturned;
+        if (vztBalance) {
+            vztBalance.innerText = `${newWalletBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} VZT`;
+        }
+
+        // Tampilkan notifikasi keberhasilan di layar dApp
+        showBanner(
+            `✅ Early Unlock Success! ${penaltyAmount.toLocaleString('en-US')} VZT permanently BURNED. ` +
+            `Returned ${finalAmountReturned.toLocaleString('en-US')} VZT to your wallet.`, 
+            "success"
+        );
+
+        // Reset status input dan kalkulator kembali ke nol
+        if (lockInput) lockInput.value = "0";
+        isTokenLocked = false;
+
+        // Kunci kembali tombol emergency karena aset sudah ditarik semua
+        if (emergencyBtn) {
+            emergencyBtn.disabled = true;
+            emergencyBtn.style.pointerEvents = "none";
+            emergencyBtn.style.cursor = "not-allowed";
+            emergencyBtn.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Emergency Early Unlock`;
+        }
+
+        // Kembalikan tombol utama Lock Token ke kondisi siap pakai
+        if (lockBtn) {
+            lockBtn.disabled = false;
+            lockBtn.style.pointerEvents = "auto";
+            lockBtn.style.cursor = "pointer";
+            lockBtn.innerText = "Lock Token";
+            lockBtn.style.background = "linear-gradient(90deg, #1f6feb 0%, #238636 100%)";
+        }
+
+        // Refresh ulang seluruh hitungan indikator reward kalkulator
+        if (typeof calculateLockReward === "function") calculateLockReward();
+
+    } catch (error) {
+        console.error("Emergency unlock failed:", error);
+        showBanner("⚠️ Emergency execution rejected by network consensus.", "error");
+    }
+}
