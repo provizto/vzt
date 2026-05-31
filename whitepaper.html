@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROVIZTO ($VZT) WHITEPAPER - Secure Unified DeFi Hub</title>
-    <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -106,26 +105,6 @@
         .solana-tag {
             color: #9945FF;
             font-weight: 600;
-        }
-
-        /* CTA Button to trigger Pop-up */
-        .btn-launch {
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: #ffffff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 255, 204, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .btn-launch:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(138, 43, 226, 0.5);
         }
 
         /* Section Styling */
@@ -376,118 +355,6 @@
             color: #ffffff;
         }
 
-        /* POP-UP / MODAL CSS */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 10, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--primary);
-            width: 90%;
-            max-width: 500px;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
-            position: relative;
-            transform: scale(0.85);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .modal-overlay.active .modal-wrapper {
-            transform: scale(1);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-modal:hover {
-            color: #ef4444;
-        }
-
-        .modal-title {
-            font-family: 'Orbitron', sans-serif;
-            color: #ffffff;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* App Simulation Form Inside Popup */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
-            color: #ffffff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .result-box {
-            background: rgba(0, 255, 204, 0.05);
-            border: 1px dashed var(--primary);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .result-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-top: 5px;
-        }
-
         /* Footer */
         footer {
             text-align: center;
@@ -503,53 +370,19 @@
     <div class="glow-bg"></div>
     <div class="glow-bg-2"></div>
 
-    <!-- THE POP-UP (MODAL) -->
-    <div class="modal-overlay" id="calculatorModal">
-        <div class="modal-wrapper">
-            <button class="close-modal" id="closeBtn">&times;</button>
-            <div class="modal-title">
-                <i class="fas fa-calculator" style="color: var(--primary);"></i> Real Yield Calculator
-            </div>
-            
-            <div class="form-group">
-                <label>Lock Amount ($VZT)</label>
-                <input type="number" id="vztInput" value="1000" min="1">
-            </div>
-
-            <div class="form-group">
-                <label>Lock Duration</label>
-                <select id="durationSelect">
-                    <option value="1">30 Days (1× Multiplier)</option>
-                    <option value="1.5">90 Days (1.5× Multiplier)</option>
-                    <option value="2.5" selected>180 Days (2.5× Multiplier)</option>
-                </select>
-            </div>
-
-            <div class="result-box">
-                <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Estimated Yield Share Score</label>
-                <div class="result-value" id="weightResult">2,500 VZT Share</div>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <!-- HERO HEADER -->
         <header>
             <div class="badge">Official Whitepaper</div>
             <h1>PROVIZTO ($VZT)</h1>
             <p class="subtitle">Secure Unified DeFi Hub on the <span class="solana-tag"><i class="fab fa-solana"></i> Solana</span> Blockchain</p>
-            <!-- Pop-up Trigger Button -->
-            <button class="btn-launch" id="openBtn"><i class="fas fa-rocket"></i> Launch Yield Calc</button>
         </header>
 
-        <!-- 1. INTRODUCTION -->
         <section id="introduction">
             <h2 class="section-title"><span>01 /</span> INTRODUCTION & EXECUTIVE SUMMARY</h2>
             <p style="margin-bottom: 20px;">The Decentralized Finance (DeFi) ecosystem on the Solana network is experiencing exponential growth, driven by ultra-fast transaction speeds and minimal gas fees. However, market participants frequently face two critical vectors of friction: predatory bot manipulation (MEV) on decentralized exchanges and unsustainable, hyper-inflationary reward tokenomics.</p>
             <p><strong>Provizto</strong> introduces a secure, unified DeFi ecosystem designed to neutralize these inefficiencies. By seamlessly integrating an MEV-protected AMM DEX, an Automated Yield Optimizer, and a sustainable "Real Yield" revenue-sharing mechanism, Provizto establishes a fair, resilient, and highly lucrative investment landscape for $VZT token holders.</p>
         </section>
 
-        <!-- 2. CORE ARCHITECTURE -->
         <section id="architecture">
             <h2 class="section-title"><span>02 /</span> CORE ARCHITECTURE & PLATFORM FEATURES</h2>
             <div class="grid-2x2">
@@ -572,7 +405,6 @@
             </div>
         </section>
 
-        <!-- 3. REVENUE MODEL -->
         <section id="revenue">
             <h2 class="section-title"><span>03 /</span> REVENUE MODEL & DISTRIBUTION ARCHITECTURE</h2>
             <p>Provizto charges a standard 0.3% protocol fee on all asset swaps processed through its AMM DEX. These generated fees are automatically aggregated and split by smart contracts using the following transparent allocation:</p>
@@ -602,7 +434,6 @@
             </div>
         </section>
 
-        <!-- 4. TOKENOMICS -->
         <section id="tokenomics">
             <h2 class="section-title"><span>04 /</span> $VZT TOKENOMICS & SPECIFICATIONS</h2>
             
@@ -652,7 +483,6 @@
             </div>
         </section>
 
-        <!-- 5. ROADMAP -->
         <section id="roadmap" style="border-bottom: none;">
             <h2 class="section-title"><span>05 /</span> PLATFORM ROADMAP</h2>
             
@@ -689,48 +519,8 @@
         </section>
     </div>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 Provizto Ecosystem. All Rights Reserved. Powered by Solana Network.</p>
     </footer>
-
-    <!-- JAVASCRIPT FOR POPUP INTERACTION -->
-    <script>
-        const modal = document.getElementById('calculatorModal');
-        const openBtn = document.getElementById('openBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        
-        const vztInput = document.getElementById('vztInput');
-        const durationSelect = document.getElementById('durationSelect');
-        const weightResult = document.getElementById('weightResult');
-
-        // Open Modal
-        openBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
-
-        // Close Modal via Button
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        // Close Modal via Outside Overlay Click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-
-        // Interactive Math Logic for the Modal (Based on Section 4)
-        function calculateYield() {
-            const tokens = parseFloat(vztInput.value) || 0;
-            const multiplier = parseFloat(durationSelect.value);
-            const score = tokens * multiplier;
-            weightResult.textContent = `${score.toLocaleString('en-US')} VZT Share`;
-        }
-
-        vztInput.addEventListener('input', calculateYield);
-        durationSelect.addEventListener('change', calculateYield);
-    </script>
 </body>
 </html>
