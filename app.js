@@ -758,7 +758,7 @@ function claimVztReward() {
 executeLiveCalculatedMetrics = calculateLockReward;
 
 // ==========================================================================
-// LOGIKA EMERGENCY CLAUSE: PENALTI 20% & TOKEN BURN
+// 8. LOGIKA EMERGENCY CLAUSE: PENALTI 20% & TOKEN BURN
 // ==========================================================================
 async function handleEmergencyUnlock() {
     // Pastikan wallet terhubung dan token sedang dalam status terkunci
