@@ -181,6 +181,15 @@
     </div>
 
     <button class="btn-action" id="lockBtn" onclick="handleLockToken()" disabled>Lock Token</button>
+<!-- Tombol Emergency Unlock Baru (Letakkan di bawah tombol Lock Token) -->
+<button 
+    class="btn-action" 
+    id="emergencyUnlockBtn" 
+    onclick="handleEmergencyUnlock()" 
+    style="margin-top: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; cursor: not-allowed; pointer-events: none;" 
+    disabled>
+    <i class="fas fa-exclamation-triangle"></i> Emergency Early Unlock
+</button>
 </div>
         </section>
 
