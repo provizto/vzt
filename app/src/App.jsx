@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Landing from './Landing'; // Mengimpor komponen Landing React Opsi A
 import './App.css';
 
 // ==========================================================================
@@ -20,6 +21,11 @@ const TOKEN_PRICES = { SOL: 170.00, USDT: 1.00, USDC: 1.00, WSOL: 170.00, VZT: 0
 // ==========================================================================
 function App() {
   // ==========================================================================
+  // VIEW NAVIGATION LAYER (OPTI A MIGRATION INTERLOCK)
+  // ==========================================================================
+  const [view, setView] = useState('landing'); // Mode bawaan awal: 'landing' atau 'dashboard'
+
+  // ==========================================================================
   // 1. GLOBAL STATE MANAGEMENT (MIGRATED FROM MASTER JAVASCRIPT VARS)
   // ==========================================================================
   const [isConnected, setIsConnected] = useState(false);
@@ -28,11 +34,12 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [securityBanner, setSecurityBanner] = useState({ show: false, message: "", type: "success" });
   
-  // System Metrics Tracker
+  // System Metrics Tracker (Terhubung Langsung ke Landing Page secara Dinamis)
   const [lastTransactionTime, setLastTransactionTime] = useState(0);
   const [isSwapLoading, setIsSwapLoading] = useState(false);
   const [isLockLoading, setIsLockLoading] = useState(false);
   const [isTokenLocked, setIsTokenLocked] = useState(false);
+  const [swapsCount, setSwapsCount] = useState(45210); // Metrik dinamis swaps awal
   
   // Perhitungan Keuangan Berbasis Number Murni
   const [vztBalance, setVztBalance] = useState(0); 
@@ -240,6 +247,9 @@ function App() {
         return prev + calculatedClawbackUsdc;
       });
 
+      // Naikkan jumlah hitungan metrik swap global
+      setSwapsCount(prev => prev + 1);
+
       setTxLog(
         `[SWAP SUCCESS] | Program: ${PROGRAM_ID}\n` +
         `Swapped: ${amount} ${tokenPay} ➜ ${receiveAmount} ${tokenReceive}\n` +
@@ -302,7 +312,7 @@ function App() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setLastTransactionTime(Date.now());
-      setProtocolTVL(prev => prev + amountValue);
+      setProtocolTVL(prev => prev + amountValue); // Menambah TVL secara dinamis
       triggerBanner("✅ Success: Deposited " + amountValue.toLocaleString('en-US') + " USDC into the Auto-Compounding Vault!", "success");
     } catch (error) {
       triggerBanner("⚠️ Transaction rejected by network consensus.", "error");
@@ -494,6 +504,20 @@ function App() {
     }
   };
 
+  // ==========================================================================
+  // CONDITIONAL RENDERING LAYER: MENGONTROL STRUKTUR VIEW HALAMAN
+  // ==========================================================================
+  if (view === 'landing') {
+    return (
+      <Landing 
+        totalValueLocked={protocolTVL} 
+        swapsCount={swapsCount} 
+        onLaunchApp={() => setView('dashboard')} 
+      />
+    );
+  }
+
+  // JIKA MODE DASHBOARD AKTIF, RENDERING INTERFACE UTAMA DAPP DI BAWAH INI
   return (
     <>
       {/* FLOATING BANNER NOTIFIKASI */}
@@ -517,7 +541,10 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          <a href="https://vzt-beige.vercel.app/landing.html" className="btn-home">Back to Home</a>
+          {/* Tombol Back to Home diarahkan untuk memicu status view kembali ke komponen Landing */}
+          <button onClick={() => setView('landing')} className="btn-home" style={{ background: 'transparent', border: '1px solid #1f2937', color: '#f3f4f6', cursor: 'pointer', padding: '8px 16px', borderRadius: '6px', marginRight: '10px' }}>
+            Back to Home
+          </button>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
             background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)"
           }}>
