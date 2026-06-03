@@ -2,34 +2,37 @@
 
 Next-generation Decentralized Asset Management and Liquidity Optimization Protocol custom-engineered for the Solana Blockchain. Provizto introduces a mathematically driven, non-inflationary ecosystem backed by **Real Yield** revenue distribution, multi-asset private routing, and algorithmic supply deflation controls.
 
+🌐 **Live Demo dApp Dashboard:** [https://vzt-beige.vercel.app/](https://vzt-beige.vercel.app/)
+
 ---
 
 ## 🚀 Core Functional Architecture
 
 ### 1. Multi-Asset AMM DEX Swap
-* **Single-Gateway Tokenomics:** To generate sustained buying pressure and token velocity, the protocol enforces a single-destination routing matrix. All incoming liquidity assets (**USDC, USDT, SOL, WSOL**) trade exclusively directly into **$VZT** (and vice-versa from $VZT to USDC).
+* **Single-Gateway Tokenomics:** To generate sustained buying pressure and token velocity, the protocol enforces a single-destination routing matrix. All incoming liquidity assets (**USDC, USDT, SOL, WSOL**) trade exclusively directly into **$VZT** (and vice-versa from $VZT to USDC) backed by simulated automated smart-contract conversion at the ledger level.
 * **Private Jito Routing Engine:** Transactions are securely routed via private Jito validator bundles, providing complete immunity against predatory MEV front-running and front-row sandwich exploits.
 * **Anti-Wash Trading Constraints:** On-chain ledger filters run daily protocol loops to track, detect, and mitigate inorganic volume inflation anomalies.
 
 ### 2. Automated Yield Optimizer Vaults
-* **Agnostic Cross-Protocol Aggregation:** User-deposited USDC is programmatically deployed into top-tier Solana yield instruments (e.g., Kamino, Meteora, Marginfi) via non-custodial smart contracts.
+* **Agnostic Cross-Protocol Aggregation:** User-deposited USDC is programmatically deployed into top-tier Solana yield instruments (e.g., Kamino, Meteora, Marginfi) via non-custodial smart contracts, organically scaling the Protocol's Total Value Locked (TVL).
 * **Compounding Mechanics:** Operates on a target interest metric of **0.11% daily**, which mathematically compounds to a **Boosted APY of up to 49.1% annually** ($APY = (1 + 0.0011)^{365} - 1$).
 * **Fee Underwriting Security:** The yield engine stability is fundamentally insulated from market volatility as it is constantly backstopped by **40% of all global swap fees** collected by the platform.
 
 ### 3. VZT Programmed Lock Pool (Real Yield Engine)
-* **Non-Inflationary Incentives:** Provizto rejects traditional inflationary token minting rewards. Stakers who lock $VZT are rewarded exclusively in **stable USDC**, derived directly from protocol revenue channels.
-* **Time-Locked Boost Multipliers:** Stakers can optimize their score weights through explicit time-locked horizons:
-  * **Instant Lock:** 1.0x Base Processing Weight.
-  * **30-Day Escrow:** 1.0x Base Multiplier.
-  * **90-Day Escrow:** 1.5x Boosted Multiplier Weight.
-  * **180-Day Escrow:** 2.5x Maximum Multiplier Weight.
-* **7-Day Settled Epochs:** Reward allocations accumulate and settle over strict **7-day cycles (Epochs)**. This constraint protects liquidity pools from high-frequency flash-loan variance and maintains network computation equilibrium.
+* **Non-Inflationary Incentives:** Provizto rejects traditional inflationary token minting rewards. Stakers who lock $VZT are rewarded exclusively in **stable USDC**, derived directly from real platform transaction utility.
+* **Dual Interface Multipliers:** Stakers can optimize their processing scores through two distinct cryptographic modes:
+  * **Instant Lock:** Manual entry allocation with a 1.0x Base Processing Weight.
+  * **Boosted Lock (Escrow Bonds):** Time-locked horizons featuring explicit reward multipliers:
+    * *30-Day Horizon:* 1.0x Base Multiplier.
+    * *90-Day Horizon:* 1.5x Boosted Multiplier Weight.
+    * *180-Day Horizon:* 2.5x Maximum Multiplier Weight.
+* **Strict 7-Day Epoch Horizon:** Reward allocations accumulate over an immutable **7-day cycle (`604,800,000 ms`) time-lock parameter**. This rigorous network constraint completely neutralizes high-frequency flash-loan vectors and guarantees liquidity layer stabilization.
 
 ---
 
 ## 📊 Tokenomics & Strategic Fee Allocation Matrix
 
-Every transaction executed on the Provizto AMM Swap module triggers a baseline **0.3% Protocol Fee** that is programmatically partitioned at the smart contract level:
+Every transaction executed on the Provizto AMM Swap module triggers a baseline **0.3% Protocol Fee** that is programmatically partitioned at the smart contract ledger level:
 
 | Target Vault Destination | Fee Split Allocation | Operational Objective |
 | :--- | :---: | :--- |
@@ -40,7 +43,7 @@ Every transaction executed on the Provizto AMM Swap module triggers a baseline *
 
 ### 👑 Capital Grant Clawback & Repayment Clause
 To ensure institutional financial transparency with our grant providers, the **15% Dev & Infrastructure Treasury** features a built-in automated debt-repayment clawback routing rule:
-* **20% Outflow Split:** Every distribution routed into the Dev Treasury automatically splits **20% of its allocation** to fulfill strategic grant repayment schedules or grantor revenue sharing.
+* **20% Outflow Split:** Every distribution routed into the Dev Treasury automatically splits **20% of its allocation** to fulfill strategic grant repayment schedules directly into the grantor's monitored address.
 * This architecture proves a sustainable payback model without ever liquidating or diluting the native $VZT market supply.
 
 ---
@@ -48,8 +51,8 @@ To ensure institutional financial transparency with our grant providers, the **1
 ## 🛡️ Sybil-Resistant Affiliate Framework
 
 Provizto features a performance-based, on-chain referral module designed with strict cryptographic guardrails to completely eliminate loop-exploits:
-* **Anti-Sybil Constraints:** The smart contract registry explicitly blocks self-referrals and enforces a mandatory **10-second transaction cooldown timeout** per account path.
-* **Dynamic Reward Tier Metrics:** Commissions scale fluidly based on the cumulative on-chain volume verified from the referred network network path:
+* **Anti-Sybil Constraints:** The smart contract registry explicitly blocks self-referrals (`SelfReferralNotAllowed` exception) and enforces a mandatory **10-second transaction cooldown timeout** per account path.
+* **Dynamic Reward Tier Metrics:** Commissions scale fluidly based on the cumulative on-chain volume verified from the referred network path:
   * **Bronze Tier ($0 - $10,000 Volume):** Receives a **10%** commission rate.
   * **Silver Tier ($10,001 - $100,000 Volume):** Upgraded to an **18%** commission rate.
   * **Gold Tier (> $100,000 Volume):** Grants a premium VIP **25%** commission rate.
@@ -58,20 +61,25 @@ Provizto features a performance-based, on-chain referral module designed with st
 
 ## 🔥 Emergency Hard-Stop Protocol (Deflationary Burn)
 
-If a market participant initiates a premature unlock of capital assets from a Boosted Bond Lock contract prior to the designated computational maturity date, the contract triggers the **Emergency Liquidation Clause**:
-1. **20% Principal Penalty:** A mandatory 20% of the locked token principal is instantly deducted.
-2. **Permanent Burn Destruction:** The 20% penalty is immediately and irreversibly dispatched to a verified Solana dead address (`11111111111111111111111111111111`), permanently removing it from the total circulating supply.
-3. **Supply Shock Acceleration:** This mechanism protects the liquidity layer from sudden panic-withdrawals while inducing a healthy systemic token scarcity that fundamentally benefits long-term $VZT network holding entities.
+If a market participant initiates a premature unlock of capital assets from a Lock contract prior to the designated computational maturity date, the contract triggers the **Emergency Liquidation Clause**:
+1. **20% Principal Penalty:** A mandatory 20% of the locked token principal is instantly deducted based on the `EMERGENCY_BURN_PENALTY_RATE` constraint.
+2. **Permanent Burn Destruction:** The 20% penalty is immediately and irreversibly dispatched to the verified Solana native dead address (`11111111111111111111111111111111`), permanently removing it from the total circulating supply.
+3. **Supply Shock Shadows:** This mechanism protects the liquidity layer from sudden panic-withdrawals while inducing a healthy systemic token scarcity that fundamentally benefits long-term $VZT network holding entities.
 
 ---
 
-## 🛠️ Local Development Stack & Verification
+## 🛠️ Production Stack Architecture & Verification
 
-The dApp frontend prototype is implemented using a modern, fast React + Vite pipeline:
+The dApp frontend prototype is fully optimized for production environments and compiled using a React + Vite deployment pipeline:
+
+* **Production Framework:** React 18 + Vite Bundler
+* **Styling Layer:** Pure Tailwind CSS Architecture
+* **Global Constants Insulated:** `PROGRAM_ID`, `BASE_EPOCH_HORIZON_MS`, `TOKEN_PRICES`
+* **Target Environment Hosting:** Vercel Global Edge Network
 
 ```bash
 # Clone the repository workspace
-git clone [https://github.com/usernameanda/vzt.git](https://github.com/usernameanda/vzt.git)
+git clone [https://github.com/provizto/vzt.git](https://github.com/provizto/vzt.git)
 
 # Navigate into the project root directory
 cd vzt
@@ -79,7 +87,5 @@ cd vzt
 # Install the required NPM package node modules
 npm install
 
-# Launch the secure local development runtime server
-npm run dev
-
-The application will automatically initialize and become accessible via local loopback at http://localhost:5173
+# Build the production distribution bundle
+npm run build
