@@ -39,6 +39,10 @@ function App() {
   const [stakedAmount, setStakedAmount] = useState(0); // Penampung saldo terkunci
   const [protocolTVL, setProtocolTVL] = useState(1248500); 
 
+  // AUTOMATED INSTUTIONAL GRANT REPAYMENT TRACKER STATE
+  const [totalRepaid, setTotalRepaid] = useState(0); // Akumulasi awal pengembalian $0
+  const GRANT_CAP = 20000; // Batasan Hard Cap senilai $20,000
+
   // AMM DEX Swap States
   const [payAmount, setPayAmount] = useState('0');
   const [receiveAmount, setReceiveAmount] = useState('0.0');
@@ -156,6 +160,7 @@ function App() {
     setReceiveAmount('0.0');
     setSwapFee('0.0000');
     setTxLog('');
+    setTotalRepaid(0); // Reset progress tracker
     triggerBanner("Wallet disconnected.", "warning");
   };
 
@@ -215,10 +220,25 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 2500));
       
       const currentFee = parseFloat(swapFee) || 0;
+      
+      // Ambil nilai tukar token asal ke dalam satuan USD/USDC untuk standardisasi pelacakan hibah
+      const payTokenData = tokens.find(t => t.symbol === tokenPay);
+      const feeInUsdcValue = payTokenData ? currentFee * payTokenData.priceInUsdc : currentFee;
+
       const vaultShare = (currentFee * 0.40).toFixed(5);
       const poolShare = (currentFee * 0.30).toFixed(5);
       const affiliateShare = (currentFee * 0.15).toFixed(5);
       const devShare = (currentFee * 0.15).toFixed(5);
+      
+      const calculatedClawbackUsdc = feeInUsdcValue * 0.15 * 0.20;
+
+      // UPDATE DINAMIS TRACKER: Menambahkan akumulasi hasil porsi hibah swap ke dashboard utama
+      setTotalRepaid((prev) => {
+        if (prev + calculatedClawbackUsdc >= GRANT_CAP) {
+          return GRANT_CAP; // Kunci pada Hard-Cap $20,000 jika pelunasan tercapai
+        }
+        return prev + calculatedClawbackUsdc;
+      });
 
       setTxLog(
         `[SWAP SUCCESS] | Program: ${PROGRAM_ID}\n` +
@@ -229,7 +249,7 @@ function App() {
         `• 30% to VZT Real Yield Pool (Auto-converted to USDC): ${poolShare} ${tokenPay}\n` +
         `• 15% to Affiliate Treasury: ${affiliateShare} ${tokenPay}\n` +
         `• 15% to Dev & Infrastructure: ${devShare} ${tokenPay}\n` +
-        `  └── (Allocated 20% for Grant Repayment Share: ${(devShare * 0.2).toFixed(4)} ${tokenPay})`
+        `   └── (Allocated 20% for Grant Repayment Share: ${(devShare * 0.2).toFixed(4)} ${tokenPay})`
       );
 
       if (tokenReceive === 'VZT') {
@@ -540,6 +560,24 @@ function App() {
         {txLog && (
           <div className="security-banner" style={{ display: 'block', background: '#111827', borderColor: '#1f2937', color: '#38bdf8', fontSize: '0.88rem', fontStyle: 'italic', whiteSpace: 'pre-line' }}>
             {txLog}
+
+            {/* INTEGRASI VISUAL: Progress Bar Pelacakan Dana Hibah $20,000 */}
+            <div className="grant-repayment-tracker" style={{ marginTop: "20px", padding: "15px", background: "#0f172a", borderRadius: "10px", border: "1px solid #1e293b", textAlign: 'left' }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontSize: "12px", color: "#9ca3af", fontWeight: "500", fontStyle: 'normal' }}>Automated Grant Debt Repayment Progress</span>
+                <span style={{ fontSize: "12px", color: totalRepaid >= GRANT_CAP ? "#22c55e" : "#3b82f6", fontWeight: "bold", fontStyle: 'normal' }}>
+                  {totalRepaid >= GRANT_CAP ? "🎉 FULLY REPAID" : `$${totalRepaid.toFixed(4)} / $20,000`}
+                </span>
+              </div>
+              <div style={{ width: "100%", height: "10px", background: "#374151", borderRadius: "5px", overflow: "hidden" }}>
+                <div style={{ 
+                  width: `${(totalRepaid / GRANT_CAP) * 100}%`, 
+                  height: "100%", 
+                  background: "linear-gradient(90deg, #3b82f6 0%, #22c55e 100%)", 
+                  transition: "width 0.4s ease-in-out" 
+                }}></div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -802,7 +840,7 @@ function App() {
         {/* COMPONENT 4: SECURE AFFILIATE NETWORK PANEL */}
         <section className="affiliate-section">
           <div className="section-title-container">
-            <h3>Secure On-Chain Affiliate</h3>
+            <h3 window-attr="true">Secure On-Chain Affiliate</h3>
             <span className="shield-badge">🛡️ Anti-Sybil Active</span>
           </div>
           <p>Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
