@@ -4,7 +4,7 @@ import './App.css';
 // ==========================================================================
 // PROTOCOL SYSTEM CONSTANTS (GLOBAL CONFIGURATION FOR GRANTS REVIEW)
 // ==========================================================================
-const PROGRAM_ID = "Prov1zto111111111111111111111111111111111";
+const PROGRAM_ID = "ProvZtoX9vR6qwMKB7zYtE4HnS2PdcG8kLmWq3jF5uBx";
 const SOLANA_NETWORK = "mainnet-beta";
 
 // TIME-HORIZON BLOCK CONFIGURATIONS (7 DAYS TIME-LOCK FOR SECURITY ENFORCEMENT)
