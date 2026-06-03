@@ -541,8 +541,21 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          {/* Tombol Back to Home diarahkan untuk memicu status view kembali ke komponen Landing */}
-          <button onClick={() => setView('landing')} className="btn-home" style={{ background: 'transparent', border: '1px solid #1f2937', color: '#f3f4f6', cursor: 'pointer', padding: '8px 16px', borderRadius: '6px', marginRight: '10px' }}>
+          {/* SINKRONISASI INTERAKTIF: Mengganti tag <a> lama dengan tombol pemindah state React */}
+          <button 
+            onClick={() => setView('landing')} 
+            className="btn-home" 
+            style={{ 
+              background: 'transparent', 
+              border: '1px solid #1f2937', 
+              color: '#f3f4f6', 
+              cursor: 'pointer', 
+              padding: '8px 16px', 
+              borderRadius: '6px', 
+              marginRight: '10px',
+              fontWeight: '600'
+            }}
+          >
             Back to Home
           </button>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
