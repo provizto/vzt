@@ -541,7 +541,7 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          {/* SINKRONISASI INTERAKTIF: Mengganti tag <a> lama dengan tombol pemindah state React */}
+          {/* LINK LANDING.HTML DI SINI SUDAH DIHAPUS DAN BERSIH TOTAL */}
           <button 
             onClick={() => setView('landing')} 
             className="btn-home" 
