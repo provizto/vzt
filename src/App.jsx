@@ -343,7 +343,6 @@ function App() {
       setTimeout(() => {
         setRewardClaimable(true);
         triggerBanner("✨ Smart Contract Update: Staking Epoch completed! Yield rewards are now claimable.", "success");
-      }, 5000);
 
     } catch (error) {
       alert('Transaction failed.');
