@@ -445,7 +445,7 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          <a href="index.html" className="btn-home">Back to Home</a>
+          <a href="/landing.html" className="btn-home">Back to Home</a>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
             background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)"
           }}>
