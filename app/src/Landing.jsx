@@ -176,35 +176,39 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
         }
         #vzt-landing-page .features-grid {
           display: grid !important;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-          gap: 30px !important;
+          grid-template-columns: repeat(4, 1fr) !important;
+          gap: 24px !important;
           padding: 0 8% 60px 8% !important;
+          max-width: 1400px !important;
+          margin: 0 auto !important;
         }
         #vzt-landing-page .feature-card {
           background: #111827 !important;
           border: 1px solid #1f2937 !important;
-          padding: 35px !important;
+          padding: 30px 24px !important;
           border-radius: 12px !important;
           transition: transform 0.3s, border-color 0.3s !important;
+          display: flex !important;
+          flex-direction: column !important;
         }
         #vzt-landing-page .feature-card:hover {
           transform: translateY(-5px) !important;
           border-color: #3b82f6 !important;
         }
         #vzt-landing-page .feature-icon {
-          font-size: 2.5rem !important;
+          font-size: 2.3rem !important;
           margin-bottom: 20px !important;
           color: #3b82f6 !important;
         }
         #vzt-landing-page .feature-card h3 {
-          font-size: 1.4rem !important;
-          margin-bottom: 15px !important;
+          font-size: 1.25rem !important;
+          margin-bottom: 12px !important;
           color: #fff !important;
         }
         #vzt-landing-page .feature-card p {
           color: #94a3b8 !important;
-          line-height: 1.6 !important;
-          font-size: 0.95rem !important;
+          line-height: 1.5 !important;
+          font-size: 0.9rem !important;
         }
         #vzt-landing-page .grant-notice-box {
           background: rgba(139, 92, 246, 0.03) !important;
@@ -351,11 +355,20 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
         #vzt-landing-page .social-icons a:hover {
           color: #14b8a6 !important;
         }
+        @media (max-width: 1024px) {
+          #vzt-landing-page .features-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
         @media (max-width: 768px) {
           #vzt-landing-page header { padding: 15px 5% !important; }
           #vzt-landing-page nav { display: none !important; }
           #vzt-landing-page .hero h1 { font-size: 2.2rem !important; }
           #vzt-landing-page .metrics-banner { flex-direction: column !important; gap: 25px !important; }
+          #vzt-landing-page .features-grid { 
+            grid-template-columns: 1fr !important; 
+            gap: 20px !important;
+          }
           #vzt-landing-page .timeline::after { left: 31px !important; }
           #vzt-landing-page .timeline-container { width: 100% !important; padding-left: 70px !important; padding-right: 25px !important; }
           #vzt-landing-page .timeline-container::after { left: 23px !important; }
