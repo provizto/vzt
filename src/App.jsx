@@ -17,9 +17,9 @@ function App() {
   const [isLockLoading, setIsLockLoading] = useState(false);
   const [isTokenLocked, setIsTokenLocked] = useState(false);
   
-  // PERBAIKAN: Menggunakan tipe data number murni untuk perhitungan matematis yang aman
+  // Perhitungan Keuangan Berbasis Number Murni
   const [vztBalance, setVztBalance] = useState(0); 
-  const [stakedAmount, setStakedAmount] = useState(0); // Penampung saldo terkunci
+  const [stakedAmount, setStakedAmount] = useState(0); 
   const [protocolTVL, setProtocolTVL] = useState(1248500); 
 
   // AMM DEX Swap States
@@ -43,6 +43,9 @@ function App() {
   const [estimatedRewardText, setEstimatedRewardText] = useState('');
   const [showRewardRow, setShowRewardRow] = useState(false);
   const [earnedUsdcDisplay, setEarnedUsdcDisplay] = useState('0.00 USDC');
+  
+  // PERBAIKAN: State Penegakan Aturan Kematangan Blok Kontrak (7-Day Epoch Time-Horizon Simulation)
+  const [rewardClaimable, setRewardClaimable] = useState(false);
 
   // Secure On-Chain Affiliate States
   const [referrerInput, setReferrerInput] = useState('');
@@ -129,6 +132,7 @@ function App() {
     setIsConnected(false);
     setIsTokenLocked(false);
     setShowRewardRow(false);
+    setRewardClaimable(false);
     setLockAmount('0');
     setLockCalculationMode('manual');
     setPayAmount('');
@@ -211,7 +215,6 @@ function App() {
         `  └── (Allocated 20% for Grant Repayment Share: ${(devShare * 0.2).toFixed(4)} ${tokenPay})`
       );
 
-      // Sinkronisasi penambahan saldo jika swap menghasilkan VZT
       if (tokenReceive === 'VZT') {
         setVztBalance(prev => prev + parseFloat(receiveAmount));
       }
@@ -272,7 +275,7 @@ function App() {
   };
 
   // ==========================================================================
-  // 6. VZT POOL CORE METRICS & DUAL INTERFACE LOGIC
+  // 6. VZT POOL CORE METRICS & TIMELOCK LOGIC
   // ==========================================================================
   const switchLockCalculationView = (selectedMode) => {
     if (isTokenLocked) return;
@@ -308,7 +311,7 @@ function App() {
     }
   }, [lockAmount, lockCalculationMode, chosenMultiplier, isTokenLocked]);
 
-  // FIX: Mengunci dana ke dalam state penampung secara presisi
+  // PERBAIKAN: Menambahkan kunci otomatis imbalan hasil sebelum kunci epoch matang
   const handleLockToken = async () => {
     const amount = parseFloat(lockAmount) || 0;
     if (amount <= 0) {
@@ -321,19 +324,27 @@ function App() {
     }
 
     setIsLockLoading(true);
+    setRewardClaimable(false); // Blok penguncian langsung memicu timelock aktif
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert(`Successfully locked ${amount} $VZT!\n\nYou are now eligible to claim periodic Real Yield rewards in stable USDC.`);
+      alert(`Successfully locked ${amount} $VZT!\n\nSmart Contract Rule: Tokens are now cryptographically bound to the 7-Day Epoch Horizon. Yield returns are processing.`);
       
       setIsTokenLocked(true);
-      setStakedAmount(amount); // Saldo resmi masuk ke pool kunci
-      setVztBalance(prev => prev - amount); // Pengurangan matematis murni
+      setStakedAmount(amount); 
+      setVztBalance(prev => prev - amount); 
       
       const finalMultiplier = (lockCalculationMode === 'wizard') ? chosenMultiplier : 1;
       setEarnedUsdcDisplay(((amount * 0.05) * finalMultiplier).toFixed(2) + " USDC");
       setShowRewardRow(true);
-      setProtocolTVL(prev => prev + (amount * 0.5)); // Menambah TVL ($VZT bernilai $0.5)
+      setProtocolTVL(prev => prev + (amount * 0.5)); 
+
+      // Memicu pelepasan kunci klaim otomatis setelah 5 detik (Representasi simulasi 7 Hari)
+      setTimeout(() => {
+        setRewardClaimable(true);
+        triggerBanner("✨ Smart Contract Update: Staking Epoch completed! Yield rewards are now claimable.", "success");
+      }, 5000);
+
     } catch (error) {
       alert('Transaction failed.');
     } finally {
@@ -341,14 +352,20 @@ function App() {
     }
   };
 
+  // PERBAIKAN: Fungsi klaim mendeteksi status timelock kontrak secara ketat
   const claimVztReward = () => {
+    if (!rewardClaimable) {
+      alert("Smart Contract Refusal: Cannot execute yield withdrawal!\n\nReason: This epoch block has not reached the maturity milestone yet (7-Day Target Horizon). If you wish to pull out early, you must trigger the Emergency Unlock protocol to bypass contract limits.");
+      return;
+    }
+
     alert(`Claim Successful!\n\n${earnedUsdcDisplay} has been transferred directly back to your secure Solana wallet account.`);
     setEarnedUsdcDisplay("0.00 USDC");
     setShowRewardRow(false);
   };
 
   // ==========================================================================
-  // 7. EMERGENCY PROTOCOL UNLOCK (FIXED: PENALTI BURN 20% BERFUNGSI SEMPURNA)
+  // 7. EMERGENCY PROTOCOL UNLOCK (PENALTI BURN 20% + BYPASS TIMELOCK REWARD)
   // ==========================================================================
   const handleEmergencyUnlock = async () => {
     if (!isConnected) {
@@ -374,17 +391,17 @@ function App() {
       const penaltyAmount = stakedAmount * 0.20;
       const finalAmountReturned = stakedAmount - penaltyAmount;
 
-      // Kembalikan dana bersih (80%) ke saldo dompet utama
       setVztBalance(prev => prev + finalAmountReturned);
       setProtocolTVL(prev => prev - (stakedAmount * 0.5));
       
       triggerBanner(`🔥 Success: ${penaltyAmount.toLocaleString('en-US')} VZT burned! Returned ${finalAmountReturned.toLocaleString('en-US')} VZT.`, "success");
       
-      // Reset total status pool kunci
+      // Reset total status pool
       setStakedAmount(0);
       setLockAmount("0");
       setIsTokenLocked(false);
       setShowRewardRow(false);
+      setRewardClaimable(false); // Reset status timelock
       setTxLog(`🔥 Deflationary System: ${penaltyAmount.toFixed(2)} $VZT permanently destroyed from total supply.`);
     } catch (error) {
       triggerBanner("⚠️ Emergency execution rejected by network consensus.", "error");
@@ -464,7 +481,7 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          <a href="https://provizto.github.io/vzt/" className="btn-home">Back to Home</a>
+          <a href="/landing.html" className="btn-home">Back to Home</a>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
             background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)"
           }}>
@@ -696,10 +713,22 @@ function App() {
               )}
             </div>
 
+            {/* BARIS MANAJEMEN REWARD KLAIM DENGAN INDIKATOR WARNA UNTUK STATUS TIMELOCK SIMULASI */}
             {isTokenLocked && !isLockLoading && showRewardRow && (
               <div className="claim-management-row" id="rewardClaimRow" style={{ display: 'flex', marginTop: '-10px', marginBottom: '15px' }}>
                 <span>Yield Earned: <strong id="earnedUsdc" style={{ color: '#22c55e' }}>{earnedUsdcDisplay}</strong></span>
-                <button className="btn-claim-vzt" onClick={claimVztReward}>Claim Reward</button>
+                <button 
+                  className="btn-claim-vzt" 
+                  onClick={claimVztReward}
+                  style={{
+                    opacity: rewardClaimable ? 1 : 0.5,
+                    background: rewardClaimable ? "#22c55e" : "#4b5563",
+                    cursor: rewardClaimable ? "pointer" : "not-allowed",
+                    border: "none", padding: "6px 12px", borderRadius: "6px", color: "white", fontWeight: "600"
+                  }}
+                >
+                  {rewardClaimable ? "Claim Reward" : "🔒 Epoch Locking..."}
+                </button>
               </div>
             )}
 
@@ -851,7 +880,7 @@ function App() {
       <footer className="dapp-footer">
         <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
         <div className="footer-links-row">
-          <a href="https://provizto.github.io/vzt/">Documentation</a>
+          <a href="/README.md">Documentation</a>
           <a href="#audit" onClick={() => alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')}>Security Audit 🛡️</a>
         </div>
       </footer>
