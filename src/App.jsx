@@ -16,8 +16,11 @@ function App() {
   const [isSwapLoading, setIsSwapLoading] = useState(false);
   const [isLockLoading, setIsLockLoading] = useState(false);
   const [isTokenLocked, setIsTokenLocked] = useState(false);
-  const [vztBalance, setVztBalance] = useState("0.00 VZT");
-  const [protocolTVL, setProtocolTVL] = useState("1,248,500"); // <-- Berhasil didaftarkan secara terintegrasi
+  
+  // PERBAIKAN: Menggunakan tipe data number murni untuk perhitungan matematis yang aman
+  const [vztBalance, setVztBalance] = useState(0); 
+  const [stakedAmount, setStakedAmount] = useState(0); // Penampung saldo terkunci
+  const [protocolTVL, setProtocolTVL] = useState(1248500); 
 
   // AMM DEX Swap States
   const [payAmount, setPayAmount] = useState('0');
@@ -33,9 +36,9 @@ function App() {
   const [isVaultLoading, setIsVaultLoading] = useState(false);
 
   // VZT Lock & Yield States
-  const [lockCalculationMode, setLockCalculationMode] = useState('manual'); // 'manual' atau 'wizard'
-  const [lockAmount, setLockAmount] = useState('0'); // Mulai dari 0 sesuai DOMContentLoaded asli
-  const [chosenMultiplier, setChosenMultiplier] = useState(2.5); // Default 180 hari (2.5x)
+  const [lockCalculationMode, setLockCalculationMode] = useState('manual'); 
+  const [lockAmount, setLockAmount] = useState('0'); 
+  const [chosenMultiplier, setChosenMultiplier] = useState(2.5); 
   const [liveScore, setLiveScore] = useState('0 VZT Share');
   const [estimatedRewardText, setEstimatedRewardText] = useState('');
   const [showRewardRow, setShowRewardRow] = useState(false);
@@ -106,10 +109,10 @@ function App() {
       setIsConnected(true);
 
       if (pubKey.startsWith("GNT") || pubKey.length > 30) {
-        setVztBalance("1,000,000.00 VZT"); 
+        setVztBalance(1000000.00); 
         triggerBanner(`👑 VIP Grantor Wallet Detected! Core Revenue-Share Active.`, "success");
       } else {
-        setVztBalance("5,000.00 VZT"); 
+        setVztBalance(5000.00); 
         triggerBanner(`Wallet successfully linked via ${walletName}!`, "success");
       }
     } catch (err) {
@@ -121,7 +124,8 @@ function App() {
   const disconnectWallet = () => {
     setMyWalletAddress("");
     setActiveProviderName("");
-    setVztBalance("0.00 VZT");
+    setVztBalance(0);
+    setStakedAmount(0);
     setIsConnected(false);
     setIsTokenLocked(false);
     setShowRewardRow(false);
@@ -207,6 +211,11 @@ function App() {
         `  └── (Allocated 20% for Grant Repayment Share: ${(devShare * 0.2).toFixed(4)} ${tokenPay})`
       );
 
+      // Sinkronisasi penambahan saldo jika swap menghasilkan VZT
+      if (tokenReceive === 'VZT') {
+        setVztBalance(prev => prev + parseFloat(receiveAmount));
+      }
+
       alert(`Swap Successful!\n\nYou exchanged ${amount} ${tokenPay} into ${receiveAmount} ${tokenReceive}.\nProtocol Fee deducted: ${swapFee} ${tokenPay}`);
       setPayAmount('');
       setReceiveAmount('0.0');
@@ -253,7 +262,8 @@ function App() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setLastTransactionTime(Date.now());
-      triggerBanner(`✅ Success: Deposited ${amountValue.toLocaleString('en-US')} USDC into the Auto-Compounding Vault!`, "success");
+      setProtocolTVL(prev => prev + amountValue);
+      triggerBanner("✅ Success: Deposited " + amountValue.toLocaleString('en-US') + " USDC into the Auto-Compounding Vault!", "success");
     } catch (error) {
       triggerBanner("⚠️ Transaction rejected by network consensus.", "error");
     } finally {
@@ -298,10 +308,15 @@ function App() {
     }
   }, [lockAmount, lockCalculationMode, chosenMultiplier, isTokenLocked]);
 
+  // FIX: Mengunci dana ke dalam state penampung secara presisi
   const handleLockToken = async () => {
     const amount = parseFloat(lockAmount) || 0;
     if (amount <= 0) {
       alert('Please enter a valid amount of $VZT tokens to lock.');
+      return;
+    }
+    if (amount > vztBalance) {
+      alert('Insufficient $VZT balance inside your secure wallet!');
       return;
     }
 
@@ -312,10 +327,13 @@ function App() {
       alert(`Successfully locked ${amount} $VZT!\n\nYou are now eligible to claim periodic Real Yield rewards in stable USDC.`);
       
       setIsTokenLocked(true);
+      setStakedAmount(amount); // Saldo resmi masuk ke pool kunci
+      setVztBalance(prev => prev - amount); // Pengurangan matematis murni
+      
       const finalMultiplier = (lockCalculationMode === 'wizard') ? chosenMultiplier : 1;
-      setVztBalance((5000 - amount).toLocaleString('en-US', { minimumFractionDigits: 2 }) + " VZT");
       setEarnedUsdcDisplay(((amount * 0.05) * finalMultiplier).toFixed(2) + " USDC");
       setShowRewardRow(true);
+      setProtocolTVL(prev => prev + (amount * 0.5)); // Menambah TVL ($VZT bernilai $0.5)
     } catch (error) {
       alert('Transaction failed.');
     } finally {
@@ -330,7 +348,7 @@ function App() {
   };
 
   // ==========================================================================
-  // 7. EMERGENCY PROTOCOL UNLOCK (20% DEFLATION BURN CALCULATION)
+  // 7. EMERGENCY PROTOCOL UNLOCK (FIXED: PENALTI BURN 20% BERFUNGSI SEMPURNA)
   // ==========================================================================
   const handleEmergencyUnlock = async () => {
     if (!isConnected) {
@@ -338,13 +356,12 @@ function App() {
       return;
     }
 
-    const amountLocked = parseFloat(lockAmount) || 0;
-    if (amountLocked <= 0) {
+    if (stakedAmount <= 0) {
       triggerBanner("⚠️ [Error]: No locked assets detected to execute early withdrawal.", "error");
       return;
     }
 
-    const alertMessage = `⚠️ ALERT: EMERGENCY UNLOCK SYSTEM\n--------------------------------------------------\nYou are attempting to unlock your tokens before the maturity date.\nPer contract rules, this action triggers the Emergency Clause:\n\n• Total Locked Assets   : ${amountLocked.toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n• 20% Penalty to BURN   : ${(amountLocked * 0.2).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT (Permanently destroyed)\n• Net Amount Returned   : ${(amountLocked * 0.8).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n\nAre you absolute sure you want to proceed and burn 20% of your capital?`;
+    const alertMessage = `⚠️ ALERT: EMERGENCY UNLOCK SYSTEM\n--------------------------------------------------\nYou are attempting to unlock your tokens before the maturity date.\nPer contract rules, this action triggers the Emergency Clause:\n\n• Total Locked Assets   : ${stakedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n• 20% Penalty to BURN   : ${(stakedAmount * 0.2).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT (Permanently destroyed)\n• Net Amount Returned   : ${(stakedAmount * 0.8).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n\nAre you absolute sure you want to proceed and burn 20% of your capital?`;
 
     const confirmWithdraw = confirm(alertMessage);
     if (!confirmWithdraw) return;
@@ -354,15 +371,17 @@ function App() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      const penaltyAmount = amountLocked * 0.20;
-      const finalAmountReturned = amountLocked - penaltyAmount;
+      const penaltyAmount = stakedAmount * 0.20;
+      const finalAmountReturned = stakedAmount - penaltyAmount;
 
-      const currentWalletBalance = parseFloat(vztBalance.replace(/[^0-9.-]+/g, "")) || 0;
-      const newWalletBalance = currentWalletBalance + finalAmountReturned;
-
-      setVztBalance(`${newWalletBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} VZT`);
+      // Kembalikan dana bersih (80%) ke saldo dompet utama
+      setVztBalance(prev => prev + finalAmountReturned);
+      setProtocolTVL(prev => prev - (stakedAmount * 0.5));
+      
       triggerBanner(`🔥 Success: ${penaltyAmount.toLocaleString('en-US')} VZT burned! Returned ${finalAmountReturned.toLocaleString('en-US')} VZT.`, "success");
       
+      // Reset total status pool kunci
+      setStakedAmount(0);
       setLockAmount("0");
       setIsTokenLocked(false);
       setShowRewardRow(false);
@@ -445,7 +464,7 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          <a href="/landing.html" className="btn-home">Back to Home</a>
+          <a href="https://provizto.github.io/vzt/" className="btn-home">Back to Home</a>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
             background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)"
           }}>
@@ -637,8 +656,8 @@ function App() {
             </div>
 
             <div className="pool-meta-row">
-              <span>Protocol TVL: <strong id="poolTvl">${protocolTVL}</strong></span>
-              <span>Your Balance: <strong id="vztBalance">{vztBalance}</strong></span>
+              <span>Protocol TVL: <strong id="poolTvl">${protocolTVL.toLocaleString('en-US')}</strong></span>
+              <span>Your Balance: <strong id="vztBalance">{vztBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT</strong></span>
             </div>
 
             <div className="lock-input-group">
@@ -743,7 +762,7 @@ function App() {
             <span className="shield-badge">🛡️ Anti-Sybil Active</span>
           </div>
           <p>Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
-             
+               
           <div className="affiliate-box">
             <input type="text" id="refLink" value={isConnected ? `https://provizto.hub/${myWalletAddress}` : "https://provizto.hub"} readOnly />
             
@@ -832,7 +851,7 @@ function App() {
       <footer className="dapp-footer">
         <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
         <div className="footer-links-row">
-          <a href="http://localhost:5173/README.md">Documentation</a>
+          <a href="https://provizto.github.io/vzt/">Documentation</a>
           <a href="#audit" onClick={() => alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')}>Security Audit 🛡️</a>
         </div>
       </footer>
