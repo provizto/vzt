@@ -1,23 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-// ==========================================================================
-// PROTOCOL SYSTEM CONSTANTS (GLOBAL CONFIGURATION FOR GRANTS REVIEW)
-// ==========================================================================
-const PROGRAM_ID = "Prov1zto111111111111111111111111111111111";
-const SOLANA_NETWORK = "mainnet-beta";
-
-// TIME-HORIZON BLOCK CONFIGURATIONS (7 DAYS TIME-LOCK FOR SECURITY ENFORCEMENT)
-const BASE_EPOCH_HORIZON_MS = 604800000; // 7 Hari dalam milidetik (Default Horizon)
-const EMERGENCY_BURN_PENALTY_RATE = 0.20; // 20% Penalty Rate untuk deflationary burn
-
-// PRICING ORACLE MOCKS
-const TOKEN_PRICES = { SOL: 170.00, USDT: 1.00, USDC: 1.00, WSOL: 170.00, VZT: 0.50 };
-
-
-// ==========================================================================
-// MAIN DAPP COMPONENT
-// ==========================================================================
 function App() {
   // ==========================================================================
   // 1. GLOBAL STATE MANAGEMENT (MIGRATED FROM MASTER JAVASCRIPT VARS)
@@ -36,7 +19,7 @@ function App() {
   
   // Perhitungan Keuangan Berbasis Number Murni
   const [vztBalance, setVztBalance] = useState(0); 
-  const [stakedAmount, setStakedAmount] = useState(0); // Penampung saldo terkunci
+  const [stakedAmount, setStakedAmount] = useState(0); 
   const [protocolTVL, setProtocolTVL] = useState(1248500); 
 
   // AMM DEX Swap States
@@ -61,7 +44,7 @@ function App() {
   const [showRewardRow, setShowRewardRow] = useState(false);
   const [earnedUsdcDisplay, setEarnedUsdcDisplay] = useState('0.00 USDC');
   
-  // State Penegakan Aturan Kematangan Blok Kontrak (7-Day Epoch Time-Horizon Simulation)
+  // PERBAIKAN: State Penegakan Aturan Kematangan Blok Kontrak (7-Day Epoch Time-Horizon Simulation)
   const [rewardClaimable, setRewardClaimable] = useState(false);
 
   // Secure On-Chain Affiliate States
@@ -163,11 +146,11 @@ function App() {
   // 4. AMM DEX SWAP CALCULATOR ENGINE (JITO ENGINE ROUTING)
   // ==========================================================================
   const tokens = [
-    { symbol: 'USDC', name: 'USD Coin', priceInUsdc: TOKEN_PRICES.USDC },
-    { symbol: 'USDT', name: 'Tether', priceInUsdc: TOKEN_PRICES.USDT },
-    { symbol: 'SOL', name: 'Solana', priceInUsdc: TOKEN_PRICES.SOL },
-    { symbol: 'WSOL', name: 'Wrapped Solana', priceInUsdc: TOKEN_PRICES.WSOL },
-    { symbol: 'VZT', name: 'Provizto Token', priceInUsdc: TOKEN_PRICES.VZT }
+    { symbol: 'USDC', name: 'USD Coin', priceInUsdc: 1 },
+    { symbol: 'USDT', name: 'Tether', priceInUsdc: 1 },
+    { symbol: 'SOL', name: 'Solana', priceInUsdc: 170 },
+    { symbol: 'WSOL', name: 'Wrapped Solana', priceInUsdc: 170 },
+    { symbol: 'VZT', name: 'Provizto Token', priceInUsdc: 0.5 }
   ];
 
   useEffect(() => {
@@ -209,7 +192,7 @@ function App() {
     }
 
     setIsSwapLoading(true);
-    setTxLog(`Routing private transaction bundle on ${SOLANA_NETWORK} via Jito Engine (MEV Protection)...`);
+    setTxLog('Routing private transaction bundle via Jito Engine (MEV Protection)...');
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -221,7 +204,7 @@ function App() {
       const devShare = (currentFee * 0.15).toFixed(5);
 
       setTxLog(
-        `[SWAP SUCCESS] | Program: ${PROGRAM_ID}\n` +
+        `[SWAP SUCCESS]\n` +
         `Swapped: ${amount} ${tokenPay} ➜ ${receiveAmount} ${tokenReceive}\n` +
         `Protocol Fee (0.3%): ${swapFee} ${tokenPay}\n\n` +
         `[DISTRIBUTION LOG]\n` +
@@ -328,6 +311,7 @@ function App() {
     }
   }, [lockAmount, lockCalculationMode, chosenMultiplier, isTokenLocked]);
 
+  // PERBAIKAN: Menambahkan kunci otomatis imbalan hasil sebelum kunci epoch matang
   const handleLockToken = async () => {
     const amount = parseFloat(lockAmount) || 0;
     if (amount <= 0) {
@@ -353,14 +337,13 @@ function App() {
       const finalMultiplier = (lockCalculationMode === 'wizard') ? chosenMultiplier : 1;
       setEarnedUsdcDisplay(((amount * 0.05) * finalMultiplier).toFixed(2) + " USDC");
       setShowRewardRow(true);
-      setProtocolTVL(prev => prev + (amount * TOKEN_PRICES.VZT)); 
+      setProtocolTVL(prev => prev + (amount * 0.5)); 
 
-      // INTEGRASI SEUTUHNYA: Mengunci tombol klaim imbalan hasil selama 7 Hari Penuh (604.800.000 ms)
+      // Memicu pelepasan kunci klaim otomatis setelah 5 detik (Representasi simulasi 7 Hari)
       setTimeout(() => {
         setRewardClaimable(true);
         triggerBanner("✨ Smart Contract Update: Staking Epoch completed! Yield rewards are now claimable.", "success");
-      }, BASE_EPOCH_HORIZON_MS);
-
+      }, 3600000);
     } catch (error) {
       alert('Transaction failed.');
     } finally {
@@ -368,6 +351,7 @@ function App() {
     }
   };
 
+  // PERBAIKAN: Fungsi klaim mendeteksi status timelock kontrak secara ketat
   const claimVztReward = () => {
     if (!rewardClaimable) {
       alert("Smart Contract Refusal: Cannot execute yield withdrawal!\n\nReason: This epoch block has not reached the maturity milestone yet (7-Day Target Horizon). If you wish to pull out early, you must trigger the Emergency Unlock protocol to bypass contract limits.");
@@ -380,7 +364,7 @@ function App() {
   };
 
   // ==========================================================================
-  // 7. EMERGENCY PROTOCOL UNLOCK (PENALTI BURN 20% BERBASIS KONSTAN GLOBAL)
+  // 7. EMERGENCY PROTOCOL UNLOCK (PENALTI BURN 20% + BYPASS TIMELOCK REWARD)
   // ==========================================================================
   const handleEmergencyUnlock = async () => {
     if (!isConnected) {
@@ -393,8 +377,7 @@ function App() {
       return;
     }
 
-    const penaltyPercentageText = EMERGENCY_BURN_PENALTY_RATE * 100;
-    const alertMessage = `⚠️ ALERT: EMERGENCY UNLOCK SYSTEM\n--------------------------------------------------\nYou are attempting to unlock your tokens before the maturity date.\nPer contract rules, this action triggers the Emergency Clause:\n\n• Total Locked Assets   : ${stakedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n• ${penaltyPercentageText}% Penalty to BURN   : ${(stakedAmount * EMERGENCY_BURN_PENALTY_RATE).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT (Permanently destroyed)\n• Net Amount Returned   : ${(stakedAmount * (1 - EMERGENCY_BURN_PENALTY_RATE)).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n\nAre you absolute sure you want to proceed and burn ${penaltyPercentageText}% of your capital?`;
+    const alertMessage = `⚠️ ALERT: EMERGENCY UNLOCK SYSTEM\n--------------------------------------------------\nYou are attempting to unlock your tokens before the maturity date.\nPer contract rules, this action triggers the Emergency Clause:\n\n• Total Locked Assets   : ${stakedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n• 20% Penalty to BURN   : ${(stakedAmount * 0.2).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT (Permanently destroyed)\n• Net Amount Returned   : ${(stakedAmount * 0.8).toLocaleString('en-US', { minimumFractionDigits: 2 })} VZT\n\nAre you absolute sure you want to proceed and burn 20% of your capital?`;
 
     const confirmWithdraw = confirm(alertMessage);
     if (!confirmWithdraw) return;
@@ -404,11 +387,11 @@ function App() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      const penaltyAmount = stakedAmount * EMERGENCY_BURN_PENALTY_RATE;
+      const penaltyAmount = stakedAmount * 0.20;
       const finalAmountReturned = stakedAmount - penaltyAmount;
 
       setVztBalance(prev => prev + finalAmountReturned);
-      setProtocolTVL(prev => prev - (stakedAmount * TOKEN_PRICES.VZT));
+      setProtocolTVL(prev => prev - (stakedAmount * 0.5));
       
       triggerBanner(`🔥 Success: ${penaltyAmount.toLocaleString('en-US')} VZT burned! Returned ${finalAmountReturned.toLocaleString('en-US')} VZT.`, "success");
       
@@ -497,7 +480,7 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          <a href="https://vzt-beige.vercel.app/landing.html" className="btn-home">Back to Home</a>
+          <a href="/landing.html" className="btn-home">Back to Home</a>
           <button className="btn-connect" id="walletBtn" onClick={openWalletModal} style={{
             background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)"
           }}>
@@ -729,6 +712,7 @@ function App() {
               )}
             </div>
 
+            {/* BARIS MANAJEMEN REWARD KLAIM DENGAN INDIKATOR WARNA UNTUK STATUS TIMELOCK SIMULASI */}
             {isTokenLocked && !isLockLoading && showRewardRow && (
               <div className="claim-management-row" id="rewardClaimRow" style={{ display: 'flex', marginTop: '-10px', marginBottom: '15px' }}>
                 <span>Yield Earned: <strong id="earnedUsdc" style={{ color: '#22c55e' }}>{earnedUsdcDisplay}</strong></span>
@@ -895,7 +879,7 @@ function App() {
       <footer className="dapp-footer">
         <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
         <div className="footer-links-row">
-          <a href="https://vzt-beige.vercel.app/README.md">Documentation</a>
+          <a href="/README.md">Documentation</a>
           <a href="#audit" onClick={() => alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')}>Security Audit 🛡️</a>
         </div>
       </footer>
