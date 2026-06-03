@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provizto Protocol | Next-Gen DeFi Asset Management on Solana</title>
+    <!-- Google Fonts & Updated Stable FontAwesome CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --accent-green: #14b8a6;
+            --text-main: #f3f4f6;
+            --text-muted: #94a3b8;
+            --border-color: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Header Style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #fff, var(--text-muted));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 0.8rem;
+            background: var(--accent-purple);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+            -webkit-text-fill-color: initial;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-green);
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 8% 80px 8%;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(139, 92, 246, 0.15) 0%, transparent 60%);
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff 40%, var(--accent-blue));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 35px auto;
+            line-height: 1.6;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 26px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Live Metrics Banner */
+        .metrics-banner {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 30px;
+            background: var(--card-bg);
+            margin: 40px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Product Features Section */
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            font-size: 1.05rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 0 8% 60px 8%;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            border-radius: 12px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Grant Box Accent Style */
+        .grant-notice-box {
+            background: rgba(139, 92, 246, 0.03);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px auto;
+            max-width: 84%;
+            text-align: left;
+        }
+
+        .grant-notice-box h4 {
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .grant-notice-box ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .grant-notice-box li {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        /* Roadmap Section */
+        .roadmap-section {
+            padding: 80px 8%;
+            background: rgba(17, 24, 39, 0.4);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--border-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+        }
+
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            right: -8px;
+            background-color: var(--bg-color);
+            border: 4px solid var(--accent-green);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; text-align: left; }
+        .right::after { left: -8px; }
+
+        .timeline-content {
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-content h4 {
+            color: var(--accent-green);
+            margin-bottom: 5px;
+        }
+
+        .timeline-content span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content li {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 5px 0;
+        }
+
+        /* FAQ Section Accordion */
+        .faq-section {
+            padding: 80px 8%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Footer Style & Socials */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #060911;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .social-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .social-icons a {
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Mobile Responsive adjustment */
+        @media (max-width: 768px) {
+            header { padding: 15px 5%; }
+            nav { display: none; }
+            .hero h1 { font-size: 2.2rem; }
+            .metrics-banner { flex-direction: column; gap: 25px; }
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-container::after { left: 23px; }
+            .left { text-align: left; }
+            .right { left: 0; }
+            footer { flex-direction: column; gap: 20px; text-align: center; }
+            .grant-notice-box { max-width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+    <header>
+        <div class="logo">PROVIZTO<span>$VZT</span></div>
+        <nav>
+            <a href="#features">Products</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#faq">FAQ</a>
+            <a href="README.md" target="_blank">Documentation</a>
+        </nav>
+        <a href="http://localhost:5173/" class="btn-launch">Launch dApp</a>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Decentralized Asset Management Protocol Running on Solana</h1>
+        <p>Optimize capital efficiency constraints and unlock liquidity stability through private Jito routing, programmatic vault structures, and deflationary burn algorithms.</p>
+        <div class="hero-btns">
+            <a href="http://localhost:5173/" class="btn-launch" style="padding: 14px 32px; font-size: 1.05rem;">Launch dApp</a>
+            <a href="README.md" target="_blank" class="btn-secondary">Read Whitepaper</a>
+        </div>
+    </section>
+
+    <!-- LIVE METRICS ACCENT BANNER -->
+    <div class="metrics-banner">
+        <div class="metric-item">
+            <div class="metric-value">$1,248,500+</div>
+            <div class="metric-label">Total Value Locked</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-value">45,210+</div>
+            <div class="metric-label">Swaps Executed</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-value">20% Burn</div>
+            <div class="metric-label">Early Exit Deflation</div>
+        </div>
+    </div>
+
+    <!-- CORE PRODUCTS & AFFILIATE SECTION -->
+    <section id="features" style="padding: 60px 0;">
+        <h2 class="section-title">Ecosystem Functional Modules</h2>
+        <p class="section-desc">Engineered securely on-chain to maximize sustainable user compound interest parameters.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3>AMM DEX Swap</h3>
+                <p>Execute private instant token exchanges for multi-assets (USDC, USDT, SOL, WSOL) routed directly through Jito private validators. Fully shielded from front-running and front-row MEV sandwich attacks.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Automated Yield Optimizer</h3>
+                <p>Deploy USDC into optimized cross-protocol compounding routes. Enjoy an agnostic, programmatic target daily compounding yield rate of 0.11% (Projected 49.1% Boosted APY backed by swap fee underwriting).</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                <h3>VZT Programmed Lock Pool</h3>
+                <p>Escrow $VZT tokens via instant or time-locked boosted configurations. Earn sustainable, organic platform revenue shares distributed exclusively in single-asset stable USDC.</p>
+            </div>
+            <!-- MODUL: SECURE AFFILIATE PROGRAM -->
+            <div class="feature-card" style="border-color: rgba(20, 184, 166, 0.3);">
+                <div class="feature-icon" style="color: var(--accent-green);"><i class="fas fa-users-rectangle"></i></div>
+                <h3>On-Chain Affiliate System</h3>
+                <p>Share your unique reference ledger URL to earn up to 25% dynamic commission from generated volumes. Features a strict 10-second timelock transaction cooldown to prevent multi-account exploit loops and Sybil attacks.</p>
+            </div>
+        </div>
+
+        <!-- BOX NOTIFIKASI KLAUSUL HIBAH / REVENUE SHARE GRANTS -->
+        <div class="grant-notice-box">
+            <h4><i class="fas fa-crown"></i> Institutional Grant Clawback Framework Active</h4>
+            <p>To establish absolute financial transparency with our foundation grant providers, the 15% Dev & Infrastructure Treasury incorporates a secure automated revenue-share routing rule:</p>
+            <ul>
+                <li><strong>20% Automated Clawback Split:</strong> Every transactional split routed into the Dev Treasury automatically streams 20% of its capital to fulfill institutional grant repayment schedules.</li>
+                <li><strong>Zero Dilution Protection:</strong> This payback mechanic guarantees that native $VZT market supply is never diluted or liquidated to reimburse strategic funding partners.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ROADMAP TIMELINE SECTION -->
+    <section id="roadmap" class="roadmap-section">
+        <h2 class="section-title">Protocol Strategic Roadmap</h2>
+        <p class="section-desc">Chronological development milestones tracking Provizto expansion for the next 12 months.</p>
+        
+        <div class="timeline">
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h4>Phase 1: Foundation & Launch</h4>
+                    <span>June - August 2026</span>
+                    <li>• Security infrastructure audit finalized.</li>
+                    <li>• MEV-Protected AMM DEX Swap Mainnet launch.</li>
+                    <li>• Deployment of secure anti-Sybil ledger logic.</li>
+                </div>
+            </div>
+            <div class="timeline-container right">
+                <div class="timeline-content">
+                    <h4>Phase 2: Growth & Automation</h4>
+                    <span>September - December 2026</span>
+                    <li>• Deployment of the Automated Yield Optimizer contracts.</li>
+                    <li>• Activation of the multi-tiered 1x - 2.5x Lock multiplier vaults.</li>
+                    <li>• Strategic Solana liquidity provider handshake integrations.</li>
+                </div>
+            </div>
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h4>Phase 3: Scaling & Integration</h4>
+                    <span>January - March 2027</span>
+                    <li>• Implementation of governance voting weight parameters.</li>
+                    <li>• Multi-asset cross-protocol vault aggregation expansion.</li>
+                    <li>• Secondary tier partner performance reward rollouts.</li>
+                </div>
+            </div>
+            <div class="timeline-container right">
+                <div class="timeline-content">
+                    <h4>Phase 4: DAO & Governance Maturity</h4>
+                    <span>April - June 2027</span>
+                    <li>• Final transition into a fully decentralized Protocol DAO.</li>
+                    <li>• Global community grant deployment for external developer builds.</li>
+                    <li>• Extension of Real Yield platform distribution channels.</li>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPANDED FAQ SECTION ACCORDION -->
+    <section id="faq" class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc">Quick technical answers regarding Provizto underlying operational mechanics.</p>
+        
+        <div class="faq-item">
+            <div class="faq-question">What is Provizto Protocol? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Provizto is a non-inflationary decentralized asset management protocol running on the Solana blockchain. It provides users with MEV-shielded token swapping, cross-protocol auto-compounding vaults, and sustainable staking mechanics that distribute revenue share in stable assets.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How does the 0.3% Trading Fee allocation cycle operate? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Every on-chain swap triggers a 0.3% baseline fee split atomically: 40% routes to underwrite the Automated Yield Optimizer pools, 30% feeds the VZT Programmed Lock Pool for USDC stakers reward claims, 15% finances Affiliate commissions, and 15% is secured for Core Development & Infrastructure treasury costs (which includes a built-in 20% automated clawback allocation for grant repayments).</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Is the 49.1% Optimizer APY sustainable or too high? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">It is highly sustainable. The baseline daily interest is just 0.11%, which mathematically compounds to 49.1% annually. Furthermore, this yield does not rely on token printing, but is fully underwritten by the 40% allocation of global protocol swap fees.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What does the 7-Day Epoch Reward Claim mean? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">It means rewards are calculated and settled in 7-day cycles (1 Epoch). This minimum 7-day lock-and-release mechanic is an industry-standard security measure designed to protect the pool from high-frequency flash-loan exploits and ensure stable network data distribution.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How exactly does the Affiliate program protect against Sybil Exploits? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">To stop bad actors from creating high-frequency multi-account loops (*Sybil Attacks*), the on-chain registry enforces a smart contract rule blocking self-referrals and restricting transaction calls to a mandatory 10-second cooldown timeout.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What are the different Affiliate Tier performance levels? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Commissions scale dynamically based on the verified on-chain trading volume of your referred network: Bronze Tier (Up to $10,000 volume) pays out a 10% commission rate, Silver Tier ($10,001 - $100,000 volume) rewards an 18% rate, and premium Gold Tier (Above $100,000 volume) guarantees a 25% commission rate.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">What is the early withdrawal penalty clause? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Any premature liquidity unlock from the time-locked Boosted Bond Lock contracts prior to the set computational maturity date will trigger an absolute 20% principal penalty deduction. This amount is automatically sent to a dead address and permanently BURNED to induce long-term market token scarcity.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Why does Provizto pay stakers in USDC instead of native $VZT emissions? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Traditional DeFi printing rewards dilute market capitalization and tank token prices. Provizto utilizes a non-inflationary *Real Yield* philosophy, where stakers are rewarded using the platform's hard revenue generated through swap operations, ensuring value accrual for long-term network participants.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Why are all protocol payouts (Optimizer, Staking, Affiliate) distributed exclusively in USDC? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">To insulate users from market volatility and optimize network computational efficiency. While the AMM Swap module accepts various highly liquid assets (SOL, WSOL, USDT), the protocol executes an instant automated smart-contract conversion into stable USDC at the ledger level. This guarantees value stability for earned yields, drastically lowers gas fee costs by avoiding multi-token routing claims, and provides absolute accounting transparency across the ecosystem.</div>
+        </div>
+    </section>
+
+    <!-- FOOTER SECTION & SOCIALS -->
+    <footer>
+        <p>© 2026 Provizto Protocol & Ecosystem Hub. All Rights Reserved. Secure Architecture Edition.</p>
+        <div class="social-icons">
+            <!-- Ikon SVG Inline FontAwesome khusus untuk memastikan Logo X (Twitter) tampil sempurna -->
+            <a href="https://x.com/@provizto" target="_blank" title="Follow our X (Twitter)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                  <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                </svg>
+            </a>
+            <a href="https://t.me/VZT_Global" target="_blank" title="Join Telegram Group"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.com/provizto" target="_blank" title="Join Discord Server"><i class="fab fa-discord"></i></a>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE ACCORDION JAVASCRIPT ANIMATION -->
+    <script>
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                if (answer.style.maxHeight && answer.style.maxHeight !== '0px') {
+                    answer.style.maxHeight = '0px';
+                    answer.style.paddingTop = '0px';
+                    answer.style.paddingBottom = '0px';
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+                    answer.style.paddingTop = '20px';
+                    answer.style.paddingBottom = '20px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

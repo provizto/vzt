@@ -1,0 +1,862 @@
+/* ==========================================================================
+   1. CORE & LAYOUT STYLES (ORIGINAL BASE)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: #0b0f19;
+    color: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dapp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #111827;
+    border-bottom: 1px solid #1f2937;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.vzt-badge {
+    font-size: 0.8rem;
+    background: #14b8a6;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 5px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-home {
+    background-color: transparent;
+    color: #94a3b8;
+    border: 1px solid #374151;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-home:hover {
+    color: #fff;
+    background-color: #1f2937;
+    border-color: #4b5563;
+}
+
+.btn-connect {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-connect:hover {
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   2. WALLET MODAL POP-UP STYLES
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    padding: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-close-modal:hover {
+    color: #fff;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.wallet-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #1f2937;
+    color: #fff;
+    border: 1px solid #374151;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.wallet-option-btn:hover {
+    background-color: #374151;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.wallet-icon {
+    font-size: 1.3rem;
+}
+
+/* ==========================================================================
+   3. PRODUCTS CONTAINER & BASE CARD GLOBAL
+   ========================================================================== */
+.dapp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1;
+    width: 100%;
+}
+
+.wallet-status {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.rpc-status-container {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 6px; 
+    font-size: 0.8rem; 
+    color: #64748b; 
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.rpc-status-indicator {
+    width: 8px; 
+    height: 8px; 
+    background-color: #22c55e; 
+    border-radius: 50%; 
+    display: inline-block; 
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.security-banner {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.product-card {
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: #3b82f6;
+}
+
+.product-card h3 {
+    margin-bottom: 12px;
+    font-size: 1.25rem;
+    color: #fff;
+}
+
+.product-card .desc {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background-color: #1f2937;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn-action {
+    background-color: #1f2937;
+    color: #94a3b8;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: not-allowed;
+    width: 100%;
+    font-size: 14px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-action:not([disabled]) {
+    background: linear-gradient(90deg, #1f6feb 0%, #238636 100%) !important;
+    color: white !important;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(31, 111, 235, 0.3);
+}
+
+/* ==========================================================================
+   4. NEW ADDITIONS: AMM DEX SWAP COMPONENT
+   ========================================================================== */
+.card-title-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px;
+}
+
+.swap-card {
+    max-width: 420px; 
+    margin: 0 auto;
+}
+
+.mev-secure-badge {
+    font-size: 11px; 
+    background: #1f6feb; 
+    color: #fff; 
+    padding: 3px 8px; 
+    border-radius: 12px; 
+    font-weight: bold; 
+    letter-spacing: 0.5px;
+}
+
+.swap-input-container {
+    background: #0b0f19; 
+    padding: 12px; 
+    border-radius: 12px; 
+    border: 1px solid #1f2937; 
+    text-align: left;
+}
+
+.swap-input-container label {
+    font-size: 12px; 
+    color: #94a3b8;
+}
+
+.swap-input-container .field-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 6px;
+}
+
+.swap-input-container input {
+    background: transparent; 
+    border: none; 
+    color: #fff; 
+    font-size: 20px; 
+    width: 60%; 
+    outline: none; 
+    font-weight: 600;
+}
+
+.swap-input-container select {
+    background: #1f2937; 
+    color: #fff; 
+    border: none; 
+    border-radius: 6px; 
+    padding: 6px 10px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    outline: none;
+}
+
+.swap-switch-row {
+    display: flex; 
+    justify-content: center; 
+    margin: -18px 0; 
+    position: relative; 
+    z-index: 2;
+}
+
+.btn-switch-tokens {
+    background: #1f2937; 
+    border: 2px solid #334155; 
+    color: #38bdf8; 
+    border-radius: 50%; 
+    width: 32px; 
+    height: 32px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    font-size: 14px; 
+    outline: none;
+}
+
+.static-token-label {
+    background: #1f2937; 
+    color: #fff; 
+    border-radius: 6px; 
+    padding: 6px 14px; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+}
+
+.swap-fee-details {
+    font-size: 12px; 
+    color: #94a3b8; 
+    margin-bottom: 20px; 
+    line-height: 1.6; 
+    text-align: left;
+}
+
+.swap-fee-details .detail-line {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 4px 0;
+}
+
+.fee-bold-value {
+    color: #f8fafc; 
+    font-weight: 600;
+}
+
+.swap-fee-details .total-divider {
+    border-top: 1px dashed #1f2937;
+}
+
+.status-active-text {
+    color: #22c55e; 
+    font-weight: 600;
+}
+
+.tx-log-box {
+    margin-top: 12px; 
+    font-size: 11px; 
+    text-align: center; 
+    color: #94a3b8; 
+    font-style: italic;
+}
+
+/* ==========================================================================
+   5. NEW ADDITIONS: YIELD OPTIMIZER PANEL
+   ========================================================================== */
+.yield-calc-embed {
+    padding: 15px; 
+    background: #0b0f19; 
+    color: #fff; 
+    border-radius: 8px; 
+    border: 1px solid #1f2937; 
+    margin-bottom: 20px; 
+    text-align: left; 
+    font-size: 0.9rem;
+}
+
+.yield-calc-embed h4 {
+    margin-bottom: 10px; 
+    color: #3b82f6;
+}
+
+.yield-calc-embed label {
+    font-size: 0.8rem; 
+    color: #94a3b8;
+}
+
+.yield-calc-embed input {
+    width: 100%; 
+    padding: 8px; 
+    margin: 8px 0 12px 0; 
+    border-radius: 6px; 
+    background: #111827; 
+    border: 1px solid #374151; 
+    color: #fff; 
+    font-weight: 600;
+    outline: none;
+}
+
+.projection-metrics-list {
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+    font-size: 0.85rem; 
+    color: #cbd5e1;
+}
+
+.profit-green-value {
+    color: #22c55e;
+}
+
+/* ==========================================================================
+   6. NEW ADDITIONS: VZT STAKING DUAL INTERFACE WIDGET
+   ========================================================================== */
+.calc-tabs {
+    display: flex;
+    background-color: #0b0f19;
+    padding: 4px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #1f2937;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: #1e293b;
+    color: #ffffff;
+}
+
+.pool-meta-row {
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 0.8rem; 
+    color: #94a3b8; 
+    margin-bottom: 12px; 
+    border-bottom: 1px dashed #1f2937; 
+    padding-bottom: 8px;
+}
+
+.lock-input-group {
+    margin-bottom: 15px; 
+    text-align: left;
+}
+
+.lock-input-group label {
+    font-size: 12px; 
+    color: #94a3b8; 
+    display: block; 
+    margin-bottom: 6px;
+}
+
+.lock-input-group input {
+    width: 100%; 
+    padding: 12px; 
+    background: #0b0f19; 
+    border: 1px solid #374151; 
+    border-radius: 8px; 
+    color: #fff; 
+    font-size: 16px; 
+    outline: none; 
+    font-weight: 600;
+}
+
+/* Pastikan ini ada di style.css agar panel bisa muncul saat diklik */
+.wizard-section {
+    display: none; /* Default tersembunyi */
+    margin-bottom: 15px;
+    background: rgba(59, 130, 246, 0.03);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+/* Class ini akan ditambahkan oleh JavaScript secara otomatis */
+.wizard-section.active {
+    display: block !important; /* Memaksa panel untuk tampil */
+}
+
+/* Desain tombol pilihan durasi horizontal */
+.duration-btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.btn-duration {
+    flex: 1;
+    background-color: #0b0f19;
+    border: 1px solid #374151;
+    color: #94a3b8;
+    padding: 10px 5px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-duration:hover {
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.btn-duration.active {
+    background-color: rgba(31, 111, 235, 0.15);
+    border-color: #3b82f6;
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.score-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(34, 197, 94, 0.03);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+}
+
+.score-value {
+    font-family: 'Orbitron', sans-serif;
+    color: #22c55e;
+    font-weight: 700;
+}
+
+.reward-info-badge {
+    background: rgba(31, 111, 235, 0.1); 
+    border: 1px solid rgba(56, 139, 253, 0.2); 
+    border-radius: 8px; 
+    padding: 12px; 
+    text-align: center; 
+    margin-bottom: 15px;
+}
+
+.badge-accent-line {
+    color: #38bdf8; 
+    font-size: 13px; 
+    font-weight: 600; 
+    display: block;
+}
+
+.badge-sub-info {
+    font-size: 11px; 
+    color: #94a3b8; 
+    display: block; 
+    margin-top: 4px;
+}
+
+.claim-management-row {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+    background: #020617; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    border: 1px solid #1f2937;
+}
+
+.btn-claim-vzt {
+    background: #1f2937; 
+    color: #38bdf8; 
+    border: 1px solid #334155; 
+    padding: 4px 10px; 
+    border-radius: 4px; 
+    font-size: 0.75rem; 
+    font-weight: bold; 
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   7. AFFILIATE PERFORMANCE & TARGET TABLES
+   ========================================================================== */
+.affiliate-section {
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.section-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.shield-badge {
+    background-color: rgba(20, 184, 166, 0.1);
+    color: #14b8a6;
+    border: 1px solid #14b8a6;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 20px;
+}
+
+.affiliate-section h3 {
+    color: #fff;
+}
+
+.affiliate-section p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.affiliate-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.affiliate-box input {
+    flex: 1;
+    background-color: #0b0f19;
+    border: 1px solid #1f2937;
+    padding: 12px;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.btn-copy {
+    background-color: #14b8a6;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.test-panel {
+    background-color: #1f2937;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #8b5cf6;
+}
+
+.test-panel label {
+    display: block;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    background-color: #0b0f19;
+    border: 1px solid #374151;
+    padding: 10px;
+    border-radius: 6px;
+    color: #fff;
+    outline: none;
+}
+
+.btn-test {
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-test[disabled] {
+    background-color: #374151;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+.tier-table-wrapper {
+    margin-bottom: 25px; 
+    border-top: 1px solid #1f2937; 
+    padding-top: 20px;
+}
+
+.tier-headline {
+    font-size: 0.85rem; 
+    color: #cbd5e1; 
+    margin-bottom: 12px; 
+    font-weight: 600;
+}
+
+.responsive-table-overflow {
+    overflow-x: auto; 
+    border-radius: 8px; 
+    border: 1px solid #1f2937;
+}
+
+.tier-data-table {
+    width: 100%; 
+    border-collapse: collapse; 
+    text-align: left; 
+    background-color: #0b0f19; 
+    font-size: 0.85rem;
+}
+
+.tier-data-table th {
+    background-color: #1f2937; 
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.row-bordered {
+    border-bottom: 1px solid #1f2937;
+}
+
+.row-bordered td, .tier-data-table tbody tr td {
+    padding: 10px 15px;
+}
+
+.tier-bronze { font-weight: 600; color: #14b8a6; }
+.tier-silver { font-weight: 600; color: #3b82f6; }
+.tier-gold { font-weight: 600; color: #a855f7; }
+.target-grey { color: #94a3b8; }
+.rate-white { font-weight: 700; color: #fff; }
+
+/* ==========================================================================
+   8. FOOTER & RESPONSIVE MEDIA BREAKPOINTS
+   ========================================================================== */
+.dapp-footer {
+    background-color: #111827;
+    border-top: 1px solid #1f2937;
+    padding: 20px 40px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+.footer-links-row {
+    margin-top: 8px; 
+    display: flex; 
+    justify-content: center; 
+    gap: 20px;
+}
+
+.footer-links-row a {
+    color: #64748b; 
+    text-decoration: none; 
+    transition: color 0.2s;
+}
+
+.footer-links-row a:hover {
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .dapp-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+    .header-left {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .header-right {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* --- THE VERY BOTTOM BLOCK --- */
+.tier-stats {
+    display: flex;
+    gap: 40px;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    background-color: #0b0f19;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #1f2937;
+    margin-top: 15px;
+}
+
+.tier-item span {
+    font-weight: 700;
+    transition: color 0.3s ease-in-out;
+}
