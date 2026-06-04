@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Landing from './Landing'; // Mengimpor komponen Landing React Opsi A
+import ComplianceModal from './components/ComplianceModal'; // INTEGRASI: Mengimpor Pop-up Compliance
 import './App.css';
 
 // ==========================================================================
@@ -44,7 +45,7 @@ function App() {
   // Perhitungan Keuangan Berbasis Number Murni
   const [vztBalance, setVztBalance] = useState(0); 
   const [stakedAmount, setStakedAmount] = useState(0); // Penampung saldo terkunci
-  const [protocolTVL, setProtocolTVL] = useState(1248500); 
+  const [protocolTVL, setProtocolTVL] = useState(1248500);
 
   // AUTOMATED INSTUTIONAL GRANT REPAYMENT TRACKER STATE
   const [totalRepaid, setTotalRepaid] = useState(0); // Akumulasi awal pengembalian $0
@@ -370,7 +371,7 @@ function App() {
     }
 
     setIsLockLoading(true);
-    setRewardClaimable(false); // Blok penguncian langsung memicu timelock aktif
+    setRewardClaimable(false); // Drop penguncian langsung memicu timelock aktif
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -509,17 +510,24 @@ function App() {
   // ==========================================================================
   if (view === 'landing') {
     return (
-      <Landing 
-        totalValueLocked={protocolTVL} 
-        swapsCount={swapsCount} 
-        onLaunchApp={() => setView('dashboard')} 
-      />
+      <>
+        {/* INTEGRASI: ComplianceModal tetap mencegat di halaman Landing awal */}
+        <ComplianceModal />
+        <Landing 
+          totalValueLocked={protocolTVL} 
+          swapsCount={swapsCount} 
+          onLaunchApp={() => setView('dashboard')} 
+        />
+      </>
     );
   }
 
   // JIKA MODE DASHBOARD AKTIF, RENDERING INTERFACE UTAMA DAPP DI BAWAH INI
   return (
     <>
+      {/* INTEGRASI: ComplianceModal aktif memantau status sesi di halaman Dashboard */}
+      <ComplianceModal />
+
       {/* FLOATING BANNER NOTIFIKASI */}
       {securityBanner.show && (
         <div id="securityBanner" style={{
@@ -541,7 +549,6 @@ function App() {
           <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         </div>
         <div className="header-right">
-          {/* LINK LANDING.HTML DI SINI SUDAH DIHAPUS DAN BERSIH TOTAL */}
           <button 
             onClick={() => setView('landing')} 
             className="btn-home" 
@@ -972,9 +979,12 @@ function App() {
       {/* FOOTER MATRIX */}
       <footer className="dapp-footer">
         <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
-        <div className="footer-links-row">
+        <div className="footer-links-row" style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '10px' }}>
           <a href="https://provizto.github.io/vzt-docs/" target="_blank" rel="noopener noreferrer">Documentation</a>
           <a href="#audit" onClick={() => alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')}>Security Audit 🛡️</a>
+          
+          {/* INTEGRASI: Link manual untuk memicu tampilan Syarat & Disclaimer Hukum */}
+          <a href="#disclaimer" onClick={() => alert('Regulatory Disclaimer:\n\nProvizto is a non-custodial decentralized application. Citizens or residents of the USA and OFAC-sanctioned countries are restricted from participating in the token lock pools.')}>Legal Disclaimer</a>
         </div>
       </footer>
     </>
