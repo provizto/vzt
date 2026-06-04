@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal Pustaka Linux Esensial untuk Kriptografi & Kompilasi C
+      # 2. Menginstal Pustaka Linux Dasar
       - name: Install Linux System Dependencies
         run: |
           sudo apt-get update
@@ -34,24 +34,24 @@ jobs:
           sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
 
-      # 5. Menginstal Perangkat Lunak Anchor CLI dengan Petunjuk Lokasi OpenSSL (FIX ERROR OPENSSL)
-      - name: Install Anchor CLI
-        env:
-          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          OPENSSL_DIR: /usr
+      # 5. Menginstal Anchor CLI secara Instan Menggunakan AVM (BYPASS ERROR OPENSSL)
+      - name: Install Anchor CLI via AVM
         run: |
-          cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 anchor-cli --locked
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
+          avm install 0.30.0
+          avm use 0.30.0
+          echo "$HOME/.avm/bin" >> $GITHUB_PATH
 
       # 6. Menghasilkan Keypair Samaran untuk Otoritas Kompilasi
       - name: Generate Dummy Solana Wallet Keypair
         run: |
           mkdir -p ~/.config/solana
-          echo "$HOME/.local/share/solana/install/active_release/bin/solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json" | bash
+          $HOME/.local/share/solana/install/active_release/bin/solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
       # 7. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
       - name: Execute Anchor Build
         run: |
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$PATH"
           anchor build
 
       # 8. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
