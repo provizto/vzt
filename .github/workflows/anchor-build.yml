@@ -1,6 +1,5 @@
 name: Provizto Smart Contract Cloud Build
 
-# Kontrak akan otomatis dikompilasi di cloud setiap kali Anda melakukan PUSH ke GitHub
 on:
   push:
     branches: [ main, master ]
@@ -17,32 +16,38 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal bahasa pemrograman Rust
+      # 2. Menginstal Pustaka Linux Esensial (SOLUSI FIX ERROR DETIK KE-6)
+      - name: Install Linux System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config build-essential libssl-dev
+
+      # 3. Menginstal bahasa pemrograman Rust
       - name: Install Rust Toolchain
-        uses: corralx/setup-rust-toolchain@v1
+        uses: corralx/setup-rust-chain@v1
         with:
           toolchain: stable
 
-      # 3. Menginstal Solana CLI Toolkit (Menggunakan versi stabil 1.18.x)
+      # 4. Menginstal Solana CLI Toolkit (Versi Stabil 1.18.17)
       - name: Install Solana CLI
         run: |
           sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
 
-      # 4. Menginstal Perangkat Lunak Anchor CLI (Versi 0.30.0 sesuai config)
+      # 5. Menginstal Perangkat Lunak Anchor CLI (Versi 0.30.0)
       - name: Install Anchor CLI
         run: |
           cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 anchor-cli --locked
 
-      # 5. Menghasilkan Keypair Samaran untuk Kebutuhan Otoritas Kompilasi
+      # 6. Menghasilkan Keypair Samaran untuk Otoritas Kompilasi
       - name: Generate Dummy Solana Wallet Keypair
         run: solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
-      # 6. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
+      # 7. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
       - name: Execute Anchor Build
         run: anchor build
 
-      # 7. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
+      # 8. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
       - name: Upload Compiled Build Artifacts
         uses: actions/upload-artifact@v4
         with:
