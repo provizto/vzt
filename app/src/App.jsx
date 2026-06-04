@@ -973,7 +973,7 @@ function App() {
       <footer className="dapp-footer">
         <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. All Rights Reserved. Secure Protocol Edition</p>
         <div className="footer-links-row">
-          <a href="https://github.com/provizto/vzt" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://github.com/provizto/vzt/README.md" target="_blank" rel="noopener noreferrer">Documentation</a>
           <a href="#audit" onClick={() => alert('Security Audits:\n\nProvizto smart contracts are currently undergoing strict internal optimization and scheduled for a formal third-party review prior to public token launch.')}>Security Audit 🛡️</a>
         </div>
       </footer>
