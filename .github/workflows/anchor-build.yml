@@ -22,7 +22,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pkg-config build-essential libssl-dev
 
-      # 3. Menginstal Bahasa Pemrograman Rust (MENGGUNAKAN AKSI RESMI & STABIL)
+      # 3. Menginstal Bahasa Pemrograman Rust
       - name: Install Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -34,8 +34,11 @@ jobs:
           sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
 
-      # 5. Menginstal Perangkat Lunak Anchor CLI (Versi 0.30.0)
+      # 5. Menginstal Perangkat Lunak Anchor CLI dengan Petunjuk Lokasi OpenSSL (FIX ERROR OPENSSL)
       - name: Install Anchor CLI
+        env:
+          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          OPENSSL_DIR: /usr
         run: |
           cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 anchor-cli --locked
 
