@@ -12,50 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Mengunduh kode dari repositori Anda ke Cloud VM
+      # 1. Ambil kode dari GitHub
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal Pustaka Linux Dasar
-      - name: Install Linux System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pkg-config build-essential libssl-dev
-
-      # 3. Menginstal Bahasa Pemrograman Rust
+      # 2. Pasang Rust
       - name: Install Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
 
-      # 4. Menginstal Solana CLI Toolkit (Versi Stabil 1.18.17)
-      - name: Install Solana CLI
+      # 3. PROSES UTAMA TERPADU (Satu Shell untuk Menghindari Hilang Path)
+      - name: Install Tools, Setup Keypair, and Execute Build
         run: |
-          sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          # A. Pasang dependensi Linux dasar
+          sudo apt-get update && sudo apt-get install -y pkg-config build-essential libssl-dev
 
-      # 5. Menginstal Anchor CLI via AVM
-      - name: Install Anchor CLI via AVM
-        run: |
+          # B. Pasang Solana CLI secara instan
+          sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
+          
+          # C. Pasang AVM dan Anchor CLI
           cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
           $HOME/.cargo/bin/avm install 0.30.0
           $HOME/.cargo/bin/avm use 0.30.0
-          echo "$HOME/.avm/bin" >> $GITHUB_PATH
 
-      # 6. Menghasilkan Keypair Samaran dengan Path yang Sudah Ter-refresh (FIX ERROR LANGKAH 6)
-      - name: Generate Dummy Solana Wallet Keypair
-        run: |
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          # D. Daftarkan semua jalur biner ke sesi shell aktif saat ini
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$HOME/.cargo/bin:$PATH"
+
+          # E. Verifikasi pemasangan (untuk memastikan alat terbaca)
+          solana --version
+          anchor --version
+
+          # F. Buat Dummy Wallet Keypair
           mkdir -p ~/.config/solana
           solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
-      # 7. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
-      - name: Execute Anchor Build
-        run: |
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$PATH"
+          # G. Eksekusi Kompilasi Utama Program Rust Provizto
           anchor build
 
-      # 8. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
+      # 4. Amankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
       - name: Upload Compiled Build Artifacts
         uses: actions/upload-artifact@v4
         with:
