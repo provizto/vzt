@@ -16,15 +16,15 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal Pustaka Linux Esensial (SOLUSI FIX ERROR DETIK KE-6)
+      # 2. Menginstal Pustaka Linux Esensial untuk Kriptografi & Kompilasi C
       - name: Install Linux System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config build-essential libssl-dev
 
-      # 3. Menginstal bahasa pemrograman Rust
+      # 3. Menginstal Bahasa Pemrograman Rust (MENGGUNAKAN AKSI RESMI & STABIL)
       - name: Install Rust Toolchain
-        uses: corralx/setup-rust-chain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
 
@@ -41,11 +41,15 @@ jobs:
 
       # 6. Menghasilkan Keypair Samaran untuk Otoritas Kompilasi
       - name: Generate Dummy Solana Wallet Keypair
-        run: solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
+        run: |
+          mkdir -p ~/.config/solana
+          echo "$HOME/.local/share/solana/install/active_release/bin/solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json" | bash
 
       # 7. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
       - name: Execute Anchor Build
-        run: anchor build
+        run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          anchor build
 
       # 8. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
       - name: Upload Compiled Build Artifacts
