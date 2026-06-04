@@ -12,41 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Mengunduh kode dari repositori Anda ke Cloud VM
+      # 1. Mengunduh kode dari repositori
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal Bahasa Pemrograman Rust Resmi
+      # 2. Menginstal Pustaka Sistem Linux
+      - name: Install Linux System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config build-essential libssl-dev protoc
+
+      # 3. Menginstal Rust Toolchain Resmi
       - name: Install Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
 
-      # 3. Eksekusi Pemasangan Alat & Kompilasi Tanpa Strict Linting
+      # 4. Proses Otomatisasi Unduhan & Kompilasi Terpadu
       - name: Auto Build Core Contract
         run: |
-          # A. Pasang dependensi keamanan Linux dasar
-          sudo apt-get update && sudo apt-get install -y pkg-config build-essential libssl-dev
-
-          # B. Pasang Solana CLI secara instan
+          # A. Pasang Solana CLI
           sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
           
-          # C. Pasang AVM dan Anchor CLI
+          # B. Pasang AVM (Anchor Version Manager)
           cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
           $HOME/.cargo/bin/avm install 0.30.0
           $HOME/.cargo/bin/avm use 0.30.0
 
-          # D. Daftarkan semua jalur biner ke sesi shell aktif saat ini
+          # C. Satukan registrasi PATH ke dalam sesi shell
           export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$HOME/.cargo/bin:$PATH"
 
-          # E. Buat Dummy Wallet Keypair agar Anchor tidak error meminta ijin otorisasi
+          # D. Buat Dummy Wallet Keypair
           mkdir -p ~/.config/solana
           solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
-          # F. Jalankan kompilasi dengan mematikan pengecekan ketat (Bypass parameter)
+          # E. Bersihkan sisa kompilasi lama & jalankan build utama
+          cargo clean --manifest-path programs/vzt/Cargo.toml
           anchor build --skip-lint
 
-      # 4. Amankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
+      # 5. Mengamankan Hasil Biner agar Bisa Diunduh
       - name: Upload Compiled Build Artifacts
         uses: actions/upload-artifact@v4
         with:
