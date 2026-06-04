@@ -386,7 +386,7 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
           <a href="#features">Products</a>
           <a href="#roadmap">Roadmap</a>
           <a href="#faq">FAQ</a>
-          <a href="https://github.com/provizto/vzt/README.md" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://github.com/provizto/vzt/" target="_blank" rel="noopener noreferrer">Documentation</a>
         </nav>
         <button onClick={onLaunchApp} className="btn-launch">
           Launch dApp
