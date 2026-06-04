@@ -16,13 +16,18 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Memasang biner Solana & Anchor siap pakai (Hanya butuh beberapa detik)
-      - name: Install Solana & Anchor Binaries Instantly
-        uses: saiba-s/setup-solana-anchor@v1
-        with:
-          node-version: '18.x'
-          solana-version: '1.18.17'
-          anchor-version: '0.30.0'
+      # 2. Memasang biner Solana & Anchor secara manual
+      - name: Install Solana, Rust, and Anchor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libudev-dev libssl-dev zlib1g-dev llvm clang make
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup default stable
+          cargo install --locked anchor-cli --version 0.30.0
+          curl -sSfL https://release.solana.com/v1.18.17/install | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
 
       # 3. Menghasilkan Keypair Otoritas dummy
       - name: Generate Dummy Solana Wallet Keypair
