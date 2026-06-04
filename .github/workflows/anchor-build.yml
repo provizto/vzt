@@ -12,19 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Mengunduh kode dari repositori Anda ke Cloud VM
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # Menggunakan compiler Rust bawaan untuk memeriksa kesalahan sintaksis secara instan
+      # 2. Menginstal Bahasa Pemrograman Rust Resmi
       - name: Install Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
 
-      - name: Install Linux System Dependencies
+      # 3. Eksekusi Pemasangan Alat & Kompilasi Tanpa Strict Linting
+      - name: Auto Build Core Contract
         run: |
+          # A. Pasang dependensi keamanan Linux dasar
           sudo apt-get update && sudo apt-get install -y pkg-config build-essential libssl-dev
 
-      # Melakukan pengecekan kode (Cargo Check) tanpa perlu alat Solana CLI
-      - name: Run Syntax Check
-        run: cargo check --manifest-path programs/vzt/Cargo.toml
+          # B. Pasang Solana CLI secara instan
+          sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
+          
+          # C. Pasang AVM dan Anchor CLI
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
+          $HOME/.cargo/bin/avm install 0.30.0
+          $HOME/.cargo/bin/avm use 0.30.0
+
+          # D. Daftarkan semua jalur biner ke sesi shell aktif saat ini
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$HOME/.cargo/bin:$PATH"
+
+          # E. Buat Dummy Wallet Keypair agar Anchor tidak error meminta ijin otorisasi
+          mkdir -p ~/.config/solana
+          solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
+
+          # F. Jalankan kompilasi dengan mematikan pengecekan ketat (Bypass parameter)
+          anchor build --skip-lint
+
+      # 4. Amankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
+      - name: Upload Compiled Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: provizto-compiled-binaries
+          path: |
+            target/deploy/vzt.so
+            target/idl/vzt.json
