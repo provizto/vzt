@@ -1,0 +1,52 @@
+name: Provizto Smart Contract Cloud Build
+
+# Kontrak akan otomatis dikompilasi di cloud setiap kali Anda melakukan PUSH ke GitHub
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  solana-anchor-build:
+    name: Compile Rust Contract on Cloud VM
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Mengunduh kode dari repositori Anda ke Cloud VM
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 2. Menginstal bahasa pemrograman Rust
+      - name: Install Rust Toolchain
+        uses: corralx/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      # 3. Menginstal Solana CLI Toolkit (Menggunakan versi stabil 1.18.x)
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
+      # 4. Menginstal Perangkat Lunak Anchor CLI (Versi 0.30.0 sesuai config)
+      - name: Install Anchor CLI
+        run: |
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 anchor-cli --locked
+
+      # 5. Menghasilkan Keypair Samaran untuk Kebutuhan Otoritas Kompilasi
+      - name: Generate Dummy Solana Wallet Keypair
+        run: solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
+
+      # 6. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
+      - name: Execute Anchor Build
+        run: anchor build
+
+      # 7. Mengamankan Hasil Biner (.so dan JSON IDL) agar Bisa Anda Unduh
+      - name: Upload Compiled Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: provizto-compiled-binaries
+          path: |
+            target/deploy/vzt.so
+            target/idl/vzt.json
