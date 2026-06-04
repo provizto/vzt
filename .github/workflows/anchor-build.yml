@@ -34,19 +34,20 @@ jobs:
           sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
 
-      # 5. Menginstal Anchor CLI secara Instan Menggunakan AVM (BYPASS ERROR OPENSSL)
+      # 5. Menginstal Anchor CLI via AVM
       - name: Install Anchor CLI via AVM
         run: |
           cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
-          avm install 0.30.0
-          avm use 0.30.0
+          $HOME/.cargo/bin/avm install 0.30.0
+          $HOME/.cargo/bin/avm use 0.30.0
           echo "$HOME/.avm/bin" >> $GITHUB_PATH
 
-      # 6. Menghasilkan Keypair Samaran untuk Otoritas Kompilasi
+      # 6. Menghasilkan Keypair Samaran dengan Path yang Sudah Ter-refresh (FIX ERROR LANGKAH 6)
       - name: Generate Dummy Solana Wallet Keypair
         run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           mkdir -p ~/.config/solana
-          $HOME/.local/share/solana/install/active_release/bin/solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
+          solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
       # 7. Perintah Utama: Kompilasi Program Rust lib.rs Provizto
       - name: Execute Anchor Build
