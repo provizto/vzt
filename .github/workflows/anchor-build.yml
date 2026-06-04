@@ -12,45 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Mengunduh kode dari repositori
+      # 1. Mengunduh kode dari repositori Anda
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Menginstal Pustaka Sistem Linux
-      - name: Install Linux System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pkg-config build-essential libssl-dev protoc
-
-      # 3. Menginstal Rust Toolchain Resmi
-      - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+      # 2. Memasang biner Solana & Anchor siap pakai (Hanya butuh beberapa detik)
+      - name: Install Solana & Anchor Binaries Instantly
+        uses: saiba-s/setup-solana-anchor@v1
         with:
-          toolchain: stable
+          node-version: '18.x'
+          solana-version: '1.18.17'
+          anchor-version: '0.30.0'
 
-      # 4. Proses Otomatisasi Unduhan & Kompilasi Terpadu
-      - name: Auto Build Core Contract
+      # 3. Menghasilkan Keypair Otoritas dummy
+      - name: Generate Dummy Solana Wallet Keypair
         run: |
-          # A. Pasang Solana CLI
-          sh -c "$(curl -sSfL https://release.solana.com/v1.18.17/install)"
-          
-          # B. Pasang AVM (Anchor Version Manager)
-          cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.0 avm --locked
-          $HOME/.cargo/bin/avm install 0.30.0
-          $HOME/.cargo/bin/avm use 0.30.0
-
-          # C. Satukan registrasi PATH ke dalam sesi shell
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.avm/bin:$HOME/.cargo/bin:$PATH"
-
-          # D. Buat Dummy Wallet Keypair
           mkdir -p ~/.config/solana
           solana-keygen new --no-bip39-passphrase --outfile ~/.config/solana/id.json
 
-          # E. Bersihkan sisa kompilasi lama & jalankan build utama
-          cargo clean --manifest-path programs/vzt/Cargo.toml
-          anchor build --skip-lint
+      # 4. Kompilasi Utama Program Rust
+      - name: Execute Anchor Build
+        run: anchor build --skip-lint
 
-      # 5. Mengamankan Hasil Biner agar Bisa Diunduh
+      # 5. Mengunggah Hasil Kompilasi (.so dan JSON IDL)
       - name: Upload Compiled Build Artifacts
         uses: actions/upload-artifact@v4
         with:
