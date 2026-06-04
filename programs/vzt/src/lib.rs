@@ -19,7 +19,7 @@ pub mod vzt {
         Ok(())
     }
 
-    /// 2. AMM DEX Swap (With automated Dev Share & Institutional Grant Clawback calculation)
+    /// 2. AMM DEX Swap (Menggunakan Integer Math Aman Tanpa f64)
     pub fn execute_swap(ctx: Context<ExecuteSwap>, pay_amount: u64) -> Result<()> {
         let user_state = &mut ctx.accounts.user_state;
         let current_time = Clock::get()?.unix_timestamp;
@@ -30,10 +30,10 @@ pub mod vzt {
             ProviztoError::SybilCooldownActive
         );
 
-        // Simulasi kalkulasi fee 0.3% di tingkat Ledger
-        let total_fee = (pay_amount as f64 * 0.003) as u64;
-        let dev_share = (total_fee as f64 * 0.15) as u64;
-        let grant_clawback = (dev_share as f64 * 0.20) as u64; // 20% otomatis dikunci untuk pengembalian hibah
+        // AMAN: Kalkulasi fee 0.3% menggunakan Integer Math (tanpa f64)
+        let total_fee = pay_amount * 3 / 1000;          // 0.3% dari pay_amount
+        let dev_share = total_fee * 15 / 100;           // 15% dari total_fee
+        let grant_clawback = dev_share * 20 / 100;      // 20% dari dev_share otomatis dikunci
 
         user_state.total_swap_volume += pay_amount;
         user_state.last_tx_timestamp = current_time;
@@ -43,7 +43,7 @@ pub mod vzt {
     }
 
     /// 3. VZT Programmed Lock Pool (7-Day Timelock Activation)
-    pub fn lock_tokens(ctx: Context<LockTokens>, amount: u64, duration_multiplier: f64) -> Result<()> {
+    pub fn lock_tokens(ctx: Context<LockTokens>, amount: u64, duration_multiplier: u8) -> Result<()> {
         let lock_account = &mut ctx.accounts.lock_account;
         let current_time = Clock::get()?.unix_timestamp;
 
@@ -52,7 +52,7 @@ pub mod vzt {
         lock_account.lock_timestamp = current_time;
         // 7 Hari Epoch Horizon: 604,800 detik
         lock_account.maturity_timestamp = current_time + 604800; 
-        lock_account.multiplier = duration_multiplier;
+        lock_account.multiplier = duration_multiplier; // Menggunakan u8 (1 byte) jauh lebih hemat space
         lock_account.is_active = true;
 
         msg!("Assets locked successfully under 7-Day Epoch Horizon constraint.");
@@ -72,7 +72,8 @@ pub mod vzt {
             ProviztoError::LockAlreadyMatured
         );
 
-        let penalty_burn_amount = (lock_account.staked_amount as f64 * 0.20) as u64;
+        // AMAN: Perhitungan Penalti Potong 20% menggunakan basis u64 murni
+        let penalty_burn_amount = lock_account.staked_amount * 20 / 100;
         let returned_amount = lock_account.staked_amount - penalty_burn_amount;
 
         lock_account.is_active = false;
@@ -89,6 +90,7 @@ pub mod vzt {
 
 #[derive(Accounts)]
 pub struct InitializeUser<'info> {
+    // Space: Anchor Discriminator (8) + Pubkey (32) + Pubkey (32) + u64 (8) + i64 (8) = 88 byte
     #[account(init, payer = user, space = 8 + 32 + 32 + 8 + 8)]
     pub user_state: Account<'info, UserState>,
     #[mut]
@@ -105,7 +107,8 @@ pub struct ExecuteSwap<'info> {
 
 #[derive(Accounts)]
 pub struct LockTokens<'info> {
-    #[account(init, payer = user, space = 8 + 32 + 8 + 8 + 8 + 8 + 1)]
+    // Perbaikan Space Akurat: 8 + 32 + 8 + 8 + 8 + 1 (u8) + 1 (bool) = 66 byte
+    #[account(init, payer = user, space = 8 + 32 + 8 + 8 + 8 + 1 + 1)]
     pub lock_account: Account<'info, LockAccount>,
     #[mut]
     pub user: Signer<'info>,
@@ -137,7 +140,7 @@ pub struct LockAccount {
     pub staked_amount: u64,
     pub lock_timestamp: i64,
     pub maturity_timestamp: i64,
-    pub multiplier: f64,
+    pub multiplier: u8, // Diubah menjadi u8 agar kompatibel dan aman di ledger Solana
     pub is_active: bool,
 }
 
