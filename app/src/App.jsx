@@ -893,7 +893,7 @@ function App() {
           <p>Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
                
           <div className="affiliate-box">
-            <input type="text" id="refLink" value={isConnected ? `https://provizto.hub/${myWalletAddress}` : "https://provizto.hub"} readOnly />
+            <input type="text" id="refLink" value={isConnected ? `https://provizto.hub/?ref=${myWalletAddress}` : "https://provizto.hub?ref="} readOnly />
             
             <button 
               className="btn-copy" 
