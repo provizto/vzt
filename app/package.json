@@ -8,8 +8,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.95.8",
-    "buffer": "^6.0.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.16.0"
@@ -17,9 +15,5 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.1",
     "vite": "^8.0.12"
-  },
-  "overrides": {
-    "semver": "^7.5.4",
-    "minimatch": "^9.0.3"
   }
 }
