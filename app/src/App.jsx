@@ -496,6 +496,7 @@ function App() {
     <>
       <ComplianceModal />
 
+      {/* FLOATING BANNER NOTIFIKASI */}
       {securityBanner.show && (
         <div id="securityBanner" style={{
           position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
@@ -509,92 +510,126 @@ function App() {
       <header className="dapp-header">
         <div className="logo">PROVIZTO <span className="vzt-badge">$VZT</span></div>
         <div className="header-right">
-          <button onClick={() => setView('landing')} className="btn-home" style={{ color: 'white', marginRight: '10px' }}>Back to Home</button>
-          <button className="btn-connect" onClick={openWalletModal}>
+          <button onClick={() => setView('landing')} className="btn-home" style={{ background: '#1e293b', color: 'white', border: '1px solid #334155', padding: '8px 16px', borderRadius: '6px', marginRight: '10px', cursor: 'pointer' }}>Back to Home</button>
+          <button className="btn-connect" onClick={openWalletModal} style={{ background: isConnected ? "#22c55e" : "linear-gradient(135deg, #8b5cf6, #3b82f6)", color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
             {isConnected ? `Connected: ${myWalletAddress.slice(0, 4)}...${myWalletAddress.slice(-4)}` : "Connect Wallet"}
           </button>
         </div>
       </header>
 
-      <main className="dapp-container">
-        <div className="wallet-status" style={{ color: isConnected ? "#22c55e" : "#94a3b8" }}>
-          {isConnected ? `Wallet Status: Connected via ${activeProviderName}` : "Wallet Status: Disconnected"}
+      {/* ➕ FIX MUTLAK: Jika wallet belum konek, paksa tampilkan tombol aktivasi besar di tengah layar agar tidak blank hitam */}
+      {!isConnected ? (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', color: '#94a3b8', padding: '20px' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🔒</div>
+          <h2>Secure Dashboard Locked</h2>
+          <p style={{ maxWidth: '450px', textAlign: 'center', margin: '10px 0 20px 0', color: '#64748b' }}>
+            To access real-yield metrics, AMM swaps, and your secure affiliate node, please initialize your wallet connection first.
+          </p>
+          <button onClick={openWalletModal} style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)', color: 'white', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 4px 14px rgba(139, 92, 246, 0.4)' }}>
+            Initialize Secure Connection
+          </button>
         </div>
+      ) : (
+        /* JIKA WALLET SUDAH KONEK, TAMPILKAN SELURUH MODUL METRIKS ANDA DI BAWAH */
+        <main className="dapp-container">
+          <div className="wallet-status" style={{ color: isConnected ? "#22c55e" : "#94a3b8", marginBottom: '15px' }}>
+            Wallet Status: Connected via {activeProviderName} ({myWalletAddress})
+          </div>
 
-        {txLog && (
-          <div className="security-banner" style={{ background: '#111827', color: '#38bdf8', padding: '15px', borderRadius: '8px', whiteSpace: 'pre-line' }}>
-            {txLog}
-            <div className="grant-repayment-tracker" style={{ marginTop: "15px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
-                <span>Grant Repayment Share Progress</span>
-                <span>${totalRepaid.toFixed(2)} / $20,000</span>
+          {txLog && (
+            <div className="security-banner" style={{ background: '#111827', color: '#38bdf8', padding: '15px', borderRadius: '8px', whiteSpace: 'pre-line', border: '1px solid #1f2937' }}>
+              {txLog}
+              <div className="grant-repayment-tracker" style={{ marginTop: "15px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
+                  <span>Grant Repayment Share Progress</span>
+                  <span>${totalRepaid.toFixed(2)} / $20,000</span>
+                </div>
+                <div style={{ width: "100%", height: "8px", background: "#374151", borderRadius: "4px", overflow: "hidden", marginTop: "5px" }}>
+                  <div style={{ width: `${(totalRepaid / GRANT_CAP) * 100}%`, height: "100%", background: "linear-gradient(90deg, #3b82f6, #22c55e)" }}></div>
+                </div>
               </div>
-              <div style={{ width: "100%", height: "8px", background: "#374151", borderRadius: "4px", overflow: "hidden", marginTop: "5px" }}>
-                <div style={{ width: `${(totalRepaid / GRANT_CAP) * 100}%`, height: "100%", background: "linear-gradient(90deg, #3b82f6, #22c55e)" }}></div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <section className="products-grid">
-          {/* AMM DEX SWAP */}
-          <div className="product-card">
-            <h3>AMM DEX Swap</h3>
-            <input type="number" placeholder="0.0" value={payAmount === '0' ? '' : payAmount} onChange={(e) => setPayAmount(e.target.value)} />
-            <select value={tokenPay} onChange={(e) => handleTokenChange(e.target.value)}>
-              <option value="USDC">USDC</option><option value="SOL">SOL</option><option value="VZT">VZT</option>
-            </select>
-            <button className="btn-switch-tokens" onClick={switchTokens}>⇅</button>
-            <input type="text" value={receiveAmount} readOnly />
-            <button className="btn-action" onClick={isConnected ? handleLaunchSwap : openWalletModal}>Launch Swap</button>
-          </div>
-
-          {/* YIELD OPTIMIZER */}
-          <div className="product-card">
-            <h3>Yield Optimizer</h3>
-            <input type="number" placeholder="0.0" value={calcAmount === '0' ? '' : calcAmount} onChange={(e) => setCalcAmount(e.target.value)} />
-            <p>Est. Monthly Profit: {projection.monthly} USDC</p>
-            <button className="btn-action" onClick={isConnected ? handleDepositVault : openWalletModal}>Open Vaults</button>
-          </div>
-
-          {/* LOCK MODULE */}
-          <div className="product-card">
-            <h3>VZT Lock & Yield</h3>
-            <div className="calc-tabs">
-              <button className={lockCalculationMode === 'manual' ? 'active' : ''} onClick={() => switchLockCalculationView('manual')}>Instant</button>
-              <button className={lockCalculationMode === 'wizard' ? 'active' : ''} onClick={() => switchLockCalculationView('wizard')}>Boosted</button>
-            </div>
-            <input type="number" value={lockAmount === '0' ? '' : lockAmount} onChange={(e) => setLockAmount(e.target.value)} />
-            <p>{liveScore}</p>
-            {showRewardRow && <button onClick={claimVztReward}>{rewardClaimable ? "Claim Yield" : "🔒 Staking Locked"}</button>}
-            <button className="btn-action" onClick={isConnected ? handleLockToken : openWalletModal}>Lock Token</button>
-            <button onClick={handleEmergencyUnlock} style={{ marginTop: "10px", width: "100%", background: "red", color: "white", border: "none", padding: "10px", borderRadius: "6px", fontWeight: "bold" }}>Emergency Unlock</button>
-          </div>
-        </section>
-
-        {/* AFFILIATE NETWORK PANEL */}
-        <section className="affiliate-section" style={{ marginTop: '30px', padding: '20px', background: '#1e293b', borderRadius: '12px' }}>
-          <h3>Secure On-Chain Affiliate (Demo)</h3>
-          <div className="affiliate-box" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-            <input type="text" value={isConnected ? `${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}` : `${window.location.origin}${window.location.pathname}`} readOnly style={{ flex: 1, padding: '10px', borderRadius: '6px' }} />
-            <button onClick={copyLink} style={{ background: '#14b8a6', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold' }}>Copy Link</button>
-          </div>
-
-          {referrerAddress && (
-            <div style={{ background: "rgba(20, 184, 166, 0.08)", border: "1px dashed #14b8a6", padding: "16px", borderRadius: "8px", marginTop: "15px" }}>
-              <p style={{ margin: 0 }}>🚀 Inbound Referral Invited by: <strong>{referrerAddress.toString().slice(0, 6)}...{referrerAddress.toString().slice(-6)}</strong></p>
-              <button onClick={registerReferrerOnChain} disabled={isReferralLoading || !isConnected} style={{ marginTop: "12px", background: "#14b8a6", color: "white", width: "100%", padding: "10px", border: "none", borderRadius: "6px", fontWeight: "bold" }}>
-                {isReferralLoading ? "Writing PDA Layer..." : !isConnected ? "🔒 Connect Wallet to Confirm" : "Secure & Bind Referral Association"}
-              </button>
             </div>
           )}
 
-          <div className="test-panel" style={{ marginTop: '20px' }}>
-            <input type="text" placeholder="Enter referrer wallet address..." value={referrerInput} onChange={(e) => setReferrerInput(e.target.value)} />
-            <button onClick={verifyReferralOnChain} disabled={!isConnected}>Verify Link</button>
+          <section className="products-grid">
+            {/* AMM DEX SWAP */}
+            <div className="product-card">
+              <h3>AMM DEX Swap</h3>
+              <input type="number" placeholder="0.0" value={payAmount === '0' ? '' : payAmount} onChange={(e) => setPayAmount(e.target.value)} />
+              <select value={tokenPay} onChange={(e) => handleTokenChange(e.target.value)}>
+                <option value="USDC">USDC</option><option value="SOL">SOL</option><option value="VZT">VZT</option>
+              </select>
+              <button className="btn-switch-tokens" onClick={switchTokens}>⇅</button>
+              <input type="text" value={receiveAmount} readOnly />
+              <button className="btn-action" onClick={handleLaunchSwap}>Launch Swap</button>
+            </div>
+
+            {/* YIELD OPTIMIZER */}
+            <div className="product-card">
+              <h3>Yield Optimizer</h3>
+              <input type="number" placeholder="0.0" value={calcAmount === '0' ? '' : calcAmount} onChange={(e) => setCalcAmount(e.target.value)} />
+              <p>Est. Monthly Profit: {projection.monthly} USDC</p>
+              <button className="btn-action" onClick={handleDepositVault}>Open Vaults</button>
+            </div>
+
+            {/* LOCK MODULE */}
+            <div className="product-card">
+              <h3>VZT Lock & Yield</h3>
+              <div className="calc-tabs">
+                <button className={lockCalculationMode === 'manual' ? 'active' : ''} onClick={() => switchLockCalculationView('manual')}>Instant</button>
+                <button className={lockCalculationMode === 'wizard' ? 'active' : ''} onClick={() => switchLockCalculationView('wizard')}>Boosted</button>
+              </div>
+              <input type="number" value={lockAmount === '0' ? '' : lockAmount} onChange={(e) => setLockAmount(e.target.value)} />
+              <p>{liveScore}</p>
+              {showRewardRow && <button onClick={claimVztReward}>{rewardClaimable ? "Claim Yield" : "🔒 Staking Locked"}</button>}
+              <button className="btn-action" onClick={handleLockToken}>Lock Token</button>
+              <button onClick={handleEmergencyUnlock} style={{ marginTop: "10px", width: "100%", background: "red", color: "white", border: "none", padding: "10px", borderRadius: "6px", fontWeight: "bold" }}>Emergency Unlock</button>
+            </div>
+          </section>
+
+          {/* AFFILIATE NETWORK PANEL */}
+          <section className="affiliate-section" style={{ marginTop: '30px', padding: '20px', background: '#1e293b', borderRadius: '12px' }}>
+            <h3>Secure On-Chain Affiliate (Demo)</h3>
+            <div className="affiliate-box" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+              <input type="text" value={`${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}`} readOnly style={{ flex: 1, padding: '10px', borderRadius: '6px', background: '#0f172a', border: '1px solid #334155', color: '#94a3b8' }} />
+              <button onClick={copyLink} style={{ background: '#14b8a6', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Copy Link</button>
+            </div>
+
+            {referrerAddress && (
+              <div style={{ background: "rgba(20, 184, 166, 0.08)", border: "1px dashed #14b8a6", padding: "16px", borderRadius: "8px", marginTop: "15px" }}>
+                <p style={{ margin: 0 }}>🚀 Inbound Referral Invited by: <strong>{referrerAddress.toString().slice(0, 6)}...{referrerAddress.toString().slice(-6)}</strong></p>
+                <button onClick={registerReferrerOnChain} disabled={isReferralLoading} style={{ marginTop: "12px", background: "#14b8a6", color: "white", width: "100%", padding: "10px", border: "none", borderRadius: "6px", fontWeight: "bold", cursor: 'pointer' }}>
+                  {isReferralLoading ? "Writing PDA Layer..." : "Secure & Bind Referral Association"}
+                </button>
+              </div>
+            )}
+
+            <div className="test-panel" style={{ marginTop: '20px' }}>
+              <input type="text" placeholder="Enter referrer wallet address..." value={referrerInput} onChange={(e) => setReferrerInput(e.target.value)} style={{ padding: '10px', borderRadius: '6px', marginRight: '10px', border: '1px solid #334155', background: '#0f172a', color: 'white' }} />
+              <button onClick={verifyReferralOnChain} style={{ padding: '10px 20px', borderRadius: '6px', background: '#3b82f6', color: 'white', border: 'none', cursor: 'pointer' }}>Verify Link</button>
+            </div>
+          </section>
+        </main>
+      )}
+
+      {/* WALLET INTEGRATION MODAL BOX */}
+      {isModalOpen && (
+        <div id="walletModal" className="modal-overlay" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 999999 }}>
+          <div className="modal-content" style={{ background: '#1e293b', padding: '30px', borderRadius: '12px', border: '1px solid #334155', minWidth: '320px', textAlign: 'center' }}>
+            <h3 style={{ margin: '0 0 20px 0', color: 'white' }}>Select Solana Wallet (Demo Mode)</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button className="wallet-option-btn" onClick={() => selectWallet('phantom')} style={{ padding: '12px', borderRadius: '8px', background: '#0f172a', border: '1px solid #334155', color: 'white', fontWeight: '600', cursor: 'pointer' }}>👻 Phantom Wallet</button>
+              <button className="wallet-option-btn" onClick={() => selectWallet('solflare')} style={{ padding: '12px', borderRadius: '8px', background: '#0f172a', border: '1px solid #334155', color: 'white', fontWeight: '600', cursor: 'pointer' }}>☀️ Solflare Wallet</button>
+            </div>
+            <button onClick={() => setIsModalOpen(false)} style={{ marginTop: '20px', background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer' }}>Close</button>
           </div>
-        </section>
-      </main>
+        </div>
+      )}
+
+      {/* FOOTER MATRIX */}
+      <footer className="dapp-footer" style={{ borderTop: '1px solid #1f2937', padding: '20px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem', marginTop: '40px' }}>
+        <p>© {new Date().getFullYear()} Provizto Protocol & dApp Hub. Secure Vercel-Stable Edition</p>
+      </footer>
     </>
   );
 }
