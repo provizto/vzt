@@ -1,4 +1,3 @@
-// ➕ INJEKSI POLYFILL BUFFER DI BAGIAN PALING ATAS (Wajib Sebelum Mengimpor App)
 import { Buffer } from 'buffer';
 window.Buffer = Buffer;
 
