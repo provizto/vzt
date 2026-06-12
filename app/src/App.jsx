@@ -3,6 +3,10 @@ import Landing from './Landing'; // Mengimpor komponen Landing React Opsi A
 import ComplianceModal from './components/ComplianceModal'; // INTEGRASI: Mengimpor Pop-up Compliance
 import './App.css';
 
+// ➕ TAMBAHKAN IMPOR CORE SOLANA WEB3 DAN ANCHOR
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import * as anchor from '@coral-xyz/anchor';
+
 // ==========================================================================
 // PROTOCOL SYSTEM CONSTANTS (GLOBAL CONFIGURATION FOR GRANTS REVIEW)
 // ==========================================================================
@@ -82,6 +86,10 @@ function App() {
   const [tierLabel, setTierLabel] = useState('Bronze (10%)');
   const [tierColor, setTierColor] = useState('#14b8a6');
 
+  // ➕ STATE INTERFACES BARU UNTUK VERIFIKASI ON-CHAIN REAL TIME
+  const [referrerAddress, setReferrerAddress] = useState(null);
+  const [isReferralLoading, setIsReferralLoading] = useState(false);
+
   // ==========================================================================
   // 2. SECURITY NOTIFICATION BANNER CONTROLLER
   // ==========================================================================
@@ -90,6 +98,111 @@ function App() {
     setTimeout(() => {
       setSecurityBanner(prev => ({ ...prev, show: false }));
     }, 4000);
+  };
+
+  // ==========================================================================
+  // ➕ AUTOMATED CAPTURE REFERRAL ADDRESS DARI LINK URL POINTER (?ref=)
+  // ==========================================================================
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refParam = params.get('ref'); 
+    
+    if (refParam) {
+      try {
+        // Memvalidasi apakah parameter merupakan alamat Base58 Solana yang legal
+        const validPubKey = new PublicKey(refParam);
+        setReferrerInput(refParam);
+        setReferrerAddress(validPubKey);
+        
+        setTimeout(() => {
+          triggerBanner(`🔗 Referral link detected from: ${refParam.slice(0, 6)}...${refParam.slice(-4)}`, "success");
+        }, 600);
+      } catch (e) {
+        console.error("Alamat eksternal rujukan dari URL tidak valid:", e);
+      }
+    }
+  }, []);
+
+  // ==========================================================================
+  // ➕ FUNGSI EKSEKUSI PENDAFTARAN REFERRAL SECARA ON-CHAIN KE SOLANA SMART CONTRACT
+  // ==========================================================================
+  const registerReferrerOnChain = async () => {
+    const walletProvider = window.solana || (window.phantom && window.phantom.solana);
+
+    if (!isConnected || !walletProvider) {
+      triggerBanner("⚠️ Please connect your secure Solana wallet first!", "error");
+      return;
+    }
+
+    if (!referrerAddress) {
+      triggerBanner("⚠️ Active referrer address context not found.", "error");
+      return;
+    }
+
+    setIsReferralLoading(true);
+    setTxLog("Constructing cryptographic transaction payload via Anchor Provider...");
+
+    try {
+      // Menghubungkan RPC Node Mainnet-Beta (Ganti URL rpcEndpoint jika memiliki private provider)
+      const rpcEndpoint = clusterApiUrl(SOLANA_NETWORK);
+      const connection = new Connection(rpcEndpoint, "confirmed");
+      const provider = new anchor.AnchorProvider(walletProvider, connection, anchor.AnchorProvider.defaultOptions());
+      const programIdPubKey = new PublicKey(PROGRAM_ID);
+      
+      // Struktur minimal Anchor IDL untuk mencocokkan Instruksi program Rust Anda
+      const mockIdl = {
+        "version": "0.1.0",
+        "name": "provizto_protocol",
+        "instructions": [
+          {
+            "name": "initializeReferral",
+            "accounts": [
+              { "name": "referee", "isMut": true, "isSigner": true },
+              { "name": "referrer", "isMut": false, "isSigner": false },
+              { "name": "referralRecord", "isMut": true, "isSigner": false },
+              { "name": "systemProgram", "isMut": false, "isSigner": false }
+            ],
+            "args": []
+          }
+        ]
+      };
+
+      const program = new anchor.Program(mockIdl, programIdPubKey, provider);
+      const userPubKey = new PublicKey(myWalletAddress);
+      
+      // Menurunkan Alamat Akun PDA secara Deterministik (Menjamin Sybil Resistance)
+      const [referralRecordPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("referral"), userPubKey.toBuffer()],
+        programIdPubKey
+      );
+
+      setTxLog(`Broadcasting Instruction: initialize_referral\nDerived Account PDA: ${referralRecordPda.toString()}`);
+
+      const tx = await program.methods
+        .initializeReferral()
+        .accounts({
+          referee: userPubKey,
+          referrer: referrerAddress,
+          referralRecord: referralRecordPda,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .rpc();
+
+      triggerBanner("👑 System Update: Referral established permanently on-chain!", "success");
+      setTxLog(`[ON-CHAIN VERIFICATION SUCCESS]\nProgram: ${PROGRAM_ID}\nState account generated successfully.\nSignature Transaction: ${tx}`);
+      setReferralVolume("$0.00 (Verified Ledger)");
+
+    } catch (err) {
+      console.error("Gagal melakukan commit data referral ke Solana:", err);
+      if (err.message && err.message.includes("SelfReferralForbidden")) {
+        triggerBanner("🛑 Smart Contract Rejection: Self-referral is strictly prohibited!", "error");
+      } else {
+        triggerBanner("⚠️ Transaction rejected by block engine or cluster consensus.", "error");
+      }
+      setTxLog(`[TRANSACTION ERROR] On-chain execution failed.\nReason: ${err.message || err}`);
+    } finally {
+      setIsReferralLoading(false);
+    }
   };
 
   // ==========================================================================
@@ -456,7 +569,7 @@ function App() {
   };
 
   // ==========================================================================
-  // 8. SYBIL-RESISTANT AFFILIATE CONTROLLER
+  // 8. 🛠️ MODIFIKASI: GENERATE LINK AFILIASI MENGGUNAKAN QUERY STRINGS (?ref=)
   // ==========================================================================
   const copyLink = () => {
     if (!isConnected) {
@@ -465,10 +578,11 @@ function App() {
       return;
     }
 
-    const generatedUrl = `https://provizto.hub/${myWalletAddress}`;
+    // Membangun URL universal dengan Query Param standard industri web3 (?ref=ADDRESS)
+    const generatedUrl = `${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(generatedUrl)
-        .then(() => triggerBanner("📋 Referral link successfully copied to your clipboard!", "success"))
+        .then(() => triggerBanner("📋 Referral URL with parameter ?ref= copied to clipboard!", "success"))
         .catch(() => alert("Please copy manually: " + generatedUrl));
     } else {
       alert("Please copy manually: " + generatedUrl);
@@ -487,21 +601,27 @@ function App() {
       return;
     }
 
-    const simulatedVolume = Math.floor(Math.random() * 145000) + 5000;
-    setReferralVolume(`$${simulatedVolume.toLocaleString('en-US', { minimumFractionDigits: 2 })}`);
+    try {
+      // Memvalidasi input manual apakah base58 valid
+      new PublicKey(inputVal);
+      const simulatedVolume = Math.floor(Math.random() * 145000) + 5000;
+      setReferralVolume(`$${simulatedVolume.toLocaleString('en-US', { minimumFractionDigits: 2 })}`);
 
-    if (simulatedVolume <= 10000) {
-      setTierLabel("Bronze (10%)");
-      setTierColor("#14b8a6");
-      triggerBanner(`✅ [Success]: Active Regular User verified. Allocated to Bronze Tier (10% Commission).`, "success");
-    } else if (simulatedVolume > 10000 && simulatedVolume <= 100000) {
-      setTierLabel("Silver (18%)");
-      setTierColor("#3b82f6");
-      triggerBanner(`🔥 [Success]: High-Volume Creator verified! Upgraded to Silver Tier (18% Commission).`, "success");
-    } else {
-      setTierLabel("Gold (25%)");
-      setTierColor("#a855f7");
-      triggerBanner(`👑 [Success]: Top-Tier VIP KOL verified! Upgraded to Premium Gold Tier (25% Commission).`, "success");
+      if (simulatedVolume <= 10000) {
+        setTierLabel("Bronze (10%)");
+        setTierColor("#14b8a6");
+        triggerBanner(`✅ [Success]: Active Regular User verified. Allocated to Bronze Tier (10% Commission).`, "success");
+      } else if (simulatedVolume > 10000 && simulatedVolume <= 100000) {
+        setTierLabel("Silver (18%)");
+        setTierColor("#3b82f6");
+        triggerBanner(`🔥 [Success]: High-Volume Creator verified! Upgraded to Silver Tier (18% Commission).`, "success");
+      } else {
+        setTierLabel("Gold (25%)");
+        setTierColor("#a855f7");
+        triggerBanner(`👑 [Success]: Top-Tier VIP KOL verified! Upgraded to Premium Gold Tier (25% Commission).`, "success");
+      }
+    } catch (e) {
+      triggerBanner("⚠️ Invalid base58 Solana layout string.", "error");
     }
   };
 
@@ -622,7 +742,7 @@ function App() {
                   height: "100%", 
                   background: "linear-gradient(90deg, #3b82f6 0%, #22c55e 100%)", 
                   transition: "width 0.4s ease-in-out" 
-                }}></div>
+                }}}></div>
               </div>
             </div>
           </div>
@@ -893,7 +1013,13 @@ function App() {
           <p>Share your unique link. The system restricts repetitive transactional manipulation (max 1 tx/10s).</p>
                
           <div className="affiliate-box">
-            <input type="text" id="refLink" value={isConnected ? `https://provizto.hub/${myWalletAddress}` : "https://provizto.hub"} readOnly />
+            {/* 🛠️ SINKRONISASI: Menghasilkan link dinamis berbasis Query String (?ref=) */}
+            <input 
+              type="text" 
+              id="refLink" 
+              value={isConnected ? `${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}` : `${window.location.origin}${window.location.pathname}`} 
+              readOnly 
+            />
             
             <button 
               className="btn-copy" 
@@ -911,6 +1037,44 @@ function App() {
               {isConnected ? "Copy Link" : "Connect"}
             </button>
           </div>
+
+          {/* ➕ INTEGRASI LAYER: UI AKSI UNTUK USER YANG MASUK LEWAT LINK PARAMETER URL AFILIASI */}
+          {referrerAddress && (
+            <div className="url-captured-referral-panel" style={{
+              background: "rgba(20, 184, 166, 0.08)",
+              border: "1px dashed #14b8a6",
+              padding: "16px",
+              borderRadius: "8px",
+              marginTop: "15px",
+              textAlign: "left"
+            }}>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#e2e8f0" }}>
+                🚀 Inbound Referral Detected: You are invited by <strong>{referrerAddress.toString().slice(0, 6)}...{referrerAddress.toString().slice(-6)}</strong>
+              </p>
+              <button
+                onClick={registerReferrerOnChain}
+                disabled={isReferralLoading || !isConnected}
+                style={{
+                  marginTop: "12px",
+                  background: "#14b8a6",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 16px",
+                  borderRadius: "6px",
+                  fontWeight: "bold",
+                  cursor: (isReferralLoading || !isConnected) ? "not-allowed" : "pointer",
+                  width: "100%",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                {isReferralLoading 
+                  ? "Writing PDA to Solana Block..." 
+                  : !isConnected 
+                    ? "🔒 Connect Wallet to Confirm Invitation" 
+                    : "Secure & Bind Referral Association On-Chain"}
+              </button>
+            </div>
+          )}
 
           <div className="test-panel">
             <label htmlFor="testReferrer">Referral Address (On-Chain Verification):</label>
