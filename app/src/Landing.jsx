@@ -3,24 +3,23 @@ import React, { useState, useEffect } from 'react';
 const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
   const [activeFaq, setActiveFaq] = useState(null);
 
-  // 🛠️ PERBAIKAN MUTLAK: Efek pemuatan Font & Icon yang aman (Anti-Blank Vercel)
+  // Suntik otomatis FontAwesome dan Google Fonts langsung ke DOM Head saat komponen dimuat
   useEffect(() => {
-    const injectLink = (id, url) => {
-      // Periksa apakah tag dengan ID ini sudah ada untuk mencegah duplikasi node DOM
-      if (!document.getElementById(id)) {
-        const link = document.createElement('link');
-        link.id = id;
-        link.href = url;
-        link.rel = 'stylesheet';
-        document.head.appendChild(link);
-      }
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
+    const faLink = document.createElement('link');
+    faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
+    faLink.rel = 'stylesheet';
+    document.head.appendChild(faLink);
+
+    return () => {
+      // Membersihkan DOM Head saat berpindah komponen
+      if (document.head.contains(fontLink)) document.head.removeChild(fontLink);
+      if (document.head.contains(faLink)) document.head.removeChild(faLink);
     };
-
-    injectLink('vzt-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    injectLink('vzt-font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
-
-    // 🛠️ FIX: Jangan hapus node saat unmount untuk menghindari interupsi rendering di React 19
-    return () => {};
   }, []);
 
   const toggleFaq = (index) => {
