@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import Landing from './Landing'; // Mengimpor komponen Landing React
-import ComplianceModal from './components/ComplianceModal'; // Mengimpor Pop-up Compliance
+import Landing from './Landing'; 
+import ComplianceModal from './components/ComplianceModal'; 
 import './App.css';
 
 // ==========================================================================
-// PROTOCOL SYSTEM CONSTANTS (GLOBAL CONFIGURATION FOR GRANTS REVIEW)
+// KONSANTA SISTEM PROTOKOL
 // ==========================================================================
 const PROGRAM_ID = "ProvZtoX9vR6qwMKB7zYtE4HnS2PdcG8kLmWq3jF5uBx";
 const SOLANA_NETWORK = "mainnet-beta";
@@ -13,31 +13,30 @@ const EMERGENCY_BURN_PENALTY_RATE = 0.20;
 const TOKEN_PRICES = { SOL: 170.00, USDT: 1.00, USDC: 1.00, WSOL: 170.00, VZT: 0.50 };
 
 function App() {
-  // VIEW NAVIGATION LAYER
+  // NAVIGATION VIEW STACK
   const [view, setView] = useState('landing'); 
 
-  // GLOBAL STATE MANAGEMENT
+  // STATE MANAJEMEN UTAMA
   const [isConnected, setIsConnected] = useState(false);
   const [myWalletAddress, setMyWalletAddress] = useState("");
   const [activeProviderName, setActiveProviderName] = useState(""); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [securityBanner, setSecurityBanner] = useState({ show: false, message: "", type: "success" });
   
-  // System Metrics Tracker
-  const [lastTransactionTime, setLastTransactionTime] = useState(0);
+  // METRIK TRACKER
   const [isSwapLoading, setIsSwapLoading] = useState(false);
   const [isLockLoading, setIsLockLoading] = useState(false);
   const [isTokenLocked, setIsTokenLocked] = useState(false);
   const [swapsCount, setSwapsCount] = useState(45210); 
-  
-  // Financial Indicators
-  const [vztBalance, setVztBalance] = useState(0); 
-  const [stakedAmount, setStakedAmount] = useState(0); 
   const [protocolTVL, setProtocolTVL] = useState(1248500);
   const [totalRepaid, setTotalRepaid] = useState(0); 
   const GRANT_CAP = 20000; 
 
-  // AMM DEX Swap States
+  // BALANCES STATE
+  const [vztBalance, setVztBalance] = useState(0); 
+  const [stakedAmount, setStakedAmount] = useState(0); 
+
+  // AMM DEX SWAP STATES
   const [payAmount, setPayAmount] = useState('0');
   const [receiveAmount, setReceiveAmount] = useState('0.0');
   const [tokenPay, setTokenPay] = useState('USDC');
@@ -45,12 +44,12 @@ function App() {
   const [swapFee, setSwapFee] = useState('0.0000');
   const [txLog, setTxLog] = useState('');
 
-  // Yield Optimizer States
+  // YIELD OPTIMIZER STATES
   const [calcAmount, setCalcAmount] = useState('0');
   const [projection, setProjection] = useState({ daily: "0.00", monthly: "0.00", annual: "0.00" });
   const [isVaultLoading, setIsVaultLoading] = useState(false);
 
-  // VZT Lock States
+  // VZT LOCK STAKING STATES
   const [lockCalculationMode, setLockCalculationMode] = useState('manual'); 
   const [lockAmount, setLockAmount] = useState('0'); 
   const [chosenMultiplier, setChosenMultiplier] = useState(2.5); 
@@ -60,7 +59,7 @@ function App() {
   const [earnedUsdcDisplay, setEarnedUsdcDisplay] = useState('0.00 USDC');
   const [rewardClaimable, setRewardClaimable] = useState(false);
 
-  // Secure Affiliate States
+  // SECURE AFFILIATE STATES
   const [referrerInput, setReferrerInput] = useState('');
   const [referralVolume, setReferralVolume] = useState('$0.00');
   const [tierLabel, setTierLabel] = useState('Bronze (10%)');
@@ -76,12 +75,13 @@ function App() {
     { symbol: 'VZT', priceInUsdc: TOKEN_PRICES.VZT }
   ];
 
+  // NOTIFIKASI BANNER CONTROLLER
   const triggerBanner = (message, type = "success") => {
     setSecurityBanner({ show: true, message, type });
     setTimeout(() => setSecurityBanner(prev => ({ ...prev, show: false })), 4000);
   };
 
-  // URL Capturer Engine
+  // AUTOMATED URL CAPTURER FOR REFERRAL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const refParam = params.get('ref'); 
@@ -95,18 +95,7 @@ function App() {
     }
   }, [view]);
 
-  // Affiliate Register On-Chain
-  const registerReferrerOnChain = async () => {
-    if (!referrerAddress || referrerAddress === myWalletAddress) return;
-    setIsReferralLoading(true);
-    setTxLog("Constructing Dynamic On-Chain PDA Layer...");
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    triggerBanner("👑 Referral established permanently on-chain!", "success");
-    setTxLog(`[ON-CHAIN KRYPTON LEDGER SUCCESS]\nProgram ID: ${PROGRAM_ID}\nSigner: ${myWalletAddress}\nTarget: ${referrerAddress}\nStatus: 100% Bound`);
-    setIsReferralLoading(false);
-  };
-
-  // Connection Handler
+  // WALLET HANDSHAKE MANAGEMENT
   const openWalletModal = () => isConnected ? disconnectWallet() : setIsModalOpen(true);
 
   const selectWallet = (walletType) => {
@@ -127,7 +116,7 @@ function App() {
     triggerBanner("Wallet disconnected.", "warning");
   };
 
-  // Swap Core Calculator
+  // AMM DEX LOGIC
   useEffect(() => {
     const amount = parseFloat(payAmount) || 0;
     setSwapFee((amount * 0.003).toFixed(4));
@@ -154,7 +143,7 @@ function App() {
     alert('Swap Successful!'); setPayAmount('0'); setIsSwapLoading(false);
   };
 
-  // Vault Optimizer
+  // YIELD VAULT OPTIMIZER LOGIC
   useEffect(() => {
     const amount = parseFloat(calcAmount) || 0;
     setProjection({
@@ -171,7 +160,13 @@ function App() {
     setCalcAmount('0'); setIsVaultLoading(false);
   };
 
-  // Lock Staking Module
+  // VZT STAKING LOCK LOGIC
+  const switchLockCalculationView = (selectedMode) => {
+    if (isTokenLocked) return;
+    setLockCalculationMode(selectedMode);
+    if (selectedMode === 'manual') { setLockAmount('0'); } else { setLockAmount('1000'); setChosenMultiplier(1); }
+  };
+
   useEffect(() => {
     if (isTokenLocked) return;
     const amount = parseFloat(lockAmount) || 0;
@@ -190,6 +185,12 @@ function App() {
     setIsLockLoading(false);
   };
 
+  const claimVztReward = () => {
+    if (!rewardClaimable) return;
+    alert(`Claim Successful!\n\n${earnedUsdcDisplay} transferred.`);
+    setEarnedUsdcDisplay("0.00 USDC"); setShowRewardRow(false);
+  };
+
   const handleEmergencyUnlock = async () => {
     if (stakedAmount <= 0) return;
     if (!confirm("Proceed with early unlock? 20% penalty principal burn will be applied.")) return;
@@ -199,9 +200,15 @@ function App() {
     setTxLog(`🔥 Deflationary System: ${penalty.toFixed(2)} $VZT Permanently Burned.`);
   };
 
-  const copyLink = () => {
-    const url = `${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}`;
-    navigator.clipboard.writeText(url).then(() => triggerBanner("📋 Link copied!", "success"));
+  // AFFILIATE SYSTEM LOGIC
+  const registerReferrerOnChain = async () => {
+    if (!referrerAddress || referrerAddress === myWalletAddress) return;
+    setIsReferralLoading(true);
+    setTxLog("Constructing Dynamic On-Chain PDA Layer...");
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    triggerBanner("👑 Referral established permanently on-chain!", "success");
+    setTxLog(`[ON-CHAIN KRYPTON LEDGER SUCCESS]\nProgram ID: ${PROGRAM_ID}\nSigner: ${myWalletAddress}\nTarget: ${referrerAddress}\nStatus: 100% Bound`);
+    setIsReferralLoading(false);
   };
 
   const verifyReferralOnChain = () => {
@@ -210,7 +217,13 @@ function App() {
     setTierLabel("Silver (18%)"); setTierColor("#3b82f6");
   };
 
-  // Navigation Logic
+  const copyLink = () => {
+    const url = `${window.location.origin}${window.location.pathname}?ref=${myWalletAddress}`;
+    navigator.clipboard.writeText(url).then(() => triggerBanner("📋 Link copied!", "success"));
+  };
+
+
+  // RENDERING CONDITION LAYER
   if (view === 'landing') {
     return (
       <>
@@ -242,7 +255,7 @@ function App() {
         </div>
       </header>
 
-      {/* Main Condition Interface Container */}
+      {/* Main Condition Interface */}
       {!isConnected ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', padding: '20px' }}>
           <div style={{ fontSize: '3.5rem', marginBottom: '15px' }}>🔒</div>
@@ -252,7 +265,8 @@ function App() {
         </div>
       ) : (
         <div style={{ width: '90%', maxWidth: '1200px', margin: '30px auto 0 auto' }}>
-          {/* RPC & Transaction Logs */}
+          
+          {/* RPC Logs Console */}
           <div style={{ background: '#111827', border: '1px solid #1f2937', padding: '20px', borderRadius: '8px', marginBottom: '25px', fontSize: '0.9rem' }}>
             <p style={{ color: '#22c55e', margin: '0 0 10px 0' }}>● RPC System Active (Network: Solana Mainnet)</p>
             <div style={{ color: '#38bdf8', fontStyle: 'italic', whiteSpace: 'pre-line' }}>{txLog || "System Idle. Ready for cryptographic operations."}</div>
@@ -264,7 +278,8 @@ function App() {
 
           {/* Grid Modules */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-            {/* AMM SWAP CARD */}
+            
+            {/* AMM SWAP */}
             <div style={{ background: '#111827', padding: '20px', borderRadius: '8px', border: '1px solid #1f2937' }}>
               <h4 style={{ margin: '0 0 15px 0', color: '#3b82f6' }}>AMM DEX Swap Module</h4>
               <div style={{ marginBottom: '10px' }}>
@@ -282,7 +297,7 @@ function App() {
               <button onClick={handleLaunchSwap} disabled={isSwapLoading} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: 'none', background: '#22c55e', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>{isSwapLoading ? 'Processing...' : 'Execute Swap'}</button>
             </div>
 
-            {/* YIELD CARD */}
+            {/* YIELD VAULT */}
             <div style={{ background: '#111827', padding: '20px', borderRadius: '8px', border: '1px solid #1f2937' }}>
               <h4 style={{ margin: '0 0 15px 0', color: '#8b5cf6' }}>Cross-Vault Yield Optimizer</h4>
               <p style={{ fontSize: '13px', color: '#94a3b8', margin: '0 0 10px 0' }}>Compound Interest Path Injection (Target: 49.1% APY)</p>
@@ -291,7 +306,7 @@ function App() {
               <button onClick={handleDepositVault} disabled={isVaultLoading} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: 'none', background: '#8b5cf6', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>{isVaultLoading ? 'Locking into Vault...' : 'Deposit Liquidity'}</button>
             </div>
 
-            {/* STAKING LOCK CARD */}
+            {/* STAKING LOCK */}
             <div style={{ background: '#111827', padding: '20px', borderRadius: '8px', border: '1px solid #1f2937' }}>
               <h4 style={{ margin: '0 0 15px 0', color: '#14b8a6' }}>VZT Real-Yield Pool Node</h4>
               <div style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
@@ -299,14 +314,15 @@ function App() {
                 <button onClick={() => switchLockCalculationView('wizard')} style={{ flex: 1, padding: '4px', background: lockCalculationMode === 'wizard' ? '#14b8a6' : '#1f2937', color: 'white', border: 'none', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>Boost Multiplier</button>
               </div>
               <input type="number" value={lockAmount === '0' ? '' : lockAmount} onChange={(e) => setLockAmount(e.target.value)} placeholder="VZT Amount" style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #374151', background: '#0b0f19', color: 'white', marginBottom: '10px' }} />
-              <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}><span>Score Weight: {liveScore}</span><span>{estimatedRewardText}</span></div>
+              <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}><span>Score: {liveScore}</span><span>{estimatedRewardText}</span></div>
               {showRewardRow && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0b0f19', padding: '8px', borderRadius: '4px', marginBottom: '10px', fontSize: '12px' }}><span>Unclaimed: {earnedUsdcDisplay}</span><button onClick={claimVztReward} style={{ padding: '4px 8px', background: rewardClaimable ? '#22c55e' : '#4b5563', border: 'none', color: 'white', borderRadius: '4px', cursor: 'pointer' }}>{rewardClaimable ? "Claim" : "🔒 Epoch Locked"}</button></div>}
               <button onClick={handleLockToken} disabled={isLockLoading || isTokenLocked} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: 'none', background: isTokenLocked ? '#4b5563' : '#14b8a6', color: 'white', fontWeight: 'bold', cursor: isTokenLocked ? 'not-allowed' : 'pointer' }}>{isTokenLocked ? "✓ Capital Locked" : "Execute Staking Lock"}</button>
-              <button onClick={handleEmergencyUnlock} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ef4444', background: 'transparent', color: '#ef4444', fontWeight: 'bold', marginTop: '10px', cursor: 'pointer', fontSize: '12px' }}>Emergency Unlock principal (20% Burn)</button>
+              <button onClick={handleEmergencyUnlock} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ef4444', background: 'transparent', color: '#ef4444', fontWeight: 'bold', marginTop: '10px', cursor: 'pointer', fontSize: '12px' }}>Emergency Unlock (20% Burn)</button>
             </div>
+
           </div>
 
-          {/* AFFILIATE NETWORK NODE */}
+          {/* AFFILIATE SECTION */}
           <section style={{ background: '#111827', padding: '20px', borderRadius: '8px', border: '1px solid #1f2937', marginTop: '25px' }}>
             <h4 style={{ margin: '0 0 10px 0', color: '#eab308' }}>On-Chain Node Affiliate Ledger</h4>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
@@ -330,6 +346,7 @@ function App() {
               <div>Network Volume: <span style={{ color: 'white', fontWeight: 'bold' }}>{referralVolume}</span></div>
             </div>
           </section>
+
         </div>
       )}
 
