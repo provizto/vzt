@@ -5,10 +5,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-vzt = "ProvZtoX9vR6qwMKB7zYtE4HnS2PdcG8kLmWq3jF5uBx"
+vzt = "CKcGMRrapsGMWmJQq6tgsRyRauDjxjyn6rCL7u6xejYa"
 
 [programs.mainnet]
-vzt = "ProvZtoX9vR6qwMKB7zYtE4HnS2PdcG8kLmWq3jF5uBx"
+vzt = "CKcGMRrapsGMWmJQq6tgsRyRauDjxjyn6rCL7u6xejYa"
 
 [registry]
 url = "https://api.apr.dev"
