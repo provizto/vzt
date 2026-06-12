@@ -15,4 +15,4 @@ no-idl = []
 no-log-ix-name = []
 
 [dependencies]
-anchor-lang = "0.30.0"
+anchor-lang = "0.30.1"
