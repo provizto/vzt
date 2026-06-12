@@ -3,22 +3,24 @@ import React, { useState, useEffect } from 'react';
 const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
   const [activeFaq, setActiveFaq] = useState(null);
 
-  // Suntik otomatis FontAwesome dan Google Fonts langsung ke DOM Head saat komponen dimuat
+  // 🛠️ PERBAIKAN MUTLAK: Efek pemuatan Font & Icon yang aman (Anti-Blank Vercel)
   useEffect(() => {
-    const fontLink = document.createElement('link');
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap';
-    fontLink.rel = 'stylesheet';
-    document.head.appendChild(fontLink);
-
-    const faLink = document.createElement('link');
-    faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
-    faLink.rel = 'stylesheet';
-    document.head.appendChild(faLink);
-
-    return () => {
-      document.head.removeChild(fontLink);
-      document.head.removeChild(faLink);
+    const injectLink = (id, url) => {
+      // Periksa apakah tag dengan ID ini sudah ada untuk mencegah duplikasi node DOM
+      if (!document.getElementById(id)) {
+        const link = document.createElement('link');
+        link.id = id;
+        link.href = url;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      }
     };
+
+    injectLink('vzt-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    injectLink('vzt-font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+    // 🛠️ FIX: Jangan hapus node saat unmount untuk menghindari interupsi rendering di React 19
+    return () => {};
   }, []);
 
   const toggleFaq = (index) => {
@@ -289,6 +291,10 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
           display: block !important;
           margin-bottom: 10px !important;
         }
+        #vzt-landing-page .timeline-content ul {
+          padding: 0 !important;
+          margin: 0 !important;
+        }
         #vzt-landing-page .timeline-content li {
           list-style: none !important;
           font-size: 0.9rem !important;
@@ -399,7 +405,7 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
         <p>Optimize capital efficiency constraints and unlock liquidity stability through private Jito routing, programmatic vault structures, and deflationary burn algorithms.</p>
       </section>
 
-      {/* LIVE METRICS BANNER (CONNECTED DYNAMICALLY) */}
+      {/* LIVE METRICS BANNER */}
       <div className="metrics-banner">
         <div className="metric-item">
           <div className="metric-value">${totalValueLocked ? totalValueLocked.toLocaleString('en-US') : '1,248,500'}+</div>
@@ -464,36 +470,44 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
             <div className="timeline-content">
               <h4>Phase 1: Foundation & Launch</h4>
               <span>June - August 2026</span>
-              <li>• Security infrastructure audit finalized.</li>
-              <li>• MEV-Protected AMM DEX Swap Mainnet launch.</li>
-              <li>• Deployment of secure anti-Sybil ledger logic.</li>
+              <ul>
+                <li>• Security infrastructure audit finalized.</li>
+                <li>• MEV-Protected AMM DEX Swap Mainnet launch.</li>
+                <li>• Deployment of secure anti-Sybil ledger logic.</li>
+              </ul>
             </div>
           </div>
           <div className="timeline-container right">
             <div className="timeline-content">
               <h4>Phase 2: Growth & Automation</h4>
               <span>September - December 2026</span>
-              <li>• Deployment of the Automated Yield Optimizer contracts.</li>
-              <li>• Activation of the multi-tiered 1x - 2.5x Lock multiplier vaults.</li>
-              <li>• Strategic Solana liquidity provider handshake integrations.</li>
+              <ul>
+                <li>• Deployment of the Automated Yield Optimizer contracts.</li>
+                <li>• Activation of the multi-tiered 1x - 2.5x Lock multiplier vaults.</li>
+                <li>• Strategic Solana liquidity provider handshake integrations.</li>
+              </ul>
             </div>
           </div>
           <div className="timeline-container left">
             <div className="timeline-content">
               <h4>Phase 3: Scaling & Integration</h4>
               <span>January - March 2027</span>
-              <li>• Implementation of governance voting weight parameters.</li>
-              <li>• Multi-asset cross-protocol vault aggregation expansion.</li>
-              <li>• Secondary tier partner performance reward rollouts.</li>
+              <ul>
+                <li>• Implementation of governance voting weight parameters.</li>
+                <li>• Multi-asset cross-protocol vault aggregation expansion.</li>
+                <li>• Secondary tier partner performance reward rollouts.</li>
+              </ul>
             </div>
           </div>
           <div className="timeline-container right">
             <div className="timeline-content">
               <h4>Phase 4: DAO & Governance Maturity</h4>
               <span>April - June 2027</span>
-              <li>• Final transition into a fully decentralized Protocol DAO.</li>
-              <li>• Global community grant deployment for external developer builds.</li>
-              <li>• Extension of Real Yield platform distribution channels.</li>
+              <ul>
+                <li>• Final transition into a fully decentralized Protocol DAO.</li>
+                <li>• Global community grant deployment for external developer builds.</li>
+                <li>• Extension of Real Yield platform distribution channels.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -533,7 +547,6 @@ const Landing = ({ totalValueLocked, swapsCount, onLaunchApp }) => {
           <a href="https://discord.com/@provizto" target="_blank" rel="noopener noreferrer"><i className="fab fa-discord"></i></a>
         </div>
       </footer>
-
     </div>
   );
 };

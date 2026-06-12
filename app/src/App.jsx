@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Landing from './Landing'; // Mengimpor komponen Landing React Opsi A
+import Landing from './Landing'; // Mengimpor komponen Landing React
 import ComplianceModal from './components/ComplianceModal'; // INTEGRASI: Mengimpor Pop-up Compliance
 import './App.css';
 
@@ -125,7 +125,7 @@ function App() {
         console.error("Format alamat referral di URL tidak valid secara kriptografi.");
       }
     }
-  }, []);
+  }, [view]);
 
   // ==========================================================================
   // FUNGSI EKSEKUSI PENDAFTARAN REFERRAL HIBRIDA (ANTI-ERROR VERCEL)
@@ -407,12 +407,8 @@ function App() {
 
   const handleLockToken = async () => {
     const amount = parseFloat(lockAmount) || 0;
-    if (amount <= 0) {
-      alert('Please enter a valid amount of $VZT tokens to lock.');
-      return;
-    }
-    if (amount > vztBalance) {
-      alert('Insufficient $VZT balance inside your secure wallet!');
+    if (amount <= 0 || amount > vztBalance) {
+      alert('Invalid or insufficient allocation amount.');
       return;
     }
 
