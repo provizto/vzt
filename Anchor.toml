@@ -1,21 +1,23 @@
 [toolchain]
 
 [features]
-seeds = false
+resolution = true
 skip-lint = false
 
 [programs.localnet]
-vzt = "CKcGMRrapsGMWmJQq6tgsRyRauDjxjyn6rCL7u6xejYa"
+vzt = "5GB7mmZVSkaAcoHNhJ8SZkMgibZeM75qTpwPejrKyw29"
 
 [programs.mainnet]
-vzt = "CKcGMRrapsGMWmJQq6tgsRyRauDjxjyn6rCL7u6xejYa"
-
-[registry]
-url = "https://api.apr.dev"
+vzt = "5GB7mmZVSkaAcoHNhJ8SZkMgibZeM75qTpwPejrKyw29"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 100000 tests/**/*.ts"
+
+[hooks]
+
+[toolchain]
+anchor_version = "0.30.1"

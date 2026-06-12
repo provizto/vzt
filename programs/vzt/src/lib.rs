@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 // Deklarasikan ID Program yang sama dengan yang ada di Frontend App.jsx Anda
-declare_id!("ProvZtoX9vR6qwMKB7zYtE4HnS2PdcG8kLmWq3jF5uBx");
+declare_id!("5GB7mmZVSkaAcoHNhJ8SZkMgibZeM75qTpwPejrKyw29");
 
 #[program]
 pub mod vzt {
